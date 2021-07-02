@@ -1,0 +1,17 @@
+.menu_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid 1em #fff;
+    background-color: #184b44;
+}
+
+.nav {
+    margin: 1em;
+}
+
+.link {
+    font-size: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}

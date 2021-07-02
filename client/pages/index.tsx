@@ -1,15 +1,24 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import Layout from '../components/Layout/Layout'
+import homeStyles from '../pageUtils/Home/Home.module.css';
+import workplaceSvg from '../files/pracovna-finished_bila.svg';
+import Image from 'next/image'
+function Home() {
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+  return (
+    <Layout>
+      <div className={homeStyles.home_wrapper}>
+        <div className={homeStyles.background}>
+          <div className={homeStyles.background_left} />
+          <div className={homeStyles.empty_stripe} />
+          <div className={homeStyles.background_right} />
+        </div>
+        <div className={homeStyles.content}>
+          <div className={homeStyles.heading}>Welcome to Worklfow Manager</div>
+          <Image src={workplaceSvg as any} alt="workplace" />
+        </div>
+      </div>
+    </Layout>
+  )
+}
 
-export default IndexPage
+export default Home;

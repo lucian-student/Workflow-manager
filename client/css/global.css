@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+
+*,
+::after,
+::before {
+    font-family: 'Playfair Display', serif;
+    box-sizing: border-box;
+    font-weight: 200;
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
+/*#184b44 green color background*/
+/*#FFF text*/
