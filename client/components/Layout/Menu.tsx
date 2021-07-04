@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import menuStyles from './Menu/Menu.module.css';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { AuthContext } from '../../context/auth';
+
 function Menu(): JSX.Element {
+
+    const { currentUser } = useContext(AuthContext);
 
     const [openMenu, setOpenMenu] = useState<boolean>(false);
 
@@ -18,17 +22,25 @@ function Menu(): JSX.Element {
     return (
         <div className={menuStyles.menu_wrapper}>
             <div className={menuStyles.pc_nav}>
-                <nav className={menuStyles.nav}>
-                    <Link href="/" >
-                        <a ref={activateLink} className={menuStyles.link}>Home</a>
-                    </Link>
-                    <Link href="/login">
-                        <a ref={activateLink} className={menuStyles.link}>Login</a>
-                    </Link>
-                    <Link href="/register">
-                        <a ref={activateLink} className={menuStyles.link}>Register</a>
-                    </Link>
-                </nav>
+                {!currentUser ? (
+                    <nav className={menuStyles.nav}>
+                        <Link href="/" >
+                            <a ref={activateLink} className={menuStyles.link}>Welcome</a>
+                        </Link>
+                        <Link href="/login">
+                            <a ref={activateLink} className={menuStyles.link}>Login</a>
+                        </Link>
+                        <Link href="/register">
+                            <a ref={activateLink} className={menuStyles.link}>Register</a>
+                        </Link>
+                    </nav>
+                ) : (
+                    <nav className={menuStyles.nav}>
+                        <Link href="/main" >
+                            <a ref={activateLink} className={menuStyles.link}>Home</a>
+                        </Link>
+                    </nav>
+                )}
             </div>
             <div className={menuStyles.mobile_nav}>
                 <nav className={menuStyles.toggle_wrapper}>

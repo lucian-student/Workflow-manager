@@ -4,7 +4,7 @@ import workplaceSvg from '../files/pracovna-finished_bila.svg';
 import Image from 'next/image'
 import Background from '../components/Layout/Background';
 import withoutAuth from '../components/hoc/withoutAuth';
-function Home() {
+function Welcome() {
 
   return (
     <div className={homeStyles.home_wrapper}>
@@ -17,4 +17,6 @@ function Home() {
   )
 }
 
-export default withoutAuth(Home);
+export default withoutAuth(Welcome);
+
+//export default Home;

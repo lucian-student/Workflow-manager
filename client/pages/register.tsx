@@ -175,3 +175,5 @@ function Register() {
 
 
 export default withoutAuth(Register);
+
+//export default Register;

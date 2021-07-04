@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/auth";
 import { useRouter } from "next/router";
 import Layout from "../Layout/Layout";
@@ -8,19 +8,16 @@ const withoutAuth: <T extends Object>(Component: React.ComponentType<T>) => (pro
     = <T extends Object>(Component: React.ComponentType<T>) => {
         const NotAuthComponent = (props: any) => {
             const { currentUser } = useContext(AuthContext);
-            const [loading, setLoading] = useState<boolean>(true);
             const Router = useRouter();
             useEffect(() => {
                 if (currentUser) {
                     Router.push('/main');
-                } else {
-                    setLoading(false);
                 }
             }, [currentUser]);
             return (
                 <Fragment>
                     <Layout >
-                        {!loading && (
+                        {!currentUser && (
                             <Component {...props} />
                         )}
                     </Layout>
