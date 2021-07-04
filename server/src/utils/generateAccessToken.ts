@@ -6,7 +6,7 @@ function generateAccessToken(user_id: number) {
     };
 
 
-    return jwt.sign(payload, process.env.SECRET1 as Secret, { expiresIn: '15m' });
+    return jwt.sign(payload, process.env.SECRET1 as Secret, { expiresIn: '15s' });
 }
 
 export default generateAccessToken;

@@ -11,6 +11,7 @@ import { sendRefreshToken } from "./utils/sendRefreshToken";
 import generateRefreshToken from "./utils/generateRefreshToken";
 import generateAccessToken from "./utils/generateAccessToken";
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 const PORT = 5000 || process.env.PORT
 
@@ -31,6 +32,11 @@ async function main() {
 
     const app = express();
     app.use(cookieParser());
+    const corsOptions = {
+        origin: 'http://localhost:3000',
+        credentials: true
+    }
+    app.use(cors(corsOptions));
     app.post("/refresh_token", async (req: RequestData, res) => {
         try {
 
@@ -67,12 +73,9 @@ async function main() {
         }
     });
 
-    const corsOptions = {
-        origin: 'http://localhost:3000',
-        credentials: true
-    }
 
-    apollo.applyMiddleware({ app, cors: corsOptions });
+
+    apollo.applyMiddleware({ app, cors: false });
     const httpServer = http.createServer(app);
     apollo.installSubscriptionHandlers(httpServer);
 

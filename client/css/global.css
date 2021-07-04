@@ -14,9 +14,15 @@ a {
     text-decoration: none;
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
 }
+/*global class*/
+.error_message {
+    color: red;
+    word-wrap: break-word;
+}
+
 /*#184b44 green color background*/
 /*#FFF text*/
