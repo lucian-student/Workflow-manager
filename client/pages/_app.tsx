@@ -7,7 +7,6 @@ import { getAccessToken, setAccessToken } from '../utils/accessToken';
 import { AuthContextProvider } from '../context/auth';
 import axios from 'axios';
 import '../css/global.css';
-import Layout from '../components/Layout/Layout';
 
 
 
@@ -25,7 +24,7 @@ function MyApp({ pageProps, Component, apollo }: WithApolloProps<any> & AppProps
 
                 if (response.data.ok) {
                     setAccessToken(response.data.accessToken);
-                    console.log(getAccessToken());
+                    //console.log(getAccessToken());
                 }
             } catch (error) {
                 console.log(error);
@@ -40,9 +39,9 @@ function MyApp({ pageProps, Component, apollo }: WithApolloProps<any> & AppProps
     return (
         <ApolloProvider client={apollo}>
             {!loading && (
-                    <AuthContextProvider>
-                        <Component {...pageProps} />
-                    </AuthContextProvider>
+                <AuthContextProvider>
+                    <Component {...pageProps} />
+                </AuthContextProvider>
             )}
         </ApolloProvider>
     );

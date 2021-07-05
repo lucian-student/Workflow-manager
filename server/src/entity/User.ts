@@ -1,5 +1,7 @@
-import { Entity, BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, BaseEntity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
+import Project from "./Project";
+import UserTeamConnection from "./UserTeamConnection";
 
 @ObjectType()
 @Entity()
@@ -36,6 +38,20 @@ export default class User extends BaseEntity {
         type: 'timestamp',
         default: () => 'current_timestamp'
     })
-    data_of_creation: Date
+    data_of_creation: Date;
+
+    @Field(() => [Project])
+    @OneToMany(() => Project, project => project.user)
+    projects: Project[];
+
+    @Field(() => [UserTeamConnection])
+    @OneToMany(() => UserTeamConnection, con => con.user)
+    cons: UserTeamConnection[];
+
+    //oneToManyTeam
+
+    /* @Field(() => [UserTeamConnection])
+     @OneToMany(() => UserTeamConnection, con => con.user)
+     teams: UserTeamConnection[];*/
 
 }

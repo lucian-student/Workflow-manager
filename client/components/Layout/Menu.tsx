@@ -1,12 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
 import menuStyles from './Menu/Menu.module.css';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { AuthContext } from '../../context/auth';
+import { useLogoutMutation } from '../../generated/apolloComponents';
+import { setAccessToken } from '../../utils/accessToken';
 
 function Menu(): JSX.Element {
 
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, setCurrentUser } = useContext(AuthContext);
 
     const [openMenu, setOpenMenu] = useState<boolean>(false);
 
@@ -17,6 +19,26 @@ function Menu(): JSX.Element {
                 reference.className = [menuStyles.link, menuStyles.active_link].join(' ');
             }
         }
+    }
+
+    const [logoutMutation, { data }] = useLogoutMutation({
+        onError(err) {
+            console.log(err.message);
+        },
+        update(cache) {
+            cache.reset();
+        }
+    });
+
+    useEffect(() => {
+        if (data) {
+            setCurrentUser(null);
+            setAccessToken('');
+        }
+    }, [data]);
+
+    async function handleLogout() {
+        await logoutMutation();
     }
 
     return (
@@ -39,6 +61,10 @@ function Menu(): JSX.Element {
                         <Link href="/main" >
                             <a ref={activateLink} className={menuStyles.link}>Home</a>
                         </Link>
+                        <Link href="/teams" >
+                            <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                        </Link>
+                        <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
                     </nav>
                 )}
             </div>
@@ -50,17 +76,29 @@ function Menu(): JSX.Element {
                 </nav>
                 {openMenu && (
                     <div className={menuStyles.mobile_menu_wrapper}>
-                        <nav className={menuStyles.mobile_menu}>
-                            <Link href="/" >
-                                <a ref={activateLink} className={menuStyles.link}>Home</a>
-                            </Link>
-                            <Link href="/login">
-                                <a ref={activateLink} className={menuStyles.link}>Login</a>
-                            </Link>
-                            <Link href="/register">
-                                <a ref={activateLink} className={menuStyles.link}>Register</a>
-                            </Link>
-                        </nav>
+                        {!currentUser ? (
+                            <nav className={menuStyles.mobile_menu}>
+                                <Link href="/" >
+                                    <a ref={activateLink} className={menuStyles.link}>Home</a>
+                                </Link>
+                                <Link href="/login">
+                                    <a ref={activateLink} className={menuStyles.link}>Login</a>
+                                </Link>
+                                <Link href="/register">
+                                    <a ref={activateLink} className={menuStyles.link}>Register</a>
+                                </Link>
+                            </nav>
+                        ) : (
+                            <nav className={menuStyles.mobile_menu}>
+                                <Link href="/main" >
+                                    <a ref={activateLink} className={menuStyles.link}>Home</a>
+                                </Link>
+                                <Link href="/teams" >
+                                    <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                                </Link>
+                                <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
+                            </nav>
+                        )}
                     </div>
                 )}
             </div>

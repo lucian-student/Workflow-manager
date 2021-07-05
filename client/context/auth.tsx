@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, Fragment } from "react";
+import React, { createContext, useState, useEffect, Fragment,  } from "react";
 import User from '../interfaces/User';
 import { useMeQuery } from '../generated/apolloComponents';
 
@@ -12,7 +12,12 @@ export const AuthContext = createContext<IAuthContext>({
     setCurrentUser: null
 });
 
-export const AuthContextProvider = ({ children }) => {
+interface AuxProps {
+    children: JSX.Element
+}
+
+
+export const AuthContextProvider = ({ children }: AuxProps) => {
     const [currentUser, setCurrentUser] = useState<User | null | boolean>(false);
 
     const { data, error } = useMeQuery({

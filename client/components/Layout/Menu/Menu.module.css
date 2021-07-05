@@ -26,6 +26,10 @@
     flex-basis: 100%;
 }
 
+.link_button{
+    background-color: transparent;
+    border:none;
+}
 .link::before {
     position: absolute;
     top: 0;

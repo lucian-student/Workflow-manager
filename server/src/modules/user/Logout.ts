@@ -11,7 +11,7 @@ export default class LogoutResolver {
         @Ctx() ctx: MyContext
     ): boolean {
 
-        sendRefreshToken(ctx.res, "");
+        sendRefreshToken(ctx.res, "",true);
 
         return true;
     }
