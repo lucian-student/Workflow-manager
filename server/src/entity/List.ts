@@ -28,6 +28,12 @@ export default class List extends BaseEntity {
     cards: Card[];
 
     //many to one project
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    project_id: number;
+
     @Field(() => Project)
     @ManyToOne(() => Project, project => project.lists, { onDelete: 'CASCADE',nullable:false })
     @JoinColumn({ name: 'project_id' })

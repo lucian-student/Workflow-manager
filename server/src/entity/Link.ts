@@ -20,6 +20,12 @@ export default class Link extends BaseEntity {
     @Column()
     url: string;
 
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    card_id: number;
+
     @Field(() => Card)
     @ManyToOne(() => Card, card => card.links, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'card_id' })

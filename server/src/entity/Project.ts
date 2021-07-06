@@ -15,10 +15,25 @@ export default class Project extends BaseEntity {
     })
     project_id: number;
 
-    @Field(() => User)
-    @ManyToOne(() => User, user => user.projects, { onDelete: 'CASCADE',nullable:false })
+    @Field(() => ID, { nullable: true })
+    @Column({
+        nullable: true,
+        type: 'bigint'
+    })
+    user_id: number | null;
+
+    @Field(() => User, { nullable: true })
+    @ManyToOne(() => User, user => user.projects, { nullable: true })
     @JoinColumn({ name: 'user_id' })
-    user: User;
+    user: User | null;
+
+    @Field(() => ID, { nullable: true })
+    @Column({
+        nullable: true,
+        type: 'bigint'
+    })
+    team_id: number | null;
+
 
     @Field(() => Team, { nullable: true })
     @ManyToOne(() => Team, team => team.projects, { nullable: true })
@@ -46,6 +61,7 @@ export default class Project extends BaseEntity {
     @Column()
     description: string;
 
+    @Field()
     @Column({
         type: 'timestamp',
         default: () => 'current_timestamp'

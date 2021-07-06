@@ -16,8 +16,14 @@ export default class Message extends BaseEntity {
     @Column()
     content: string;
 
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    card_id: number;
+
     @Field(() => Card)
-    @ManyToOne(() => Card, card => card.messages, { onDelete: 'CASCADE',nullable:false })
+    @ManyToOne(() => Card, card => card.messages, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'card_id' })
     card: Card;
 

@@ -20,13 +20,25 @@ export default class UserTeamConnection extends BaseEntity {
     role: number;
     //manytomany user
 
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    user_id: number;
+
     @Field(() => User)
-    @ManyToOne(() => User, user => user.cons, { onDelete: 'CASCADE',nullable:false })
+    @ManyToOne(() => User, user => user.cons, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'user_id' })
     user: User;
 
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    team_id: number;
+
     @Field(() => Team)
-    @ManyToOne(() => Team, team => team.cons, { onDelete: 'CASCADE',nullable:false })
+    @ManyToOne(() => Team, team => team.cons, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'team_id' })
     team: Team;
 

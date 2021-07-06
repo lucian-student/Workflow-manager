@@ -20,6 +20,12 @@ export default class Todo extends BaseEntity{
     @Column()
     description: string;
 
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    card_id: number;
+
     @Field(() => Card)
     @ManyToOne(() => Card, card => card.todos,{onDelete:'CASCADE',nullable:false})
     @JoinColumn({ name: 'card_id' })

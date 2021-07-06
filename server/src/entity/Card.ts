@@ -46,8 +46,14 @@ export default class Card extends BaseEntity {
     links: Link[];
 
     //many to one list
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    list_id: number;
+
     @Field(() => List)
-    @ManyToOne(() => List, project => project.cards, { onDelete: 'CASCADE',nullable:false })
+    @ManyToOne(() => List, project => project.cards, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'list_id' })
     list: List;
 
