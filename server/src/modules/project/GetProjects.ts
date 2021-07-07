@@ -32,6 +32,7 @@ export default class GetProjectsResolver {
             addSelect('t3.name', 'name').
             addSelect('t3.deadline', 'deadline').
             where('t1.user_id = :user_id', { user_id }).
+            andWhere('t.confirmed =:confirmed', { confirmed: true }).
             innerJoin(Team, 't2', 't2.team_id = t1.team_id').
             innerJoin(Project, 't3', 't3.team_id=t2.team_id').
             orderBy('t3.last_updated', 'DESC').

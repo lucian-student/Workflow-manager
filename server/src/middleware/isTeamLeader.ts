@@ -1,1 +1,0 @@
-//prozatim zrušena z plánu

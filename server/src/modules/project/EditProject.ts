@@ -1,17 +1,20 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from 'type-graphql'
 import Project from '../../entity/Project';
+import checkTypeOfProject from '../../middleware/checkTypeOfProject';
 import isAuth from '../../middleware/isAuth';
-import isAdmin from '../../middleware/isAdmin';
+import isProjectAccessible from '../../middleware/isProjectAccessible';
+import isTeamAdmin from '../../middleware/isTeamAdmin';
 import EditProjectInput from './EditProject/EditProjectInput';
 
 @Resolver()
 export default class EditProjectResolver {
 
-    @UseMiddleware([isAuth, isAdmin])
+    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible)
     @Mutation(() => Project, { nullable: true })
     async editProject(
         @Arg('data') data: EditProjectInput,
-        @Arg('project_id') project_id: number
+        @Arg('project_id') project_id: number,
+        @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<Project | null> {
         const { status, deadline, description, name } = data;
 

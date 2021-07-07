@@ -1,12 +1,16 @@
-import { Mutation, Resolver } from "type-graphql";
+/*import { Mutation, Resolver, UseMiddleware } from "type-graphql";
 import List from "../../entity/List";
+import isAdmin from "../../middleware/isAdmin";
+import isAuth from "../../middleware/isAuth";
 
-/*@Resolver()
+@Resolver()
 export default class CreateListResolver {
 
+    @UseMiddleware(isAuth, isAdmin)
     @Mutation(() => List)
-    async createList() {
-
+    async createList(
+    ) {
+            
     }
 
 }*/
