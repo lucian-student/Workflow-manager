@@ -3,7 +3,10 @@ import { ObjectType, Field, ID } from 'type-graphql';
 import User from './User';
 import Team from './Team';
 import List from './List';
-
+import Card from './Card';
+import Link from './Link';
+import Message from './Message';
+import Todo from './Todo';
 
 @ObjectType()
 @Entity()
@@ -68,4 +71,15 @@ export default class Project extends BaseEntity {
     })
     last_updated: Date;
 
+    @OneToMany(() => Card, card => card.project)
+    cards: Card[];
+
+    @OneToMany(() => Link, link => link.project)
+    links: Link[];
+
+    @OneToMany(() => Message, message => message.project)
+    messages: Message[];
+
+    @OneToMany(() => Todo, todo => todo.project)
+    todos: Todo[];
 }

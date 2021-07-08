@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
+import Project from './Project';
 
 @ObjectType()
 @Entity()
@@ -27,4 +28,13 @@ export default class Message extends BaseEntity {
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Column({
+        nullable: false,
+        type: 'bigint'
+    })
+    project_id: number;
+
+    @ManyToOne(() => Project, project => project.messages, { nullable: false })
+    @JoinColumn({ name: 'project_id' })
+    project: Project;
 }

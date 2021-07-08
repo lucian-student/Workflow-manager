@@ -4,6 +4,7 @@ import List from './List';
 import Link from './Link';
 import Todo from './Todo';
 import Message from './Message';
+import Project from './Project';
 
 @ObjectType()
 @Entity()
@@ -53,8 +54,17 @@ export default class Card extends BaseEntity {
     list_id: number;
 
     @Field(() => List)
-    @ManyToOne(() => List, project => project.cards, { onDelete: 'CASCADE', nullable: false })
+    @ManyToOne(() => List, list => list.cards, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'list_id' })
     list: List;
 
+    @Column({
+        nullable: false,
+        type: 'bigint'
+    })
+    project_id: number;
+
+    @ManyToOne(() => Project, project => project.cards, { nullable: false })
+    @JoinColumn({ name: 'project_id' })
+    project: Project;
 }

@@ -18,8 +18,6 @@ export default class DeleteProjectResolver {
 
         const result = await Project.delete({ project_id });
 
-        console.log(result.affected);
-
         if (!result.affected) {
             throw Error('Project doesnt exist!');
         }

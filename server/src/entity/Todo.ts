@@ -1,10 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
+import Project from './Project';
 
 @ObjectType()
 @Entity()
-export default class Todo extends BaseEntity{
+export default class Todo extends BaseEntity {
 
     @Field(() => ID)
     @PrimaryGeneratedColumn({
@@ -27,8 +28,17 @@ export default class Todo extends BaseEntity{
     card_id: number;
 
     @Field(() => Card)
-    @ManyToOne(() => Card, card => card.todos,{onDelete:'CASCADE',nullable:false})
+    @ManyToOne(() => Card, card => card.todos, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Column({
+        nullable: false,
+        type: 'bigint'
+    })
+    project_id: number;
+
+    @ManyToOne(() => Project, project => project.todos, { nullable: false })
+    @JoinColumn({ name: 'project_id' })
+    project: Project;
 }

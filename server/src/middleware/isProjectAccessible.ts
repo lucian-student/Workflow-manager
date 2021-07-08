@@ -23,7 +23,7 @@ const isProjectAccessible: MiddlewareFn<MyContext> = async ({ context, args }, n
         }
 
         if (Number(project.user_id) !== user_id) {
-            throw new Error('Project doesnt exist!');
+            throw new Error('Access denied! You dont have permission to perform this action!');
         }
 
         context.payload.curr_project = project;
