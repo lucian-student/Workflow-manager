@@ -21,6 +21,12 @@ export default class Todo extends BaseEntity {
     @Column()
     description: string;
 
+    @Field(() => Boolean)
+    @Column({
+        default: false
+    })
+    done: boolean
+
     @Field(() => ID)
     @Column({
         type: 'bigint'
@@ -32,6 +38,7 @@ export default class Todo extends BaseEntity {
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Field(() => ID)
     @Column({
         nullable: false,
         type: 'bigint'

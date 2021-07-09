@@ -7,6 +7,9 @@ import isTeamMember from "../../middleware/isTeamMember";
 import { getManager } from 'typeorm';
 import List from "../../entity/List";
 import Card from "../../entity/Card";
+import Message from "../../entity/Message";
+import Link from "../../entity/Link";
+import Todo from "../../entity/Todo";
 import MyContext from "../../types/MyContext";
 
 
@@ -51,9 +54,23 @@ export default class GetProjectResolver {
             .where("t1.project_id = :project_id", { project_id })
             .leftJoinAndSelect(List, 't2', 't2.project_id=t1.project_id')
             .leftJoinAndSelect(Card, 't3', 't2.list_id=t3.list_id')
+            /*.leftJoinAndSelect(Todo, 't4', 't3.card_id=t4.card_id')
+            .leftJoinAndSelect(Link, 't5', 't3.card_id=t5.card_id')
+            .leftJoinAndSelect(Message, 't6', 't3.card_id=t6.card_id')*/
             .orderBy('t2.order_index', 'ASC')
             .addOrderBy('t3.order_index', 'ASC')
             .getRawMany();
+
+        /*console.log(res.length);
+        console.log(res);*/
+
+        if (!res) {
+            return null;
+        }
+
+        if (res.length === 0) {
+            return null;
+        }
 
         const project = ctx.payload.curr_project as Project;
 
@@ -61,13 +78,17 @@ export default class GetProjectResolver {
 
         res.forEach(item => {
 
-            tmpLists.set(item.t2_list_id, {
-                list_id: item.t2_list_id,
-                name: item.t2_name,
-                order_index: item.t2_order_index,
-                project_id: item.t2_project_id,
-                cards: []
-            });
+            if (!tmpLists.has(item.t2_list_id)) {
+
+                tmpLists.set(item.t2_list_id, {
+                    list_id: item.t2_list_id,
+                    name: item.t2_name,
+                    order_index: item.t2_order_index,
+                    project_id: item.t2_project_id,
+                    cards: []
+                });
+
+            }
 
             if (item.t3_card_id) {
 

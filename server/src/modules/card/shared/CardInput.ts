@@ -1,11 +1,12 @@
 import { Field, InputType } from "type-graphql";
-import {IsDate, MinLength,Length} from 'class-validator';
+import { IsDate, MinLength, Length } from 'class-validator';
+
 
 @InputType()
 export default class CardInput {
 
     @Field()
-    @Length(1,15)
+    @Length(1, 15)
     name: string;
 
     @Field()
@@ -14,6 +15,6 @@ export default class CardInput {
 
     @Field()
     @IsDate()
-    deadline: Date
+    deadline: Date;
 
 }

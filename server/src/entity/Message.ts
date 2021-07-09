@@ -28,6 +28,7 @@ export default class Message extends BaseEntity {
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Field(() => ID)
     @Column({
         nullable: false,
         type: 'bigint'

@@ -8,6 +8,7 @@ import List from "../../entity/List";
 import { getManager } from "typeorm";
 import ListInput from "./shared/ListInput";
 
+
 @Resolver()
 export default class CreateListResolver {
 
@@ -18,18 +19,24 @@ export default class CreateListResolver {
         @Arg('data') { name }: ListInput,
         @Arg('team_id', { nullable: true }) team_id?: number,
     ) {
-        const list = new List();
 
-        const count = await getManager().
-            createQueryBuilder(List, 't1')
-            .where("t1.project_id = :project_id", { project_id })
-            .getCount();
+        let list = new List();
 
-        list.name = name;
-        list.order_index = count;
-        list.project = { project_id } as Project;
+        await getManager().transaction('SERIALIZABLE', async (transactionalEntityManager) => {
+            const count = await transactionalEntityManager.
+                createQueryBuilder(List, 't1')
+                .where("t1.project_id = :project_id", { project_id })
+                .getCount();
 
-        return await list.save();
+            list.name = name;
+            list.order_index = count;
+            list.project = { project_id } as Project;
+
+            list = await transactionalEntityManager.create(List, list).save();
+        });
+
+        return list;
+
     }
 
 }

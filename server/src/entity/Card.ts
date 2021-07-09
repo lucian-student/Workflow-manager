@@ -58,6 +58,7 @@ export default class Card extends BaseEntity {
     @JoinColumn({ name: 'list_id' })
     list: List;
 
+    @Field(() => ID)
     @Column({
         nullable: false,
         type: 'bigint'

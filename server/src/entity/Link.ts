@@ -31,7 +31,8 @@ export default class Link extends BaseEntity {
     @ManyToOne(() => Card, card => card.links, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'card_id' })
     card: Card;
-   
+
+    @Field(() => ID)
     @Column({
         nullable: false,
         type: 'bigint'

@@ -29,7 +29,6 @@ export default class MoveListResolver {
             const order_index = list.order_index;
 
             if (order_index > end_index) {
-                console.log('fall');
                 await transactionalEntityManager
                     .createQueryBuilder()
                     .update(List)
@@ -39,7 +38,6 @@ export default class MoveListResolver {
                     .andWhere('order_index <=:order_index', { order_index })
                     .execute();
             } else if (order_index < end_index) {
-                console.log('climb');
                 await transactionalEntityManager
                     .createQueryBuilder()
                     .update(List)
