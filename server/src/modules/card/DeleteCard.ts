@@ -8,7 +8,8 @@ import isTeamOwner from "../../middleware/isTeamOwner";
 import { getManager } from "typeorm";
 
 interface RawItem {
-    order_index: number
+    order_index: number,
+    list_id:number
 }
 
 @Resolver()
@@ -19,7 +20,6 @@ export default class DeleteCardResolver {
     async deleteCard(
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
-        @Arg('list_id') list_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
     ): Promise<number> {
 
@@ -29,7 +29,7 @@ export default class DeleteCardResolver {
                 .delete()
                 .from(Card)
                 .where('card_id = :card_id', { card_id })
-                .returning(['order_index'])
+                .returning(['order_index', 'list_id'])
                 .execute();
 
             console.log(result);
@@ -43,7 +43,7 @@ export default class DeleteCardResolver {
             }
             const rawRes: RawItem = result.raw[0];
             const order_index = rawRes.order_index;
-
+            const list_id = rawRes.list_id;
             await transactionalEntityManager
                 .createQueryBuilder()
                 .update(Card)

@@ -26,6 +26,12 @@ interface ResItem {
     t3_deadline: Date | null,
     t3_list_id: number | null,
     t3_project_id: number | null,
+    t4_todo_id: number | null,
+    t4_name: string | null,
+    t4_description: string | null,
+    t4_done: boolean | null,
+    t4_card_id: number | null,
+    t4_project_id: number | null,
     project_id: number,
     status: string,
     deadline: Date,
@@ -54,15 +60,10 @@ export default class GetProjectResolver {
             .where("t1.project_id = :project_id", { project_id })
             .leftJoinAndSelect(List, 't2', 't2.project_id=t1.project_id')
             .leftJoinAndSelect(Card, 't3', 't2.list_id=t3.list_id')
-            /*.leftJoinAndSelect(Todo, 't4', 't3.card_id=t4.card_id')
-            .leftJoinAndSelect(Link, 't5', 't3.card_id=t5.card_id')
-            .leftJoinAndSelect(Message, 't6', 't3.card_id=t6.card_id')*/
+            .leftJoinAndSelect(Todo, 't4', 't4.card_id=t3.card_id')
             .orderBy('t2.order_index', 'ASC')
             .addOrderBy('t3.order_index', 'ASC')
             .getRawMany();
-
-        /*console.log(res.length);
-        console.log(res);*/
 
         if (!res) {
             return null;
@@ -85,7 +86,7 @@ export default class GetProjectResolver {
                     name: item.t2_name,
                     order_index: item.t2_order_index,
                     project_id: item.t2_project_id,
-                    cards: []
+                    cards: new Map()
                 });
 
             }
@@ -93,20 +94,41 @@ export default class GetProjectResolver {
             if (item.t3_card_id) {
 
                 tmpLists.get(item.t3_list_id).
-                    cards.push({
+                    cards.set(item.t3_card_id, {
                         card_id: item.t3_card_id,
                         name: item.t3_name,
                         description: item.t3_description,
                         order_index: item.t3_order_index,
                         deadline: item.t3_deadline,
                         list_id: item.t3_list_id,
-                        project_id: item.t3_project_id
+                        project_id: item.t3_project_id,
+                        todos: []
                     });
-
             }
+
+            if (item.t4_todo_id) {
+
+                tmpLists.get(item.t3_list_id)
+                    .cards.get(item.t3_card_id)
+                    .todos.push({
+                        todo_id: item.t4_todo_id,
+                        name: item.t4_name,
+                        description: item.t4_description,
+                        done: item.t4_done,
+                        card_id: item.t4_card_id,
+                        project_id:item.t4_project_id
+                    })
+            }
+
         }, []);
 
         const lists = Array.from(tmpLists.values());
+
+        lists.forEach(item => {
+            if (item.cards) {
+                item.cards = Array.from(item.cards.values());
+            }
+        })
 
         project.lists = lists;
 

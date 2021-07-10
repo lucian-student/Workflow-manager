@@ -7,11 +7,13 @@ import CreateCardInput from "./createCard/CreateCardInput";
 import { getManager } from "typeorm";
 import Todo from "../../entity/Todo";
 import Link from "../../entity/Link";
+import isProjectAccessible from "../../middleware/isProjectAccessible";
+import isListAccessible from "../../middleware/isListAccessible";
 
 @Resolver()
 export default class CreateCardResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin)
+    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isListAccessible)
     @Mutation(() => Card)
     async createCard(
         @Arg('data') data: CreateCardInput,

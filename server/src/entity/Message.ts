@@ -38,4 +38,12 @@ export default class Message extends BaseEntity {
     @ManyToOne(() => Project, project => project.messages, { nullable: false })
     @JoinColumn({ name: 'project_id' })
     project: Project;
+
+    @Field()
+    @Column({
+        type: 'timestamp',
+        default: () => 'current_timestamp'
+    })
+    data_of_creation: Date;
+
 }
