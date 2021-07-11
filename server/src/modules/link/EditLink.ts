@@ -29,7 +29,7 @@ export default class EditLinkResolver {
             .execute();
 
         if (!result.raw) {
-            return null;
+            throw Error('Link doesnt exist!');
         }
         const link = result.raw[0] as Link
 

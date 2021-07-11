@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany, Index } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Project from './Project';
 import Card from './Card';
@@ -28,6 +28,7 @@ export default class List extends BaseEntity {
     cards: Card[];
 
     //many to one project
+    @Index()
     @Field(() => ID)
     @Column({
         type: 'bigint'

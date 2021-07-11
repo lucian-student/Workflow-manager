@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Team from './Team';
 import User from './User';
@@ -20,6 +20,7 @@ export default class UserTeamConnection extends BaseEntity {
     role: number;
     //manytomany user
 
+    @Index()
     @Field(() => ID)
     @Column({
         type: 'bigint'
@@ -31,6 +32,7 @@ export default class UserTeamConnection extends BaseEntity {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
+    @Index()
     @Field(() => ID)
     @Column({
         type: 'bigint'

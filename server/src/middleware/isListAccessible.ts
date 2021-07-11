@@ -22,8 +22,6 @@ const isListAccessible: MiddlewareFn<MyContext> = async ({ context, args }, next
         throw new Error('Access denied! You dont have permission to perform this action!');
     }
 
-    context.payload.curr_list = list;
-
     return next();
 }
 

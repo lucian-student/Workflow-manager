@@ -12,14 +12,14 @@ import { getManager } from "typeorm";
 export default class EditCardResolver {
 
     @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isCardAccessible)
-    @Mutation(() => Card, { nullable: true })
+    @Mutation(() => Card)
     async editCard(
         @Arg('data') data: CardInput,
         @Arg('card_id') card_id: number,
         @Arg('list_id') list_id: number,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
-    ): Promise<Card | null> {
+    ): Promise<Card> {
 
         const result = await getManager()
             .createQueryBuilder()
@@ -31,7 +31,7 @@ export default class EditCardResolver {
             .returning('*')
             .execute();
         if (!result.raw) {
-            return null;
+           throw Error('Card doesnt exist!');
         }
 
         const card = result.raw[0] as Card;

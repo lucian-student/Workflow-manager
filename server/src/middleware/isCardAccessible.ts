@@ -23,11 +23,6 @@ const isCardAccessible: MiddlewareFn<MyContext> = async ({ context, args }, next
         throw new Error('Access denied! You dont have permission to perform this action!');
     }
 
-    /*if (Number(card.list_id) !== list_id) {
-        throw new Error('Access denied! You dont have permission to perform this action!');
-    }*/
-
-    context.payload.curr_card = card;
 
     return next();
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
 import Project from './Project';
@@ -21,6 +21,7 @@ export default class Link extends BaseEntity {
     @Column()
     url: string;
 
+    @Index()
     @Field(() => ID)
     @Column({
         type: 'bigint'
@@ -32,6 +33,7 @@ export default class Link extends BaseEntity {
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Index()
     @Field(() => ID)
     @Column({
         nullable: false,

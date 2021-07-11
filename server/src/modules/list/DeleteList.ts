@@ -6,6 +6,7 @@ import isProjectAccessible from "../../middleware/isProjectAccessible";
 import isTeamOwner from "../../middleware/isTeamOwner";
 import List from "../../entity/List";
 import { getManager } from "typeorm";
+import isTeamAdmin from "../../middleware/isTeamAdmin";
 
 interface RawItem {
     order_index: number
@@ -14,7 +15,7 @@ interface RawItem {
 @Resolver()
 export default class DeleteListResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamOwner, isProjectAccessible, isListAccessible)
+    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isListAccessible)
     @Mutation(() => ID)
     async deleteList(
         @Arg('project_id') project_id: number,

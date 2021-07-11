@@ -1,24 +1,22 @@
 import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
-import Link from "../../entity/Link";
+import Message from "../../entity/Message";
 import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
-import isLinkAccessible from "../../middleware/isLinkAccessible";
+import isMessageAccessible from "../../middleware/isMessageAccessible";
 import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
-import isTeamOwner from "../../middleware/isTeamOwner";
+import isTeamMember from "../../middleware/isTeamMember";
 
 @Resolver()
-export default class DeleteLinkResolver {
+export default class DeleteMessageResolver {
 
-    @UseMiddleware(isAuth,checkTypeOfProject,isTeamAdmin,isProjectAccessible,isLinkAccessible)
+    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible, isMessageAccessible)
     @Mutation(() => ID)
-    async deleteLink(
-        @Arg('link_id') link_id: number,
+    async deleteMessage(
         @Arg('project_id') project_id: number,
-        @Arg('team_id', { nullable: true }) team_id: number
+        @Arg('message_id') message_id: number,
+        @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<number> {
-
-        const result = await Link.delete({link_id});
+        const result = await Message.delete({ message_id });
 
         if (!result.affected) {
             throw Error('Project doesnt exist!');
@@ -28,7 +26,7 @@ export default class DeleteLinkResolver {
             throw Error('Project doesnt exist!');
         }
 
-        return link_id;
+        return message_id;
     }
 
 }

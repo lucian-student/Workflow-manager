@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
 import Project from './Project';
@@ -27,6 +27,7 @@ export default class Todo extends BaseEntity {
     })
     done: boolean
 
+    @Index()
     @Field(() => ID)
     @Column({
         type: 'bigint'
@@ -38,6 +39,7 @@ export default class Todo extends BaseEntity {
     @JoinColumn({ name: 'card_id' })
     card: Card;
 
+    @Index()
     @Field(() => ID)
     @Column({
         nullable: false,

@@ -26,8 +26,6 @@ const isProjectAccessible: MiddlewareFn<MyContext> = async ({ context, args }, n
             throw new Error('Access denied! You dont have permission to perform this action!');
         }
 
-        context.payload.curr_project = project;
-
         return next();
     }
 

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany, Index } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import User from './User';
 import Team from './Team';
@@ -18,6 +18,7 @@ export default class Project extends BaseEntity {
     })
     project_id: number;
 
+    @Index()
     @Field(() => ID, { nullable: true })
     @Column({
         nullable: true,
@@ -30,6 +31,7 @@ export default class Project extends BaseEntity {
     @JoinColumn({ name: 'user_id' })
     user: User | null;
 
+    @Index()
     @Field(() => ID, { nullable: true })
     @Column({
         nullable: true,

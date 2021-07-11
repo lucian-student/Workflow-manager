@@ -20,13 +20,7 @@ const isLinkAccessible: MiddlewareFn<MyContext> = async ({ context, args }, next
     if (Number(link.project_id) !== project_id) {
         throw new Error('Access denied! You dont have permission to perform this action!');
     }
-
-    /* if (Number(link.link_id) !== link_id) {
-         throw new Error('Access denied! You dont have permission to perform this action!');
-    }*/
-
-    // context.payload.curr_link = link;
-
+    
     return next();
 }
 

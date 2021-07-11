@@ -73,7 +73,14 @@ export default class GetProjectResolver {
             return null;
         }
 
-        const project = ctx.payload.curr_project as Project;
+        const project = new Project();
+        project.name = res[0].name;
+        project.project_id = res[0].project_id;
+        project.status = res[0].status;
+        project.deadline = res[0].deadline;
+        project.description = res[0].description;
+        project.user_id = res[0].user_id;
+        project.team_id = res[0].team_id;
 
         const tmpLists = new Map();
 
@@ -116,7 +123,7 @@ export default class GetProjectResolver {
                         description: item.t4_description,
                         done: item.t4_done,
                         card_id: item.t4_card_id,
-                        project_id:item.t4_project_id
+                        project_id: item.t4_project_id
                     })
             }
 
@@ -134,6 +141,4 @@ export default class GetProjectResolver {
 
         return project;
     }
-
-
 }

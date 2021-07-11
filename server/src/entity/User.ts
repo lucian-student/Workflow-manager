@@ -2,6 +2,7 @@ import { Entity, BaseEntity, Column, PrimaryGeneratedColumn, OneToMany } from "t
 import { Field, ObjectType, ID } from "type-graphql";
 import Project from "./Project";
 import UserTeamConnection from "./UserTeamConnection";
+import Message from "./Message";
 
 @ObjectType()
 @Entity()
@@ -48,10 +49,7 @@ export default class User extends BaseEntity {
     @OneToMany(() => UserTeamConnection, con => con.user)
     cons: UserTeamConnection[];
 
-    //oneToManyTeam
-
-    /* @Field(() => [UserTeamConnection])
-     @OneToMany(() => UserTeamConnection, con => con.user)
-     teams: UserTeamConnection[];*/
-
+    @Field(() => [Message])
+    @OneToMany(() => Message, message => message.user)
+    messages: Message[];
 }
