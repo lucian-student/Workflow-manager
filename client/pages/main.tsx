@@ -1,25 +1,14 @@
 import React from "react";
 import withAuth from '../components/hoc/withAuth';
-import { useHelloLazyQuery } from '../generated/apolloComponents';
+import Background from "../components/Layout/Background";
+import mainStyles from '../pageUtils/Main/Main.module.css';
+import OptionsBar from "../components/Main/OptionsBar";
 
 function Main() {
-    const [helloQuery] = useHelloLazyQuery({
-        onError(err) {
-            console.log(err.message);
-        },
-        onCompleted(data) {
-            console.log(data);
-        }
-    });
-
-    function helloHandle() {
-        helloQuery();
-    }
-
-
     return (
-        <div>
-            <button style={{ color: "black" }} onClick={helloHandle}>hello</button>
+        <div className={mainStyles.main_wrapper}>
+            <Background />
+            <OptionsBar />
         </div>
     )
 }
