@@ -12,6 +12,81 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
+};
+
+export type Card = {
+  __typename?: 'Card';
+  card_id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  order_index: Scalars['Float'];
+  deadline: Scalars['DateTime'];
+  todos: Array<Todo>;
+  messages: Array<Message>;
+  links: Array<Link>;
+  list_id: Scalars['ID'];
+  list: List;
+  project_id: Scalars['ID'];
+};
+
+export type CardInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  deadline: Scalars['DateTime'];
+};
+
+export type CreateCardInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  deadline: Scalars['DateTime'];
+  todos: Array<TodoInput>;
+  links: Array<LinkInput>;
+};
+
+export type CreateProjectInput = {
+  status: Scalars['String'];
+  deadline: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+};
+
+
+export type EditProjectInput = {
+  status: Scalars['String'];
+  deadline: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+};
+
+export type Link = {
+  __typename?: 'Link';
+  link_id: Scalars['ID'];
+  name: Scalars['String'];
+  url: Scalars['String'];
+  card_id: Scalars['ID'];
+  card: Card;
+  project_id: Scalars['ID'];
+};
+
+export type LinkInput = {
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type List = {
+  __typename?: 'List';
+  list_id: Scalars['ID'];
+  name: Scalars['String'];
+  order_index: Scalars['Float'];
+  cards: Array<Card>;
+  project_id: Scalars['ID'];
+  project: Project;
+};
+
+export type ListInput = {
+  name: Scalars['String'];
 };
 
 export type LoginResponse = {
@@ -20,12 +95,200 @@ export type LoginResponse = {
   access_token: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  message_id: Scalars['ID'];
+  content: Scalars['String'];
+  user_id: Scalars['ID'];
+  user: User;
+  card_id: Scalars['ID'];
+  card: Card;
+  project_id: Scalars['ID'];
+  data_of_creation: Scalars['DateTime'];
+  username?: Maybe<Scalars['String']>;
+};
+
+export type MessageInput = {
+  content: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createCard: Card;
+  deleteCard: Scalars['ID'];
+  editCard: Card;
+  moveCard: Scalars['Boolean'];
+  createLink: Link;
+  deleteLink: Scalars['ID'];
+  editLink?: Maybe<Link>;
+  createList: List;
+  deleteList: Scalars['ID'];
+  editList: List;
+  moveList: Scalars['Boolean'];
+  createMessage: Message;
+  deleteMessage: Scalars['ID'];
+  editMessage: Message;
+  createProject: Project;
+  deleteProject: Scalars['ID'];
+  editProject: Project;
+  createTeam: Team;
+  createTodo: Todo;
+  deleteTodo: Scalars['ID'];
+  editTodo?: Maybe<Todo>;
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   register: RegisterResponse;
   revokeRefreshToken: Scalars['Boolean'];
+};
+
+
+export type MutationCreateCardArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  data: CreateCardInput;
+};
+
+
+export type MutationDeleteCardArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  card_id: Scalars['Float'];
+};
+
+
+export type MutationEditCardArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  list_id: Scalars['Float'];
+  card_id: Scalars['Float'];
+  data: CardInput;
+};
+
+
+export type MutationMoveCardArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  end_index: Scalars['Float'];
+};
+
+
+export type MutationCreateLinkArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  card_id: Scalars['Float'];
+  data: LinkInput;
+};
+
+
+export type MutationDeleteLinkArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  link_id: Scalars['Float'];
+};
+
+
+export type MutationEditLinkArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  link_id: Scalars['Float'];
+  data: LinkInput;
+};
+
+
+export type MutationCreateListArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  data: ListInput;
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationDeleteListArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationEditListArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  data: ListInput;
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationMoveListArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  end_index: Scalars['Float'];
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationCreateMessageArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  data: MessageInput;
+};
+
+
+export type MutationDeleteMessageArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  message_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationEditMessageArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  message_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  data: MessageInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteProjectArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+};
+
+
+export type MutationEditProjectArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  data: EditProjectInput;
+};
+
+
+export type MutationCreateTodoArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  data: TodoInput;
+};
+
+
+export type MutationDeleteTodoArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  todo_id: Scalars['Float'];
+};
+
+
+export type MutationEditTodoArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+  todo_id: Scalars['Float'];
+  data: TodoInput;
 };
 
 
@@ -44,10 +307,48 @@ export type MutationRevokeRefreshTokenArgs = {
   user_id: Scalars['Float'];
 };
 
+export type Project = {
+  __typename?: 'Project';
+  project_id: Scalars['ID'];
+  user_id?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
+  team_id?: Maybe<Scalars['ID']>;
+  team?: Maybe<Team>;
+  lists: Array<List>;
+  status: Scalars['String'];
+  deadline: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  last_updated: Scalars['DateTime'];
+};
+
+export type ProjectInput = {
+  status: Scalars['String'];
+  deadline: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  getCard?: Maybe<Card>;
+  getProject?: Maybe<Project>;
+  getProjects: Array<Project>;
   hello: Scalars['String'];
   me?: Maybe<User>;
+};
+
+
+export type QueryGetCardArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+};
+
+
+export type QueryGetProjectArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
 };
 
 export type RegisterInput = {
@@ -63,12 +364,60 @@ export type RegisterResponse = {
   access_token: Scalars['String'];
 };
 
+export type Team = {
+  __typename?: 'Team';
+  team_id: Scalars['ID'];
+  name: Scalars['String'];
+  projects: Array<Project>;
+  cons: Array<UserTeamConnection>;
+  description: Scalars['String'];
+};
+
+export type Todo = {
+  __typename?: 'Todo';
+  todo_id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  done: Scalars['Boolean'];
+  card_id: Scalars['ID'];
+  card: Card;
+  project_id: Scalars['ID'];
+};
+
+export type TodoInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   user_id: Scalars['ID'];
   username: Scalars['String'];
   email: Scalars['String'];
+  projects: Array<Project>;
+  cons: Array<UserTeamConnection>;
+  messages: Array<Message>;
 };
+
+export type UserTeamConnection = {
+  __typename?: 'UserTeamConnection';
+  con_id: Scalars['ID'];
+  user_id: Scalars['ID'];
+  user: User;
+  team_id: Scalars['ID'];
+  team: Team;
+};
+
+export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProjectsQuery = (
+  { __typename?: 'Query' }
+  & { getProjects: Array<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated'>
+  )> }
+);
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -133,6 +482,47 @@ export type MeQuery = (
 );
 
 
+export const GetProjectsDocument = gql`
+    query GetProjects {
+  getProjects {
+    project_id
+    name
+    deadline
+    status
+    description
+    user_id
+    team_id
+    last_updated
+  }
+}
+    `;
+
+/**
+ * __useGetProjectsQuery__
+ *
+ * To run a query within a React component, call `useGetProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProjectsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetProjectsQuery(baseOptions?: Apollo.QueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, options);
+      }
+export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, options);
+        }
+export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
+export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
+export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {

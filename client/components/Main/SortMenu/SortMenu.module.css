@@ -1,6 +1,8 @@
 .toggle_button {
     background-color: #184b44;
     border: none;
+    font-size: 1em;
+    padding: 0;
     /*font-size: 1em;*/
 }
 
@@ -35,8 +37,10 @@
 }
 
 .menu_item {
+    font-size: 1em;
     text-align: left;
     width: 100%;
+    white-space: nowrap;
     color: #fff;
     background-color: #184b44;
     border: solid 1px #184b44;
@@ -88,7 +92,8 @@
     color: #184b44;
 }
 
-.menu_item_heading{
+.menu_item_heading {
+    font-size: 1em;
     text-align: left;
     width: 100%;
     color: #184b44;

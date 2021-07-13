@@ -16,7 +16,7 @@ export function useDropDownMenu(): DropdownProps {
         const hadleClickOutside = (event) => {
             if (event.target instanceof Element) {
                 if (!menuRef.current.contains(event.target)) {
-                    console.log('closing');
+                    //console.log('closing');
                     setOpen(false);
                 }
             }
@@ -25,7 +25,7 @@ export function useDropDownMenu(): DropdownProps {
         const handleEscape = (event) => {
             if (event.keyCode === 27) {
                 setOpen(false);
-                console.log('closing');
+                //  console.log('closing');
             }
         };
 

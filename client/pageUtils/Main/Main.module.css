@@ -1,4 +1,20 @@
-.main_wrapper{
+.main_wrapper {
     width: 100%;
     position: relative;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.projects_wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 1em;
 }

@@ -1,0 +1,10 @@
+.project_card {
+    background-color: #184b44;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.card_header{
+    border-bottom: solid 1px #FFF;
+    padding: 1em;
+}

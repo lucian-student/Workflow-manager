@@ -25,7 +25,7 @@ function Login() {
                 setError('email',
                     {
                         type: 'invalid',
-                        message: 'Either you havenť confirmed your email, email doesnt exist or password doesnt match'
+                        message: 'Invalid credentials!'
                     });
 
                 return;
@@ -57,6 +57,9 @@ function Login() {
                             })} />
                         {errors.email && errors.email.type === 'required' && (
                             <div className='error_message'>Email is empty!</div>
+                        )}
+                        {(errors.email && errors.email.type === 'invalid') && (
+                            <div className='error_message'>{errors.email.message}</div>
                         )}
                     </div>
                     <div className={loginStyles.input_wrapper}>

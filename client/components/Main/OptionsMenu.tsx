@@ -1,11 +1,12 @@
 import React from "react";
-
+import { FaUserCog } from 'react-icons/fa';
+import OptionsMenuStyle from './OptionsMenu/OptionsMenu.module.css'
 function OptionsMenu(): JSX.Element {
 
     return (
-        <div style={{color:'#184b44'}}>
-            Options menu
-        </div>
+        <button className={OptionsMenuStyle.settings_button}>
+            <FaUserCog />
+        </button>
     )
 }
 
