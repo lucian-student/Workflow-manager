@@ -1,8 +1,9 @@
-import React, { ReactNode, useContext } from 'react'
+import React, { ReactNode } from 'react'
 import Head from 'next/head'
 import Menu from './Menu';
 import Footer from './Footer';
 import layoutStyles from './Layout/Layout.module.css';
+import Background from './Background';
 
 type Props = {
   children?: ReactNode
@@ -10,7 +11,7 @@ type Props = {
 }
 
 const Layout = ({ children, title = 'Workflow Manager' }: Props) => {
-  
+
   return (
     <div className={layoutStyles.layout_wrapper}>
       <Head>

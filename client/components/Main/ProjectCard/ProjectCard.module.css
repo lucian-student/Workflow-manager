@@ -2,9 +2,18 @@
     background-color: #184b44;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    transition: transform 0.5s ease-in-out 0s;
 }
 
-.card_header{
+.project_card:hover{
+    transform: translateY(-1em);
+}
+
+.card_header {
     border-bottom: solid 1px #FFF;
+    padding: 1em;
+}
+
+.card_body {
     padding: 1em;
 }

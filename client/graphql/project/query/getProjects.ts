@@ -11,6 +11,7 @@ query GetProjects{
         user_id
         team_id
         last_updated
+        team_name
     }
 }
 `;

@@ -10,19 +10,19 @@ function OptionsBar(): JSX.Element {
     return (
         <Fragment>
             <div className={optionsBarStyles.options_bar_pc}>
-                <div className={optionsBarStyles.bar_item}>
+                <div className={optionsBarStyles.bar_item_left}>
                     <SortMenu />
                 </div>
-                <div className={optionsBarStyles.bar_item}>
+                <div className={optionsBarStyles.bar_item_center}>
                     <SearchBar />
                 </div>
-                <div className={optionsBarStyles.bar_item}>
+                <div className={optionsBarStyles.bar_item_right}>
                     <OptionsMenu />
                 </div>
             </div>
             <div className={optionsBarStyles.mobile_wrapper}>
                 <div className={optionsBarStyles.options_bar_mobile}>
-                    <div className={optionsBarStyles.wrapper}>
+                    <div className={optionsBarStyles.main_wrapper}>
                         <div className={optionsBarStyles.bar_item}>
                             <SearchBar />
                         </div>

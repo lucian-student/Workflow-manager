@@ -320,6 +320,7 @@ export type Project = {
   name: Scalars['String'];
   description: Scalars['String'];
   last_updated: Scalars['DateTime'];
+  team_name?: Maybe<Scalars['String']>;
 };
 
 export type ProjectInput = {
@@ -408,6 +409,32 @@ export type UserTeamConnection = {
   team: Team;
 };
 
+export type GetProjectQueryVariables = Exact<{
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetProjectQuery = (
+  { __typename?: 'Query' }
+  & { getProject?: Maybe<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
+    & { lists: Array<(
+      { __typename?: 'List' }
+      & Pick<List, 'list_id' | 'name' | 'order_index'>
+      & { cards: Array<(
+        { __typename?: 'Card' }
+        & Pick<Card, 'card_id' | 'name' | 'deadline' | 'description' | 'project_id' | 'list_id' | 'order_index'>
+        & { todos: Array<(
+          { __typename?: 'Todo' }
+          & Pick<Todo, 'todo_id' | 'description' | 'name' | 'done' | 'project_id' | 'card_id'>
+        )> }
+      )> }
+    )> }
+  )> }
+);
+
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -415,7 +442,7 @@ export type GetProjectsQuery = (
   { __typename?: 'Query' }
   & { getProjects: Array<(
     { __typename?: 'Project' }
-    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated'>
+    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated' | 'team_name'>
   )> }
 );
 
@@ -482,6 +509,70 @@ export type MeQuery = (
 );
 
 
+export const GetProjectDocument = gql`
+    query GetProject($project_id: Float!, $team_id: Float) {
+  getProject(project_id: $project_id, team_id: $team_id) {
+    project_id
+    name
+    deadline
+    status
+    description
+    user_id
+    team_id
+    lists {
+      list_id
+      name
+      order_index
+      cards {
+        card_id
+        name
+        deadline
+        description
+        project_id
+        list_id
+        order_index
+        todos {
+          todo_id
+          description
+          name
+          done
+          project_id
+          card_id
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProjectQuery__
+ *
+ * To run a query within a React component, call `useGetProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProjectQuery({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useGetProjectQuery(baseOptions: Apollo.QueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+      }
+export function useGetProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+        }
+export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
+export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
+export type GetProjectQueryResult = Apollo.QueryResult<GetProjectQuery, GetProjectQueryVariables>;
 export const GetProjectsDocument = gql`
     query GetProjects {
   getProjects {
@@ -493,6 +584,7 @@ export const GetProjectsDocument = gql`
     user_id
     team_id
     last_updated
+    team_name
   }
 }
     `;

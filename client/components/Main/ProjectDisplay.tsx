@@ -37,11 +37,12 @@ function ProjectDisplay(): JSX.Element {
                             project_id: Number(project.project_id),
                             name: project.name,
                             deadline: Date.parse(project.deadline),
-                            last_updated:Date.parse(project.last_updated),
+                            last_updated: Date.parse(project.last_updated),
                             status: project.status,
                             description: project.description,
                             user_id: project.user_id ? Number(project.user_id) : null,
-                            team_id: project.team_id ? Number(project.team_id) : null
+                            team_id: project.team_id ? Number(project.team_id) : null,
+                            team_name: project.team_name ? project.team_name : null
                         }} />
                     ))}
                 </div>

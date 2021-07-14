@@ -73,6 +73,9 @@ export default class Project extends BaseEntity {
     })
     last_updated: Date;
 
+    @Field(() => String, { nullable: true })
+    team_name: string | null
+
     @OneToMany(() => Card, card => card.project)
     cards: Card[];
 

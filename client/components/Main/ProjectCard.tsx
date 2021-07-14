@@ -1,6 +1,11 @@
 import React from "react";
 import projectCardStyles from './ProjectCard/ProjectCard.module.css';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import Link from 'next/link';
+
+dayjs.extend(relativeTime);
+
 
 interface ProjectProps {
     project: {
@@ -10,22 +15,39 @@ interface ProjectProps {
         last_updated: number,
         status: string,
         description: string,
-        user_id: number,
-        team_id: number
+        user_id: number | null,
+        team_id: number | null,
+        team_name: string | null
     }
 }
 
 function ProjectCard({ project }: ProjectProps): JSX.Element {
 
     return (
-        <div className={projectCardStyles.project_card}>
-            <div className={projectCardStyles.card_header}>
-                {project.name}
-            </div>
-            <div>
-                {dayjs(project.deadline).format('DD/MM/YYYY').toString()}
-            </div>
-        </div>
+        <Link href={`/project/${project.team_id}/${project.project_id}`} >
+            <a>
+                <div className={projectCardStyles.project_card}>
+                    <div className={projectCardStyles.card_header}>
+                        <div>
+                            {project.name}
+                        </div>
+                        {project.team_id && (
+                            <div>
+                                {`Team:`}
+                            </div>
+                        )}
+                    </div>
+                    <div className={projectCardStyles.card_body}>
+                        <div>
+                            {`Last updated: ${dayjs(project.last_updated).fromNow()}`}
+                        </div>
+                        <div>
+                            {`Deadline: ${dayjs(project.deadline).format('DD/MM/YYYY')}`}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </Link>
     )
 }
 
