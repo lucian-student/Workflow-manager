@@ -29,6 +29,10 @@ export type Card = {
   list_id: Scalars['ID'];
   list: List;
   project_id: Scalars['ID'];
+  done_todo_count: Scalars['Float'];
+  todo_count: Scalars['Float'];
+  message_count: Scalars['Float'];
+  link_count: Scalars['Float'];
 };
 
 export type CardInput = {
@@ -422,13 +426,19 @@ export type GetProjectQuery = (
     & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
     & { lists: Array<(
       { __typename?: 'List' }
-      & Pick<List, 'list_id' | 'name' | 'order_index'>
+      & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
       & { cards: Array<(
         { __typename?: 'Card' }
-        & Pick<Card, 'card_id' | 'name' | 'deadline' | 'description' | 'project_id' | 'list_id' | 'order_index'>
-        & { todos: Array<(
+        & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+        & { links: Array<(
+          { __typename?: 'Link' }
+          & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+        )>, messages: Array<(
+          { __typename?: 'Message' }
+          & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+        )>, todos: Array<(
           { __typename?: 'Todo' }
-          & Pick<Todo, 'todo_id' | 'description' | 'name' | 'done' | 'project_id' | 'card_id'>
+          & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
         )> }
       )> }
     )> }
@@ -520,6 +530,7 @@ export const GetProjectDocument = gql`
     user_id
     team_id
     lists {
+      project_id
       list_id
       name
       order_index
@@ -527,17 +538,32 @@ export const GetProjectDocument = gql`
         card_id
         name
         deadline
-        description
         project_id
         list_id
         order_index
+        links {
+          link_id
+          name
+          url
+          card_id
+          project_id
+        }
+        messages {
+          message_id
+          content
+          user_id
+          card_id
+          project_id
+          data_of_creation
+          username
+        }
         todos {
           todo_id
-          description
           name
+          description
           done
-          project_id
           card_id
+          project_id
         }
       }
     }

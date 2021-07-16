@@ -9,7 +9,7 @@
 
 .form_paper {
     background-color: #fff;
-    border-radius: 2.8%/12%;
+    border-radius: 15px;
     width: 75%;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .input {
-    border-radius: 0.8%/25%;
+    border-radius: 6px;
     color: #184b44;
     border-color: #184b44;
     border-style: solid;
@@ -52,13 +52,23 @@
     outline: none;
 }
 
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+    transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    transition-delay: 9999s;
+    -webkit-transition-delay: 9999s;
+}
+
 .submit_button {
     color: #fff;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     background-color: #184b44;
     border: solid 1px #184b44;
-    border-radius: 3%/9%;
+    border-radius: 7px;
     width: 120px;
     position: relative;
     z-index: 1;
@@ -98,7 +108,7 @@
     content: '';
     z-index: 3;
     border: solid 1px #184b44;
-    border-radius: 3%/9%;
+    border-radius: 7px;
 }
 
 
@@ -111,15 +121,10 @@
 @media screen and (max-width:500px) {
     .form_paper {
         width: 90%;
-        border-radius: 7%/12%;;
     }
 
     .form {
         margin: 2em;
-    }
-
-    .input {
-        border-radius: 2%/24%;
     }
 }
 

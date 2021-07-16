@@ -14,6 +14,7 @@
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
     "graphql": "^15.5.1",
+    "immutability-helper": "^3.1.1",
     "jwt-decode": "^3.1.2",
     "next": "latest",
     "next-with-apollo": "^5.2.1",

@@ -10,35 +10,51 @@ query GetProject(
         project_id:$project_id,
         team_id:$team_id
     ){
-        project_id
+    project_id
+    name
+    deadline
+    status
+    description
+    user_id
+    team_id
+    lists {
+      project_id
+      list_id
+      name
+      order_index
+      cards {
+        card_id
         name
         deadline
-        status
-        description
-        user_id
-        team_id
-        lists {
+        project_id
         list_id
-        name
         order_index
-        cards {
-            card_id
-            name
-            deadline
-            description
-            project_id
-            list_id
-            order_index
-            todos {
-            todo_id
-            description
-            name
-            done
-            project_id
-            card_id
-                }
-            }   
+        links {
+          link_id
+          name
+          url
+          card_id
+          project_id
         }
+        messages {
+          message_id
+          content
+          user_id
+          card_id
+          project_id
+          data_of_creation
+          username
+        }
+        todos {
+          todo_id
+          name
+          description
+          done
+          card_id
+          project_id
+        }
+      }
     }
+  }
 }
 `;

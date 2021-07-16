@@ -70,4 +70,22 @@ export default class Card extends BaseEntity {
     @ManyToOne(() => Project, project => project.cards, { nullable: false })
     @JoinColumn({ name: 'project_id' })
     project: Project;
+
+
+    /*done_todo_count: number,
+    todo_count: number,
+    message_count: number,
+    link_count: number*/
+
+    @Field()
+    done_todo_count: number;
+
+    @Field()
+    todo_count: number;
+
+    @Field()
+    message_count: number;
+
+    @Field()
+    link_count: number;
 }
