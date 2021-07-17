@@ -29,10 +29,6 @@ export type Card = {
   list_id: Scalars['ID'];
   list: List;
   project_id: Scalars['ID'];
-  done_todo_count: Scalars['Float'];
-  todo_count: Scalars['Float'];
-  message_count: Scalars['Float'];
-  link_count: Scalars['Float'];
 };
 
 export type CardInput = {

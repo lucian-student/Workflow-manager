@@ -24,12 +24,14 @@
     z-index: 1;
     text-align: center;
     flex-basis: 100%;
+    color: #fff;
 }
 
-.link_button{
+.link_button {
     background-color: transparent;
-    border:none;
+    border: none;
 }
+
 .link::before {
     position: absolute;
     top: 0;

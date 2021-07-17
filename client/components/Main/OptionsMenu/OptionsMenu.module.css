@@ -6,4 +6,10 @@
     background-color: #184b44;
     border: none;
     font-size: 1em;
+    color: #fff;
+}
+
+.settings_button:hover,
+.settings_button:active {
+    background-color: rgba(24, 75, 68, 0.8);
 }

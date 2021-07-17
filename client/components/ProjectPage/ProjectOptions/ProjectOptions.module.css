@@ -1,0 +1,25 @@
+.icon {
+    color: inherit;
+    margin: 0.25em;
+    font-size: 1.5em;
+}
+
+.toggle_button {
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    padding: 0;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color,color 0.5s ease-in-out 0s;
+    border-radius: 3px;
+}
+
+.toggle_button:hover,
+.toggle_button:active {
+    background-color: #184b44;
+    color: #fff;
+}

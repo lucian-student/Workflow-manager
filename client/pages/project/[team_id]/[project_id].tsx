@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import withAuth from '../../../components/hoc/withAuth';
-import { List, useGetProjectQuery } from '../../../generated/apolloComponents';
+import withAuthProject from '../../../components/hoc/withAuthProject';
+import { List, Project, useGetProjectQuery } from '../../../generated/apolloComponents';
 import Background from '../../../components/Layout/Background';
-import { Fragment } from 'react';
 import projectPageStyles from '../../../pageUtils/ProjectPage/ProjectPage.module.css';
 import ListDisplay from '../../../components/ProjectPage/ListDisplay';
+import OptionBar from '../../../components/ProjectPage/OptionBar';
 
 interface Props {
     project_id?: string,
@@ -46,13 +46,14 @@ function ProjectPage(): JSX.Element {
         <div className={projectPageStyles.project_page_wrapper}>
             <Background />
             {data && (
-                <Fragment>
+                <div className={projectPageStyles.content_wrapper}>
+                    <OptionBar project={data.getProject as Project} />
                     <ListDisplay lists={data.getProject.lists as List[]} />
-                </Fragment>
+                </div>
             )}
         </div>
     )
 
 }
 
-export default withAuth(ProjectPage);
+export default withAuthProject(ProjectPage);

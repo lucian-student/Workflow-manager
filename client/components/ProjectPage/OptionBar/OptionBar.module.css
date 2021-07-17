@@ -1,0 +1,21 @@
+.option_bar_wrapper {
+    width: calc(100% - 0.5em);
+    background-color: #fff;
+    /*  margin: 0.25em;*/
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    padding: 0.25em;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.project_name {
+    word-wrap: break-word;
+    color: #184b44;
+    font-size: 1em;
+    cursor: default;
+}

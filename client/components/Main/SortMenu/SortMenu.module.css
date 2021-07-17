@@ -6,12 +6,18 @@
     /*font-size: 1em;*/
 }
 
+.toggle_button:hover,
+.toggle_button:active {
+   background-color: rgba(24, 75, 68, 0.8);
+}
+
 .toggle_text {
     padding: 0.5em;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    color: #fff;
 }
 
 .toggle_icon {

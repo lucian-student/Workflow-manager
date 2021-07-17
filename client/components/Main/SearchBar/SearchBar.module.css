@@ -10,6 +10,7 @@
     left: 0.5em;
     top: 50%;
     transform: translateY(-50%);
+    color: #fff;
 }
 
 .cancel_icon {
@@ -18,6 +19,7 @@
     right: 0.5em;
     top: 50%;
     transform: translateY(-50%);
+    color: #fff;
 }
 
 .input {

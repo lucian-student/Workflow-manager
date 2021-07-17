@@ -12,7 +12,7 @@ type Props = {
 const Layout = ({ children, title = 'Workflow Manager' }: Props) => {
 
   return (
-    <div className={layoutStyles.layout_wrapper}>
+    <div className={layoutStyles.project_layout_wrapper}>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
@@ -21,7 +21,7 @@ const Layout = ({ children, title = 'Workflow Manager' }: Props) => {
       <header>
         <Menu />
       </header>
-      <div className={layoutStyles.content}>
+      <div className={layoutStyles.project_content}>
         {children}
       </div>
       <footer>

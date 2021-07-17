@@ -6,8 +6,11 @@
 ::before {
     font-family: 'Playfair Display', serif;
     box-sizing: border-box;
-    font-weight: 400;
-    color: #fff;
+    font-weight: 600;
+}
+
+button {
+    cursor: pointer;
 }
 
 a {

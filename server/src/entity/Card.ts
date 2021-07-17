@@ -77,15 +77,15 @@ export default class Card extends BaseEntity {
     message_count: number,
     link_count: number*/
 
-    @Field()
-    done_todo_count: number;
-
-    @Field()
-    todo_count: number;
-
-    @Field()
-    message_count: number;
-
-    @Field()
-    link_count: number;
+    /* @Field()
+     done_todo_count: number;
+ 
+     @Field()
+     todo_count: number;
+ 
+     @Field()
+     message_count: number;
+ 
+     @Field()
+     link_count: number;*/
 }

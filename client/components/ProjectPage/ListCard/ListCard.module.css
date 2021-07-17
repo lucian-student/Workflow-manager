@@ -1,0 +1,36 @@
+.list_card_wrapper {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: calc(100% - 20px);
+}
+
+.list_card {
+    border-radius: 3px;
+    width: 100%;
+    padding: 0.25em;
+    background-color: #fff;
+    min-width: 250px;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.card_heading {
+    font-size: 1em;
+    color: #184b44;
+    cursor: default;
+}
+
+.card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card_body {
+    flex-grow: 1;
+    overflow-y: auto;
+}

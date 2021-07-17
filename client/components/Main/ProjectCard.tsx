@@ -28,20 +28,20 @@ function ProjectCard({ project }: ProjectProps): JSX.Element {
             <a>
                 <div className={projectCardStyles.project_card}>
                     <div className={projectCardStyles.card_header}>
-                        <div>
+                        <div className={projectCardStyles.card_text}>
                             {project.name}
-                        </div>
+                        </div >
                         {project.team_id && (
-                            <div>
+                            <div className={projectCardStyles.card_text}>
                                 {`Team:`}
                             </div>
                         )}
                     </div>
                     <div className={projectCardStyles.card_body}>
-                        <div>
+                        <div className={projectCardStyles.card_text}>
                             {`Last updated: ${dayjs(project.last_updated).fromNow()}`}
                         </div>
-                        <div>
+                        <div className={projectCardStyles.card_text}>
                             {`Deadline: ${dayjs(project.deadline).format('DD/MM/YYYY')}`}
                         </div>
                     </div>

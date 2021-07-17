@@ -4,9 +4,11 @@
     justify-content: center;
     background-color: #184b44;
     border-top: solid 1em #fff;
+    cursor: default;
 }
 
 .footer_text {
     font-size: 1em;
     text-align: center;
+    color: #fff;
 }
