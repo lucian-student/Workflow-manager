@@ -9,44 +9,45 @@ function ListForm(): JSX.Element {
 
     const { register, handleSubmit } = useForm();
 
-    function handleCreateList(data:{name:string}) {
+    function handleCreateList(data: { name: string }) {
         console.log(data.name.trim());
     }
-
     return (
         <div className={listFormStyles.list_form_wrapper}>
             <div className={listFormStyles.content_wrapper}>
-                {!openForm ? (
-                    <button className={listFormStyles.toggle_button}
-                        onClick={() => setOpenForm(true)}>
-                        <VscAdd className={listFormStyles.icon} />
-                        <div className={listFormStyles.heading}>
-                            create list
-                        </div>
-                    </button>
-                ) : (
-                    <form className={listFormStyles.form}
-                        onSubmit={handleSubmit(handleCreateList)}>
+                <form className={listFormStyles.form}
+                    onSubmit={handleSubmit(handleCreateList)}>
+                    {!openForm ? (
+                        <button className={listFormStyles.toggle_button}
+                            onClick={() => setOpenForm(true)}>
+                            <VscAdd className={listFormStyles.icon} />
+                            <div className={listFormStyles.heading}>
+                                create list
+                            </div>
+                        </button>
+                    ) : (
                         <div>
-                            <input
-                                name='name'
-                                type='text'
-                                autoComplete='off'
-                                placeholder='Enter name of the column...'
-                                {...register('name', {
-                                    validate: (value) => { return !!value.trim()}
-                                })} />
+                            <div>
+                                <input
+                                    className={listFormStyles.input}
+                                    name='name'
+                                    type='text'
+                                    autoComplete='off'
+                                    placeholder='Enter name of the column...'
+                                    {...register('name', {
+                                        validate: (value) => { return !!value.trim() }
+                                    })} />
+                            </div>
+                            <div className={listFormStyles.form_actions}>
+                                <button type='submit' className={listFormStyles.submit_button}>
+                                    Add column
+                                </button>
+                                <ImCancelCircle className={listFormStyles.cancel_icon}
+                                    onClick={() => setOpenForm(false)} />
+                            </div>
                         </div>
-                        <div>
-                            <button type='submit'>
-                                Add column
-                            </button>
-                            <button onClick={() => setOpenForm(false)}>
-                                <ImCancelCircle />
-                            </button>
-                        </div>
-                    </form>
-                )}
+                    )}
+                </form>
             </div>
         </div>
     )

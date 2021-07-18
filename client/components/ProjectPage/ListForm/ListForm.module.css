@@ -51,6 +51,85 @@
 }
 
 
+.submit_button {
+    color: #fff;
+    background-color: #184b44;
+    border: solid 1px #184b44;
+    border-radius: 7px;
+    width: 120px;
+    position: relative;
+    z-index: 1;
+    border: solid 1px #fff;
+    overflow: hidden;
+    transition: color 1s linear 0s;
+}
+
+.submit_button::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    z-index: -1;
+    background-color: #fff;
+    transition: all 0.5s linear 0s;
+    transform-origin: center;
+    overflow: hidden;
+}
+
+.submit_button:hover::before,
+.submit_button:focus::before {
+    transform: scale(1.5);
+    background-color: #fff;
+}
+
+.submit_button::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: '';
+    z-index: 3;
+    border: solid 1px #184b44;
+    border-radius: 7px;
+}
+
+
+.submit_button:hover,
+.submit_button:focus {
+    color: #184b44;
+}
+
+
+.input {
+    border-radius: 6px;
+    color: #184b44;
+    border-color: #184b44;
+    border-style: solid;
+    width: 100%;
+}
+
+.input::placeholder {
+    color: #184b44;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.cancel_icon {
+    font-size: 1.5em;
+    color: #184b44;
+}
+
+.form_actions {
+    display: flex;
+    align-items: center;
+}
 
 /*.form {
    

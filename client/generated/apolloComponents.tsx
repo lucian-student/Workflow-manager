@@ -409,6 +409,20 @@ export type UserTeamConnection = {
   team: Team;
 };
 
+export type CreateProjectMutationVariables = Exact<{
+  data: CreateProjectInput;
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { createProject: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated' | 'team_name'>
+  ) }
+);
+
 export type GetProjectQueryVariables = Exact<{
   project_id: Scalars['Float'];
   team_id?: Maybe<Scalars['Float']>;
@@ -515,6 +529,48 @@ export type MeQuery = (
 );
 
 
+export const CreateProjectDocument = gql`
+    mutation CreateProject($data: CreateProjectInput!, $team_id: Float) {
+  createProject(data: $data, team_id: $team_id) {
+    project_id
+    name
+    deadline
+    status
+    description
+    user_id
+    team_id
+    last_updated
+    team_name
+  }
+}
+    `;
+export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, options);
+      }
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const GetProjectDocument = gql`
     query GetProject($project_id: Float!, $team_id: Float) {
   getProject(project_id: $project_id, team_id: $team_id) {

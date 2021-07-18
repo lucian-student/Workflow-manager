@@ -32,7 +32,7 @@ export default class CreateProjectResolver {
         } else {
             project.user = { user_id } as User;
         }
-
+        
         return await project.save();
     }
 

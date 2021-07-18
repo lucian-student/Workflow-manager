@@ -21,8 +21,9 @@ export default class GetProjectsResolver {
         const projects1 = await getManager()
             .createQueryBuilder(Project, 'project')
             .where('project.user_id = :user_id', { user_id })
+            .orderBy('project.last_updated', 'DESC')
             .getMany();
-            
+
         if (projects1) {
             projects = projects1;
         }
