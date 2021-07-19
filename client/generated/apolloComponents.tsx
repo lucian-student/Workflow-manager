@@ -352,6 +352,12 @@ export type QueryGetProjectArgs = {
   project_id: Scalars['Float'];
 };
 
+
+export type QueryGetProjectsArgs = {
+  search?: Maybe<Scalars['String']>;
+  sort_option: Scalars['String'];
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   email: Scalars['String'];
@@ -455,7 +461,10 @@ export type GetProjectQuery = (
   )> }
 );
 
-export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProjectsQueryVariables = Exact<{
+  sort_option: Scalars['String'];
+  search?: Maybe<Scalars['String']>;
+}>;
 
 
 export type GetProjectsQuery = (
@@ -652,8 +661,8 @@ export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
 export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
 export type GetProjectQueryResult = Apollo.QueryResult<GetProjectQuery, GetProjectQueryVariables>;
 export const GetProjectsDocument = gql`
-    query GetProjects {
-  getProjects {
+    query GetProjects($sort_option: String!, $search: String) {
+  getProjects(sort_option: $sort_option, search: $search) {
     project_id
     name
     deadline
@@ -679,10 +688,12 @@ export const GetProjectsDocument = gql`
  * @example
  * const { data, loading, error } = useGetProjectsQuery({
  *   variables: {
+ *      sort_option: // value for 'sort_option'
+ *      search: // value for 'search'
  *   },
  * });
  */
-export function useGetProjectsQuery(baseOptions?: Apollo.QueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
+export function useGetProjectsQuery(baseOptions: Apollo.QueryHookOptions<GetProjectsQuery, GetProjectsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetProjectsQuery, GetProjectsQueryVariables>(GetProjectsDocument, options);
       }

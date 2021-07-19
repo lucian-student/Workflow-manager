@@ -1,8 +1,14 @@
 import { gql } from '@apollo/client';
 
-export const getProjectQuery = gql`
-query GetProjects{
-    getProjects{
+export const getProjectsQuery = gql`
+query GetProjects(
+    $sort_option:String!
+    $search:String
+){
+    getProjects(
+        sort_option:$sort_option
+        search:$search
+    ){
         project_id
         name
         deadline

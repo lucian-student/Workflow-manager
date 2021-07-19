@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { VscAdd } from 'react-icons/vsc';
 import { ImCancelCircle } from 'react-icons/im';
 import projectFormStyles from './ProjectForm/ProjectForm.module.css';
 import { useForm } from 'react-hook-form';
 import { useDropDownMenu } from "../../hooks/useDropdownMenu";
 import { CreateProjectInput, useCreateProjectMutation } from '../../generated/apolloComponents';
-import { getProjectQuery } from '../../graphql/project/query/getProjects';
+import { getProjectsQuery } from '../../graphql/project/query/getProjects';
+import { ProjectSortContext } from '../../context/projectSort';
 
 function ProjectForm(): JSX.Element {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
     const { menuRef, open, setOpen } = useDropDownMenu();
+
+    const { sortOptions } = useContext(ProjectSortContext);
 
     const [createProjectMutation] = useCreateProjectMutation({
         onError(err) {
@@ -18,10 +21,15 @@ function ProjectForm(): JSX.Element {
         },
         update(proxy, result) {
             const data = proxy.readQuery({
-                query: getProjectQuery
+                query: getProjectsQuery,
+                variables: {
+                    sort_option: sortOptions.order_param + sortOptions.order,
+                    search: sortOptions.search
+                }
             }) as any;
+            console.log(data);
             proxy.writeQuery({
-                query: getProjectQuery,
+                query: getProjectsQuery,
                 data: { getProjects: [result.data.createProject, ...data.getProjects] }
             });
         }
@@ -29,7 +37,6 @@ function ProjectForm(): JSX.Element {
 
     async function handleCreateProject(data: CreateProjectInput) {
         await createProjectMutation({ variables: { data } });
-        setOpen(false);
     }
 
     return (
@@ -128,6 +135,7 @@ function ProjectForm(): JSX.Element {
                             )}
                         </div>
                         <button className={projectFormStyles.submit_button}
+                            onClick={() => setOpen(false)}
                             type='submit'>
                             Submit</button>
                     </form>

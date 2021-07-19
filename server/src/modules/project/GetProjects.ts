@@ -1,10 +1,8 @@
-import { Ctx, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Query, Resolver, UseMiddleware } from "type-graphql";
 import isAuth from "../../middleware/isAuth";
 import Project from "../../entity/Project";
 import MyContext from "../../types/MyContext";
 import { getManager } from "typeorm";
-/*import UserTeamConnection from "../../entity/UserTeamConnection";
-import Team from "../../entity/Team";*/
 
 @Resolver()
 export default class GetProjectsResolver {
@@ -12,39 +10,40 @@ export default class GetProjectsResolver {
     @UseMiddleware(isAuth)
     @Query(() => [Project])
     async getProjects(
-        @Ctx() ctx: MyContext
+        @Ctx() ctx: MyContext,
+        @Arg('sort_option') sort_option: string,
+        @Arg('search', { nullable: true }) search?: string
     ): Promise<Project[]> {
         const user_id = ctx.payload.user_id;
 
-        let projects: Project[] = [];
+        let search_string = '%' + '' + '%';
 
-        const projects1 = await getManager()
-            .createQueryBuilder(Project, 'project')
-            .where('project.user_id = :user_id', { user_id })
-            .orderBy('project.last_updated', 'DESC')
-            .getMany();
-
-        if (projects1) {
-            projects = projects1;
+        if (search) {
+            search_string = '%' + search + '%';
         }
 
-        /*  const projects2 = await getManager().
-              createQueryBuilder(UserTeamConnection, 't1').
-              select('t3.project_id', 'project_id').
-              addSelect('t3.status', 'status').
-              addSelect('t3.description', 'description').
-              addSelect('t3.name', 'name').
-              addSelect('t3.deadline', 'deadline').
-              where('t1.user_id = :user_id', { user_id }).
-              andWhere('t.confirmed =:confirmed', { confirmed: true }).
-              innerJoin(Team, 't2', 't2.team_id = t1.team_id').
-              innerJoin(Project, 't3', 't3.team_id=t2.team_id').
-              orderBy('t3.last_updated', 'DESC').
-              getRawMany() as Project[];
-  
-          if (projects2) {
-              projects.concat(projects2);
-          }*/
+        const projects = await getManager()
+            .query(`
+                select projects.* from
+                ((SELECT *
+                FROM project
+                where user_id=$1
+                and lower(project.name) like lower($2))
+                UNION ALL
+                (SELECT project.*
+                FROM user_team_connection
+                INNER JOIN team on team.team_id=user_team_connection.team_id
+                INNER JOIN project on team.team_id=project.team_id
+                where user_team_connection.user_id=$1
+                and lower(project.name) like lower($2))) as projects
+                ORDER BY 
+                case when $3='last_viewed_asc' then last_updated end ASC ,
+                case when $3='last_viewed_desc' then last_updated end DESC,
+                case when $3='alphabetical_asc' then name end ASC,
+                case when $3='alphabetical_desc' then name end DESC,
+                case when $3='deadline_asc' then deadline end ASC,
+                case when $3='deadline_desc' then deadline end DESC
+        `, [user_id, search_string, sort_option]);
 
         return projects;
     }
@@ -59,3 +58,30 @@ select * from user_team_connection where user_id=$1
 inner join team on team.team_id=user_team_connection.team_id
 inner join projects on team.team_id=projects.team_id;
 */
+
+/*let projects: Project[] = [];
+
+const projects1 = await getManager()
+    .createQueryBuilder(Project, 'project')
+    .where('project.user_id = :user_id', { user_id })
+    .orderBy('project.last_updated', 'DESC')
+    .getMany();
+
+if (projects1) {
+    projects = projects1;
+}
+
+/* const projects2 = await getManager().
+     createQueryBuilder().
+     select('t3.project_id', 'project_id').
+     from(UserTeamConnection, 't1').
+     where('t1.user_id = :user_id', { user_id }).
+     andWhere('t.confirmed =:confirmed', { confirmed: true }).
+     innerJoin(Team, 't2', 't2.team_id = t1.team_id').
+     innerJoinAndSelect(Project, 't3', 't3.team_id=t2.team_id').
+     orderBy('t3.last_updated', 'DESC').
+     getRawMany() as Project[];
+
+ if (projects2) {
+     projects.concat(projects2);
+ }*/

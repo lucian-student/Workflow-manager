@@ -4,6 +4,7 @@ import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isProjectAccessible from "../../middleware/isProjectAccessible";
 import isTeamOwner from "../../middleware/isTeamOwner";
+import { getManager } from "typeorm";
 
 
 @Resolver()
@@ -16,7 +17,12 @@ export default class DeleteProjectResolver {
         @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<number> {
 
-        const result = await Project.delete({ project_id });
+        const result = await getManager()
+            .createQueryBuilder()
+            .delete()
+            .from(Project)
+            .where('project_id= :project_id', { project_id })
+            .execute();
 
         if (!result.affected) {
             throw Error('Project doesnt exist!');

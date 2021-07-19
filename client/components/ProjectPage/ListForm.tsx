@@ -11,6 +11,7 @@ function ListForm(): JSX.Element {
 
     function handleCreateList(data: { name: string }) {
         console.log(data.name.trim());
+        setOpenForm(false);
     }
     return (
         <div className={listFormStyles.list_form_wrapper}>

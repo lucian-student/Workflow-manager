@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import SearchBarStyles from './SearchBar/SearchBar.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { ImCancelCircle } from 'react-icons/im';
 import { useForm } from 'react-hook-form';
+import { ProjectSortContext } from '../../context/projectSort';
 
 interface SearchInput {
     search: string
@@ -12,6 +13,8 @@ function SearchBar(): JSX.Element {
 
     const { register, watch, setValue } = useForm<SearchInput>();
 
+    const { setSortOptions } = useContext(ProjectSortContext);
+
     const search = watch('search');
 
     useEffect(() => {
@@ -19,7 +22,13 @@ function SearchBar(): JSX.Element {
             if (search) {
                 if (search.length > 0) {
                     console.log(search)
-                    //Call query
+                    setSortOptions(old => {
+                        return {
+                            order_param: old.order_param,
+                            order: old.order,
+                            search: search
+                        }
+                    });
                 }
             }
         }, 500);
@@ -34,7 +43,16 @@ function SearchBar(): JSX.Element {
                     <AiOutlineSearch className={SearchBarStyles.search_icon} />
                     {search && (
                         <ImCancelCircle className={SearchBarStyles.cancel_icon}
-                            onClick={() => setValue('search', '')} />
+                            onClick={() => {
+                                setValue('search', '')
+                                setSortOptions(old => {
+                                    return {
+                                        order_param: old.order_param,
+                                        order: old.order,
+                                        search: ''
+                                    }
+                                });
+                            }} />
                     )}
                     <input className={SearchBarStyles.input}
                         name='search'

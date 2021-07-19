@@ -1,38 +1,47 @@
-import React from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Fragment } from 'react';
-import { useGetProjectsQuery } from '../../generated/apolloComponents';
+import { useGetProjectsLazyQuery } from '../../generated/apolloComponents';
 import projectDisplayStyle from './ProjectDisplay/ProjectDisplay.module.css';
 import ProjectCard from './ProjectCard';
+import { ProjectSortContext } from '../../context/projectSort';
 
 
 function ProjectDisplay(): JSX.Element {
-    const { data, loading, error } = useGetProjectsQuery({
-        fetchPolicy: 'network-only'
+
+    const { sortOptions } = useContext(ProjectSortContext);
+
+    const [projects, setProjects] = useState([]);
+
+    const [getProjects, { data }] = useGetProjectsLazyQuery({
+        fetchPolicy: 'network-only',
+        variables: {
+            sort_option: sortOptions.order_param + sortOptions.order,
+            search: sortOptions.search
+        },
+        onError(err) {
+            console.log(err);
+        }
     });
 
+    useEffect(() => {
+        getProjects();
+    }, [sortOptions]);
 
-    if (error) {
-        return (
-            <div>
-                {error.message}
-            </div>
-        )
-    }
-
-    if (loading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
+    useEffect(() => {
+        console.log('changed');
+        if (data) {
+            if (data.getProjects) {
+                setProjects(data.getProjects);
+            }
+        }
+    }, [data]);
 
 
     return (
         <Fragment>
-            {data && (
+            {projects && (
                 <div className={projectDisplayStyle.projects_card}>
-                    {data.getProjects.map(project => (
+                    {projects.map(project => (
                         <ProjectCard key={project.project_id} project={{
                             project_id: Number(project.project_id),
                             name: project.name,
