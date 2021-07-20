@@ -27,13 +27,13 @@
     align-items: center;
     background-color: transparent;
     border: none;
-    transition: background-color, color 0.5s ease-in-out 0s;
+    transition: all 0.5s ease-in-out 0s;
     color: #184b44;
     /* border:1px solid #184b44;*/
 }
 
 .toggle_button:hover,
-.toggle_button:active {
+.toggle_button:focus {
     background-color: #184b44;
     color: #fff;
 }

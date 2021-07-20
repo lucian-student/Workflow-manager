@@ -6,16 +6,18 @@ import ListForm from './ListForm';
 
 interface Props {
     lists: List[]
+    project_id: string
+    team_id: string | null
 }
 
-function ListDisplay({ lists }: Props): JSX.Element {
+function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
 
     return (
         <div className={listDisplayStyles.list_display_wrapper}>
             {lists.map(list => (
                 <ListCard key={list.list_id} list={list} />
             ))}
-            <ListForm />
+            <ListForm project_id={project_id} team_id={team_id} />
         </div>
     )
 }

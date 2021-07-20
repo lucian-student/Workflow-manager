@@ -13,9 +13,11 @@ export default class UserTeamConnection extends BaseEntity {
     })
     con_id: number;
 
+    @Field()
     @Column({ default: false })
     confirmed: boolean
 
+    @Field()
     @Column()
     role: number;
     //manytomany user

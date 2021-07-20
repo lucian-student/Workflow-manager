@@ -14,8 +14,10 @@ function ListCard({ list }: Props): JSX.Element {
         <div className={listCardStyles.list_card_wrapper}>
             <div className={listCardStyles.list_card}>
                 <div className={listCardStyles.card_header}>
-                    <div className={listCardStyles.card_heading}>
-                        {list.name}
+                    <div className={listCardStyles.card_heading_wrapper}>
+                        <div className={listCardStyles.card_heading}>
+                            {list.name}
+                        </div>
                     </div>
                     <ListOptions />
                 </div>

@@ -29,6 +29,7 @@ export default class Team extends BaseEntity {
     @Column()
     description: string;
 
+    @Field()
     @Column({
         type: 'timestamp',
         default: () => 'current_timestamp'

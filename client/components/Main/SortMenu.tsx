@@ -16,9 +16,6 @@ function SortMenu(): JSX.Element {
     orderMap.set('last_viewed', 'Last viewed');
     orderMap.set('deadline', 'Deadline');
 
-
-
-
     function changeOrder(order: string) {
         if (order === 'asc') {
             setSortOptions(old => {
@@ -75,8 +72,6 @@ function SortMenu(): JSX.Element {
 
         setOpen(false);
     }
-
-
 
     return (
         <div className={sortMenuStyles.sort_menu_wrapper} ref={menuRef}>

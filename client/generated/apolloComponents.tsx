@@ -415,6 +415,35 @@ export type UserTeamConnection = {
   team: Team;
 };
 
+export type CreateListMutationVariables = Exact<{
+  data: ListInput;
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateListMutation = (
+  { __typename?: 'Mutation' }
+  & { createList: (
+    { __typename?: 'List' }
+    & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+    & { cards: Array<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+      & { links: Array<(
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      )>, messages: Array<(
+        { __typename?: 'Message' }
+        & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+      )>, todos: Array<(
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
+      )> }
+    )> }
+  ) }
+);
+
 export type CreateProjectMutationVariables = Exact<{
   data: CreateProjectInput;
   team_id?: Maybe<Scalars['Float']>;
@@ -538,6 +567,76 @@ export type MeQuery = (
 );
 
 
+export const CreateListDocument = gql`
+    mutation CreateList($data: ListInput!, $project_id: Float!, $team_id: Float) {
+  createList(data: $data, project_id: $project_id, team_id: $team_id) {
+    project_id
+    list_id
+    name
+    order_index
+    cards {
+      card_id
+      name
+      deadline
+      project_id
+      list_id
+      order_index
+      links {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      messages {
+        message_id
+        content
+        user_id
+        card_id
+        project_id
+        data_of_creation
+        username
+      }
+      todos {
+        todo_id
+        name
+        description
+        done
+        card_id
+        project_id
+      }
+    }
+  }
+}
+    `;
+export type CreateListMutationFn = Apollo.MutationFunction<CreateListMutation, CreateListMutationVariables>;
+
+/**
+ * __useCreateListMutation__
+ *
+ * To run a mutation, you first call `useCreateListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createListMutation, { data, loading, error }] = useCreateListMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useCreateListMutation(baseOptions?: Apollo.MutationHookOptions<CreateListMutation, CreateListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateListMutation, CreateListMutationVariables>(CreateListDocument, options);
+      }
+export type CreateListMutationHookResult = ReturnType<typeof useCreateListMutation>;
+export type CreateListMutationResult = Apollo.MutationResult<CreateListMutation>;
+export type CreateListMutationOptions = Apollo.BaseMutationOptions<CreateListMutation, CreateListMutationVariables>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($data: CreateProjectInput!, $team_id: Float) {
   createProject(data: $data, team_id: $team_id) {

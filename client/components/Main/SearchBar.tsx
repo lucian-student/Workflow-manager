@@ -19,18 +19,13 @@ function SearchBar(): JSX.Element {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            if (search) {
-                if (search.length > 0) {
-                    console.log(search)
-                    setSortOptions(old => {
-                        return {
-                            order_param: old.order_param,
-                            order: old.order,
-                            search: search
-                        }
-                    });
-                }
-            }
+                setSortOptions(old => {
+                    return {
+                        order_param: old.order_param,
+                        order: old.order,
+                        search: search
+                    }
+                });
         }, 500);
 
         return () => clearTimeout(delayDebounceFn)

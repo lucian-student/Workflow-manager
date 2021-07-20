@@ -28,7 +28,6 @@ function ProjectDisplay(): JSX.Element {
     }, [sortOptions]);
 
     useEffect(() => {
-        console.log('changed');
         if (data) {
             if (data.getProjects) {
                 setProjects(data.getProjects);

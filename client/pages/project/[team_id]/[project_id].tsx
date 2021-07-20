@@ -48,7 +48,9 @@ function ProjectPage(): JSX.Element {
             {data && (
                 <div className={projectPageStyles.content_wrapper}>
                     <OptionBar project={data.getProject as Project} />
-                    <ListDisplay lists={data.getProject.lists as List[]} />
+                    <ListDisplay lists={data.getProject.lists as List[]}
+                        project_id={data.getProject.project_id}
+                        team_id={data.getProject.team_id} />
                 </div>
             )}
         </div>

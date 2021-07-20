@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { VscAdd } from 'react-icons/vsc';
 import { ImCancelCircle } from 'react-icons/im';
 import projectFormStyles from './ProjectForm/ProjectForm.module.css';
@@ -10,12 +10,12 @@ import { ProjectSortContext } from '../../context/projectSort';
 
 function ProjectForm(): JSX.Element {
 
-    const { handleSubmit, register, formState: { errors } } = useForm();
+    const { handleSubmit, register, formState: { errors }, reset } = useForm();
     const { menuRef, open, setOpen } = useDropDownMenu();
 
     const { sortOptions } = useContext(ProjectSortContext);
 
-    const [createProjectMutation] = useCreateProjectMutation({
+    const [createProjectMutation, { data }] = useCreateProjectMutation({
         onError(err) {
             console.log(err.message);
         },
@@ -27,13 +27,19 @@ function ProjectForm(): JSX.Element {
                     search: sortOptions.search
                 }
             }) as any;
-            console.log(data);
             proxy.writeQuery({
                 query: getProjectsQuery,
                 data: { getProjects: [result.data.createProject, ...data.getProjects] }
             });
         }
     });
+
+    useEffect(() => {
+        if (data) {
+            setOpen(false);
+            reset();
+        }
+    }, [data]);
 
     async function handleCreateProject(data: CreateProjectInput) {
         await createProjectMutation({ variables: { data } });
@@ -135,7 +141,6 @@ function ProjectForm(): JSX.Element {
                             )}
                         </div>
                         <button className={projectFormStyles.submit_button}
-                            onClick={() => setOpen(false)}
                             type='submit'>
                             Submit</button>
                     </form>

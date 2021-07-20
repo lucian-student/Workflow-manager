@@ -57,21 +57,21 @@ function Menu(): JSX.Element {
                         </Link>
                     </nav>
                 ) : (
-                        <nav className={menuStyles.nav}>
-                            <Link href="/main" >
-                                <a ref={activateLink} className={menuStyles.link}>Home</a>
-                            </Link>
-                            <Link href="/teams" >
-                                <a ref={activateLink} className={menuStyles.link}>Teams</a>
-                            </Link>
-                            <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
-                        </nav>
-                    )}
+                    <nav className={menuStyles.nav}>
+                        <Link href="/main" >
+                            <a ref={activateLink} className={menuStyles.link}>Home</a>
+                        </Link>
+                        <Link href="/teams" >
+                            <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                        </Link>
+                        <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
+                    </nav>
+                )}
             </div>
             <div className={menuStyles.mobile_nav}>
                 <nav className={menuStyles.toggle_wrapper}>
                     <button className={menuStyles.toggle_button} onClick={() => { setOpenMenu(old => !old) }}>
-                        <GiHamburgerMenu />
+                        <GiHamburgerMenu className={menuStyles.hamburger_icon} />
                     </button>
                 </nav>
                 {openMenu && (
@@ -89,16 +89,16 @@ function Menu(): JSX.Element {
                                 </Link>
                             </nav>
                         ) : (
-                                <nav className={menuStyles.mobile_menu}>
-                                    <Link href="/main" >
-                                        <a ref={activateLink} className={menuStyles.link}>Home</a>
-                                    </Link>
-                                    <Link href="/teams" >
-                                        <a ref={activateLink} className={menuStyles.link}>Teams</a>
-                                    </Link>
-                                    <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
-                                </nav>
-                            )}
+                            <nav className={menuStyles.mobile_menu}>
+                                <Link href="/main" >
+                                    <a ref={activateLink} className={menuStyles.link}>Home</a>
+                                </Link>
+                                <Link href="/teams" >
+                                    <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                                </Link>
+                                <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
+                            </nav>
+                        )}
                     </div>
                 )}
             </div>

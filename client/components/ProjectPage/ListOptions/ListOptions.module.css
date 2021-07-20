@@ -15,12 +15,84 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color, color 0.5s ease-in-out 0s;
+    transition: background-color 0.5s ease-in-out 0s, color 0.5s ease-in-out 0s;
     border-radius: 3px;
 }
 
 .toggle_button:hover,
-.toggle_button:active {
+.toggle_button:focus {
     background-color: #184b44;
     color: #fff;
+    outline: none;
+}
+
+.list_options_wrapper {
+    position: relative;
+    display: table;
+    height: fit-content;
+}
+
+.menu {
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    background-color: #184b44;
+    border: solid 1px #fff;
+    display: table;
+}
+
+.menu_item {
+    font-size: 1em;
+    text-align: left;
+    width: 100%;
+    white-space: nowrap;
+    color: #fff;
+    background-color: #184b44;
+    border: solid 1px #184b44;
+    border-radius: 3%/9%;
+    position: relative;
+    z-index: 1;
+    border: solid 1px #184b44;
+    overflow: hidden;
+    transition: color 1s linear 0s;
+}
+
+.menu_item::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    z-index: -1;
+    background-color: #fff;
+    transition: all 0.5s linear 0s;
+    transform-origin: center;
+    overflow: hidden;
+}
+
+.menu_item:hover::before,
+.menu_item:focus::before {
+    transform: scale(1.5);
+    background-color: #fff;
+}
+
+.menu_item::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: '';
+    z-index: 3;
+    border: solid 1px #184b44;
+    border-radius: 3%/9%;
+}
+
+
+.menu_item:hover,
+.menu_item:focus {
+    color: #184b44;
 }

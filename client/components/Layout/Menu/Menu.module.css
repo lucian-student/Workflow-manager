@@ -75,6 +75,10 @@
     margin: 1em;
 }
 
+.hamburger_icon {
+    color: #fff;
+}
+
 .mobile_menu_wrapper {
     position: absolute;
     z-index: 2;

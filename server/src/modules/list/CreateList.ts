@@ -33,6 +33,7 @@ export default class CreateListResolver {
             list.project = { project_id } as Project;
 
             list = await transactionalEntityManager.create(List, list).save();
+            list.cards = [];
         });
 
         return list;
