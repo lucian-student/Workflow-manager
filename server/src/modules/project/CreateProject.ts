@@ -5,14 +5,14 @@ import MyContext from "../../types/MyContext";
 import CreateProjectInput from "./createProject/CreateProjectInput";
 import User from "../../entity/User";
 import Team from "../../entity/Team";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
-import isTeamOwner from "../../middleware/isTeamOwner";
+import getTeamRole from "../../middleware/getTeamRole";
+import checkIfTeamOwner from "../../middleware/checkIfTeamOwner";
 
 
 @Resolver()
 export default class CreateProjectResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamOwner)
+    @UseMiddleware(isAuth, getTeamRole, checkIfTeamOwner)
     @Mutation(() => Project)
     async createProject(
         @Arg('data') data: CreateProjectInput,
@@ -32,7 +32,7 @@ export default class CreateProjectResolver {
         } else {
             project.user = { user_id } as User;
         }
-        
+
         return await project.save();
     }
 

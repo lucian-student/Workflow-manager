@@ -3,18 +3,16 @@ import Card from "../../entity/Card";
 import Message from "../../entity/Message";
 import Project from "../../entity/Project";
 import User from "../../entity/User";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamMember from "../../middleware/isTeamMember";
 import MyContext from "../../types/MyContext";
 import MessageInput from "./shared/MessageInput";
 
 @Resolver()
 export default class CreateMessageResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible, isCardAccessible)
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => Message)
     async createMessage(
         @Arg('data') data: MessageInput,

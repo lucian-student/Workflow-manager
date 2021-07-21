@@ -34,11 +34,6 @@ function ProjectCard({ project }: ProjectProps): JSX.Element {
                         <div className={projectCardStyles.card_text}>
                             {project.status}
                         </div >
-                        {project.team_id && (
-                            <div className={projectCardStyles.card_text}>
-                                {`Team:`}
-                            </div>
-                        )}
                     </div>
                     <div className={projectCardStyles.card_body}>
                         <div className={projectCardStyles.card_text}>

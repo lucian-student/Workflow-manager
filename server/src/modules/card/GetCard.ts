@@ -43,7 +43,7 @@ interface resItem {
 @Resolver()
 export default class GetCardResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible, isCardAccessible)
+    @UseMiddleware(isAuth, isCardAccessible)
     @Query(() => Card, { nullable: true })
     async getCard(
         @Arg('project_id') project_id: number,

@@ -1,9 +1,13 @@
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import { getManager } from "typeorm";
 import Card from "../../entity/Card";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import isAuth from "../../middleware/isAuth";
+import isCardAccessible from "../../middleware/isCardAccessible";
 @Resolver()
 export default class MoveCard {
 
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => Boolean)
     async moveCard(
         @Arg('end_index') end_index: number,
@@ -26,7 +30,7 @@ export default class MoveCard {
                     .createQueryBuilder()
                     .update(Card)
                     .set({ order_index: () => 'order_index+1' })
-                    .where('list_id= :list_id', { list_id:card.list_id })
+                    .where('list_id= :list_id', { list_id: card.list_id })
                     .andWhere('order_index >=:end_index', { end_index })
                     .andWhere('order_index <=:order_index', { order_index })
                     .execute();
@@ -35,7 +39,7 @@ export default class MoveCard {
                     .createQueryBuilder()
                     .update(Card)
                     .set({ order_index: () => 'order_index-1' })
-                    .where('list_id= :list_id', { list_id:card.list_id })
+                    .where('list_id= :list_id', { list_id: card.list_id })
                     .andWhere('order_index >=:order_index', { order_index })
                     .andWhere('order_index <=:end_index', { end_index })
                     .execute();

@@ -1,19 +1,17 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Card from "../../entity/Card";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import CreateCardInput from "./createCard/CreateCardInput";
 import { getManager } from "typeorm";
 import Todo from "../../entity/Todo";
 import Link from "../../entity/Link";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
 import isListAccessible from "../../middleware/isListAccessible";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 @Resolver()
 export default class CreateCardResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isListAccessible)
+    @UseMiddleware(isAuth, isListAccessible, checkIfTeamAdmin)
     @Mutation(() => Card)
     async createCard(
         @Arg('data') data: CreateCardInput,

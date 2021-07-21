@@ -58,7 +58,7 @@ interface ResItem {
 @Resolver()
 export default class GetProjectResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible)
+    @UseMiddleware(isAuth, isProjectAccessible)
     @Query(() => Project, { nullable: true })
     async getProject(
         @Arg('project_id') project_id: number,

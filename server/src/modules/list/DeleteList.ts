@@ -1,12 +1,9 @@
 import { ID, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
-import isListAccessible from "../../middleware/isListAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamOwner from "../../middleware/isTeamOwner";
 import List from "../../entity/List";
 import { getManager } from "typeorm";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import isLinkAccessible from "../../middleware/isLinkAccessible";
 
 interface RawItem {
     order_index: number
@@ -15,7 +12,7 @@ interface RawItem {
 @Resolver()
 export default class DeleteListResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isListAccessible)
+    @UseMiddleware(isAuth, isLinkAccessible, checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteList(
         @Arg('project_id') project_id: number,

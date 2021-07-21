@@ -1,11 +1,9 @@
 import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Card from "../../entity/Card";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamOwner from "../../middleware/isTeamOwner";
 import { getManager } from "typeorm";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 interface RawItem {
     order_index: number,
@@ -15,7 +13,7 @@ interface RawItem {
 @Resolver()
 export default class DeleteCardResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamOwner, isProjectAccessible, isCardAccessible)
+    @UseMiddleware(isAuth, isCardAccessible,checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteCard(
         @Arg('card_id') card_id: number,

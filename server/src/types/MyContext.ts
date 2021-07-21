@@ -7,6 +7,7 @@ interface MyContext {
     payload: {
         user_id: number,
         type_of_project?: string,
+        role?: number
     }
 }
 

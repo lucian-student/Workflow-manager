@@ -1,18 +1,16 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Todo from "../../entity/Todo";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import TodoInput from "./shared/TodoInput";
 import Card from "../../entity/Card";
 import Project from "../../entity/Project";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 @Resolver()
 export default class CreateTodoResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isCardAccessible)
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => Todo)
     async createTodo(
         @Arg('data') data: TodoInput,
@@ -26,8 +24,8 @@ export default class CreateTodoResolver {
 
         todo.name = name;
         todo.description = description;
-        todo.card = {card_id} as Card;
-        todo.project = {project_id} as Project;
+        todo.card = { card_id } as Card;
+        todo.project = { project_id } as Project;
 
         return await todo.save();
     }

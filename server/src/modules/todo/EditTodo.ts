@@ -1,17 +1,15 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Todo from "../../entity/Todo";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import isTodoAccessible from "../../middleware/isTodoAccessible";
 import TodoInput from "./shared/TodoInput";
 import { getManager } from "typeorm";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 @Resolver()
 export default class EditTodoResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isTodoAccessible)
+    @UseMiddleware(isAuth, isTodoAccessible, checkIfTeamAdmin)
     @Mutation(() => Todo, { nullable: true })
     async editTodo(
         @Arg('data') data: TodoInput,

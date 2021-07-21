@@ -1,18 +1,17 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import Project from "../../entity/Project";
 import List from "../../entity/List";
 import { getManager } from "typeorm";
 import ListInput from "./shared/ListInput";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 
 @Resolver()
 export default class CreateListResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible)
+    @UseMiddleware(isAuth, isProjectAccessible, checkIfTeamAdmin)
     @Mutation(() => List)
     async createList(
         @Arg('project_id') project_id: number,

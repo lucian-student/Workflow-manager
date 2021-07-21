@@ -1,17 +1,15 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import { getManager } from "typeorm";
 import Link from "../../entity/Link";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
 import isLinkAccessible from "../../middleware/isLinkAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import LinkInput from "./shared/LinkInput";
 
 @Resolver()
 export default class EditLinkResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isLinkAccessible)
+    @UseMiddleware(isAuth, isLinkAccessible, checkIfTeamAdmin)
     @Mutation(() => Link, { nullable: true })
     async editLink(
         @Arg('data') data: LinkInput,

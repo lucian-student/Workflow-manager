@@ -1,16 +1,14 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import List from "../../entity/List";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isListAccessible from "../../middleware/isListAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import { getManager } from "typeorm";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 @Resolver()
 export default class MoveListResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isListAccessible)
+    @UseMiddleware(isAuth, isListAccessible, checkIfTeamAdmin)
     @Mutation(() => Boolean)
     async moveList(
         @Arg('project_id') project_id: number,

@@ -1,16 +1,15 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from 'type-graphql'
 import Project from '../../entity/Project';
-import checkTypeOfProject from '../../middleware/checkTypeOfProject';
 import isAuth from '../../middleware/isAuth';
 import isProjectAccessible from '../../middleware/isProjectAccessible';
-import isTeamAdmin from '../../middleware/isTeamAdmin';
 import EditProjectInput from './editProject/EditProjectInput';
 import { getManager } from 'typeorm';
+import checkIfTeamAdmin from '../../middleware/checkIfTeamAdmin';
 
 @Resolver()
 export default class EditProjectResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible)
+    @UseMiddleware(isAuth, isProjectAccessible, checkIfTeamAdmin)
     @Mutation(() => Project)
     async editProject(
         @Arg('data') data: EditProjectInput,

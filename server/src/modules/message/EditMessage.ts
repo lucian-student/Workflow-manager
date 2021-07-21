@@ -1,17 +1,15 @@
 import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Message from "../../entity/Message";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isMessageAccessible from "../../middleware/isMessageAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamMember from "../../middleware/isTeamMember";
 import MessageInput from "./shared/MessageInput";
 import { getManager } from "typeorm";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 @Resolver()
 export default class EditMessageResolover {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible, isMessageAccessible)
+    @UseMiddleware(isAuth, isMessageAccessible, checkIfTeamAdmin)
     @Mutation(() => Message)
     async editMessage(
         @Arg('data') data: MessageInput,

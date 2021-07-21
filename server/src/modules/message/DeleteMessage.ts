@@ -1,15 +1,13 @@
 import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Message from "../../entity/Message";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
 import isMessageAccessible from "../../middleware/isMessageAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamMember from "../../middleware/isTeamMember";
 
 @Resolver()
 export default class DeleteMessageResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamMember, isProjectAccessible, isMessageAccessible)
+    @UseMiddleware(isAuth, isMessageAccessible, checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteMessage(
         @Arg('project_id') project_id: number,

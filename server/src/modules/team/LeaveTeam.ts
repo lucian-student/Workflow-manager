@@ -31,7 +31,7 @@ export default class LeaveTeamResolver {
             console.log(checkTeamMembers);
 
             if (checkTeamMembers.length === 0) {
-                throw Error('Team is corrupted!');
+                throw Error('Team is corrupted or team doesnt exist!');
             }
 
             if (checkTeamMembers.length === 1 && Number(checkTeamMembers[0].t2_user_id) === user_id) {

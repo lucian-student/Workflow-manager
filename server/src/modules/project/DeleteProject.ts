@@ -5,12 +5,13 @@ import isAuth from "../../middleware/isAuth";
 import isProjectAccessible from "../../middleware/isProjectAccessible";
 import isTeamOwner from "../../middleware/isTeamOwner";
 import { getManager } from "typeorm";
+import checkIfTeamOwner from "../../middleware/checkIfTeamOwner";
 
 
 @Resolver()
 export default class DeleteProjectResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamOwner, isProjectAccessible)
+    @UseMiddleware(isAuth, isProjectAccessible, checkIfTeamOwner)
     @Mutation(() => ID)
     async deleteProject(
         @Arg('project_id') project_id: number,

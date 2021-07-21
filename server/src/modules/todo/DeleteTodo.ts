@@ -1,15 +1,13 @@
 import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Todo from "../../entity/Todo";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamAdmin from "../../middleware/isTeamAdmin";
 import isTodoAccessible from "../../middleware/isTodoAccessible";
 
 @Resolver()
 export default class DeleteTodoResolver {
 
-    @UseMiddleware(isAuth, checkTypeOfProject, isTeamAdmin, isProjectAccessible, isTodoAccessible)
+    @UseMiddleware(isAuth, isTodoAccessible, checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteTodo(
         @Arg('todo_id') todo_id: number,
