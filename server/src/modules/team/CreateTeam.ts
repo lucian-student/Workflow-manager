@@ -24,13 +24,14 @@ export default class CreateTeamResolver {
         let team = new Team();
         await getManager().transaction('READ COMMITTED', async (transactionalEntityManager) => {
 
-            team.name = name;
+            team.name = name.trimEnd().trimStart().replace(/\s+/g, " ");
             team.description = description;
 
             team = await transactionalEntityManager.create(Team, team).save();
 
             let userCon = new UserTeamConnection();
             userCon.role = 1;
+            userCon.confirmed = true;
             userCon.user = { user_id } as User;
             userCon.team = { team_id: team.team_id } as Team;
 

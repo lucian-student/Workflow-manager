@@ -7,9 +7,16 @@
     border: none;
     font-size: 1em;
     color: #fff;
+    display: flex;
+    align-items: center;
 }
 
 .settings_button:hover,
 .settings_button:active {
     background-color: rgba(24, 75, 68, 0.8);
+}
+
+.username {
+    padding-left: 0.25em;
+    padding-right: 0.25em;
 }

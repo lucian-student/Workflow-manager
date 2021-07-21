@@ -6,6 +6,7 @@ import Background from '../../../components/Layout/Background';
 import projectPageStyles from '../../../pageUtils/ProjectPage/ProjectPage.module.css';
 import ListDisplay from '../../../components/ProjectPage/ListDisplay';
 import OptionBar from '../../../components/ProjectPage/OptionBar';
+import { ProjectContextProvider } from '../../../context/project';
 
 interface Props {
     project_id?: string,
@@ -43,15 +44,18 @@ function ProjectPage(): JSX.Element {
     }
 
     return (
+
         <div className={projectPageStyles.project_page_wrapper}>
             <Background />
             {data && (
-                <div className={projectPageStyles.content_wrapper}>
-                    <OptionBar project={data.getProject as Project} />
-                    <ListDisplay lists={data.getProject.lists as List[]}
-                        project_id={data.getProject.project_id}
-                        team_id={data.getProject.team_id} />
-                </div>
+                <ProjectContextProvider role={data.getProject.role}>
+                    <div className={projectPageStyles.content_wrapper}>
+                        <OptionBar project={data.getProject.project as Project} />
+                        <ListDisplay lists={data.getProject.project.lists as List[]}
+                            project_id={data.getProject.project.project_id}
+                            team_id={data.getProject.project.team_id} />
+                    </div>
+                </ProjectContextProvider>
             )}
         </div>
     )

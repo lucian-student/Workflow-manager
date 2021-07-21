@@ -22,7 +22,7 @@ export default class EditListResolver {
             .createQueryBuilder()
             .update(List)
             .set({
-                name
+                name: name.trimEnd().trimStart().replace(/\s+/g, " ")
             })
             .where('list_id= :list_id', { list_id })
             .returning('*')

@@ -21,7 +21,10 @@ export default class EditLinkResolver {
         const result = await getManager()
             .createQueryBuilder()
             .update(Link)
-            .set({ ...data })
+            .set({
+                ...data,
+                name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
+            })
             .where('link_id= :link_id', { link_id })
             .returning('*')
             .execute();

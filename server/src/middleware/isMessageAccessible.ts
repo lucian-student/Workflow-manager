@@ -29,6 +29,7 @@ const isMessageAccessible: MiddlewareFn<MyContext> = async ({ context, args }, n
             .where('t1.message_id= :message_id', { message_id })
             .andWhere('t4.user_id= :user_id', { user_id })
             .andWhere('t2.project_id= :project_id', { project_id })
+            .andWhere('t4.confirmed=true')
             .getRawOne();
 
         if (!result) {

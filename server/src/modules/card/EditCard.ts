@@ -22,7 +22,8 @@ export default class EditCardResolver {
             .createQueryBuilder()
             .update(Card)
             .set({
-                ...data
+                ...data,
+                name:data.name.trimEnd().trimStart().replace(/\s+/g, " ")
             })
             .where('card_id= :card_id', { card_id })
             .returning('*')

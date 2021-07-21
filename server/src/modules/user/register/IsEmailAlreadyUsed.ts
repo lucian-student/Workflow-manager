@@ -13,7 +13,7 @@ class IsEmailAlreadyUsedConstraint
     implements ValidatorConstraintInterface {
     async validate(email: string) {
 
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({ where: { email: email.trim() } });
 
         return !user;
     };

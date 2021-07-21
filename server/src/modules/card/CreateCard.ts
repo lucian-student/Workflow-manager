@@ -35,7 +35,7 @@ export default class CreateCardResolver {
                 .insert()
                 .into(Card)
                 .values({
-                    name,
+                    name: name.trimStart().trimEnd().replace(/\s+/g, " "),
                     deadline,
                     description,
                     list_id,

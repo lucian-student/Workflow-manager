@@ -29,7 +29,11 @@ export default class RegisterResolver {
         const salt = await bcrypt.genSalt(saltRound);
         const bcryptPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.create({ username, email, password: bcryptPassword }).save();
+        const user = await User.create({
+            username: username.trimStart().trimEnd(),
+            email: email.trim(),
+            password: bcryptPassword
+        }).save();
 
         const refresh_token = generateRefreshToken(user.user_id, user.tokenVersion);
         sendRefreshToken(res, refresh_token);

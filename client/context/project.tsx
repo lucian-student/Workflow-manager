@@ -1,25 +1,18 @@
 import React, { createContext } from "react";
-import { useGetProjectQuery } from '../generated/apolloComponents';
 
 export const ProjectContext = createContext({
-
+    role: null
 });
 
-export const ProjectContextProvider = ({ children }) => {
+interface Props {
+    children: any,
+    role?: number
+}
 
-
-    /*   const { data, loading, error } = useGetProjectQuery({
-           variables: {
-               project_id: Number(project_id),
-               team_id: Number(team_id)
-           },
-           fetchPolicy: 'network-only'
-       });*/
-
-
+export const ProjectContextProvider = ({ children, role }: Props) => {
     return (
         <ProjectContext.Provider value={{
-
+            role
         }}>
             {children}
         </ProjectContext.Provider>

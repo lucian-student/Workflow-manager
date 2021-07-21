@@ -31,6 +31,7 @@ const isListAccessible: MiddlewareFn<MyContext> = async ({ context, args }, next
             .where('t1.list_id= :list_id', { list_id })
             .andWhere('t4.user_id= :user_id', { user_id })
             .andWhere('t2.project_id= :project_id', { project_id })
+            .andWhere('t4.confirmed=true')
             .getRawOne();
 
         if (!result) {

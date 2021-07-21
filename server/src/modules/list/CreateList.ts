@@ -27,7 +27,7 @@ export default class CreateListResolver {
                 .where("t1.project_id = :project_id", { project_id })
                 .getCount();
 
-            list.name = name;
+            list.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
             list.order_index = count;
             list.project = { project_id } as Project;
 

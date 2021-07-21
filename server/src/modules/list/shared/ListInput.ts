@@ -1,10 +1,11 @@
-import { MinLength } from "class-validator";
+import { MinLength, isNotEmpty, IsNotEmpty } from "class-validator";
 import { Field, InputType } from "type-graphql";
-
+import StringLength from "../../../custom_validators/StringLength";
 @InputType()
 export default class ListInput {
 
-    @MinLength(1)
+    @StringLength(1, null, { message: "Name length has to be longer than 1 character!" })
+    @IsNotEmpty()
     @Field()
     name: string
 

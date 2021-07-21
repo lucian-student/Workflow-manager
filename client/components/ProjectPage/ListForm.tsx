@@ -31,7 +31,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
                 query: getProjectQuery,
                 data: {
                     getProject: update(data.getProject, {
-                        lists: { $push: [result.data.createList] }
+                        project: { lists: { $push: [result.data.createList] } }
                     })
                 }
             });
@@ -51,7 +51,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
     async function handleCreateList(data: { name: string }) {
         await createListMutation({
             variables: {
-                data,
+                data: { name: data.name.trimStart().trimEnd().replace(/\s+/g, " ") },
                 project_id: Number(project_id),
                 team_id: Number(team_id)
             }

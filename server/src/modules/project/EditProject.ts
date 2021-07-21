@@ -20,7 +20,8 @@ export default class EditProjectResolver {
             .createQueryBuilder()
             .update(Project)
             .set({
-                ...data
+                ...data,
+                name:data.name.trimStart().trimEnd().replace(/\s+/g, " ")
             })
             .where('project_id= :project_id', { project_id })
             .returning('*')

@@ -24,7 +24,7 @@ export default class CreateProjectResolver {
 
         const project = new Project();
         project.status = status;
-        project.name = name;
+        project.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
         project.deadline = deadline;
         project.description = description;
         if (team_id) {

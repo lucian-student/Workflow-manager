@@ -25,6 +25,7 @@ export default class LeaveTeamResolver {
                 .from(Team, 't1')
                 .where('t1.team_id= :team_id', { team_id })
                 .andWhere('t2.role=1')
+                .andWhere('t2.confirmed=true')
                 .innerJoinAndSelect(UserTeamConnection, 't2', 't2.team_id=t1.team_id')
                 .getRawMany();
 

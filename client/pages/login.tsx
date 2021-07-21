@@ -73,14 +73,10 @@ function Login() {
                             autoComplete='off'
                             placeholder='Enter your password...'
                             {...register('password', {
-                                required: true,
-                                minLength: 3
+                                required: true
                             })} />
                         {errors.password && errors.password.type === 'required' && (
                             <div className='error_message'>Password is empty!</div>
-                        )}
-                        {errors.password && errors.password.type === 'minLength' && (
-                            <div className='error_message'>Password has to be at least 3 characters long!</div>
                         )}
                     </div>
                     <button className={loginStyles.submit_button}

@@ -12,6 +12,7 @@ import Link from "../../entity/Link";
 import Todo from "../../entity/Todo";
 import User from "../../entity/User";
 import MyContext from "../../types/MyContext";
+import GetProjectResponse from "./getProject/GetProjectResponse";
 
 
 interface ResItem {
@@ -59,12 +60,12 @@ interface ResItem {
 export default class GetProjectResolver {
 
     @UseMiddleware(isAuth, isProjectAccessible)
-    @Query(() => Project, { nullable: true })
+    @Query(() => GetProjectResponse)
     async getProject(
         @Arg('project_id') project_id: number,
         @Ctx() ctx: MyContext,
         @Arg('team_id', { nullable: true }) team_id?: number
-    ): Promise<Project | null> {
+    ): Promise<GetProjectResponse> {
 
         const res: ResItem[] = await getManager()
             .createQueryBuilder()
@@ -83,11 +84,11 @@ export default class GetProjectResolver {
             .getRawMany();
 
         if (!res) {
-            return null;
+            throw Error('Project doesnt exist!');
         }
 
         if (res.length === 0) {
-            return null;
+            throw Error('Project doesnt exist!');
         }
 
         const project = new Project();
@@ -189,7 +190,10 @@ export default class GetProjectResolver {
 
         project.lists = lists;
 
-        return project;
+        return {
+            project,
+            role: ctx.payload.role
+        };
     }
 }
 

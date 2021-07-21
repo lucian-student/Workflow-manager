@@ -60,6 +60,12 @@ export type EditProjectInput = {
   description: Scalars['String'];
 };
 
+export type GetProjectResponse = {
+  __typename?: 'GetProjectResponse';
+  project: Project;
+  role?: Maybe<Scalars['Float']>;
+};
+
 export type Link = {
   __typename?: 'Link';
   link_id: Scalars['ID'];
@@ -132,6 +138,8 @@ export type Mutation = {
   deleteProject: Scalars['ID'];
   editProject: Project;
   createTeam: Team;
+  deleteTeam: Scalars['ID'];
+  leaveTeam: Scalars['ID'];
   createTodo: Todo;
   deleteTodo: Scalars['ID'];
   editTodo?: Maybe<Todo>;
@@ -160,7 +168,6 @@ export type MutationDeleteCardArgs = {
 export type MutationEditCardArgs = {
   team_id?: Maybe<Scalars['Float']>;
   project_id: Scalars['Float'];
-  list_id: Scalars['Float'];
   card_id: Scalars['Float'];
   data: CardInput;
 };
@@ -269,6 +276,21 @@ export type MutationEditProjectArgs = {
 };
 
 
+export type MutationCreateTeamArgs = {
+  data: TeamInput;
+};
+
+
+export type MutationDeleteTeamArgs = {
+  team_id: Scalars['Float'];
+};
+
+
+export type MutationLeaveTeamArgs = {
+  team_id: Scalars['Float'];
+};
+
+
 export type MutationCreateTodoArgs = {
   team_id?: Maybe<Scalars['Float']>;
   card_id: Scalars['Float'];
@@ -333,10 +355,11 @@ export type ProjectInput = {
 export type Query = {
   __typename?: 'Query';
   getCard?: Maybe<Card>;
-  getProject?: Maybe<Project>;
+  getProject: GetProjectResponse;
   getProjects: Array<Project>;
   hello: Scalars['String'];
   me?: Maybe<User>;
+  getUserTeamConnection?: Maybe<UserTeamConnection>;
 };
 
 
@@ -358,6 +381,11 @@ export type QueryGetProjectsArgs = {
   sort_option: Scalars['String'];
 };
 
+
+export type QueryGetUserTeamConnectionArgs = {
+  team_id: Scalars['Float'];
+};
+
 export type RegisterInput = {
   username: Scalars['String'];
   email: Scalars['String'];
@@ -377,6 +405,12 @@ export type Team = {
   name: Scalars['String'];
   projects: Array<Project>;
   cons: Array<UserTeamConnection>;
+  description: Scalars['String'];
+  last_active: Scalars['DateTime'];
+};
+
+export type TeamInput = {
+  name: Scalars['String'];
   description: Scalars['String'];
 };
 
@@ -409,6 +443,8 @@ export type User = {
 export type UserTeamConnection = {
   __typename?: 'UserTeamConnection';
   con_id: Scalars['ID'];
+  confirmed: Scalars['Boolean'];
+  role: Scalars['Float'];
   user_id: Scalars['ID'];
   user: User;
   team_id: Scalars['ID'];
@@ -466,28 +502,32 @@ export type GetProjectQueryVariables = Exact<{
 
 export type GetProjectQuery = (
   { __typename?: 'Query' }
-  & { getProject?: Maybe<(
-    { __typename?: 'Project' }
-    & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
-    & { lists: Array<(
-      { __typename?: 'List' }
-      & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
-      & { cards: Array<(
-        { __typename?: 'Card' }
-        & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
-        & { links: Array<(
-          { __typename?: 'Link' }
-          & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
-        )>, messages: Array<(
-          { __typename?: 'Message' }
-          & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
-        )>, todos: Array<(
-          { __typename?: 'Todo' }
-          & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
+  & { getProject: (
+    { __typename?: 'GetProjectResponse' }
+    & Pick<GetProjectResponse, 'role'>
+    & { project: (
+      { __typename?: 'Project' }
+      & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
+      & { lists: Array<(
+        { __typename?: 'List' }
+        & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+        & { cards: Array<(
+          { __typename?: 'Card' }
+          & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+          & { links: Array<(
+            { __typename?: 'Link' }
+            & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+          )>, messages: Array<(
+            { __typename?: 'Message' }
+            & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+          )>, todos: Array<(
+            { __typename?: 'Todo' }
+            & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
+          )> }
         )> }
       )> }
-    )> }
-  )> }
+    ) }
+  ) }
 );
 
 export type GetProjectsQueryVariables = Exact<{
@@ -682,48 +722,51 @@ export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProj
 export const GetProjectDocument = gql`
     query GetProject($project_id: Float!, $team_id: Float) {
   getProject(project_id: $project_id, team_id: $team_id) {
-    project_id
-    name
-    deadline
-    status
-    description
-    user_id
-    team_id
-    lists {
+    role
+    project {
       project_id
-      list_id
       name
-      order_index
-      cards {
-        card_id
-        name
-        deadline
+      deadline
+      status
+      description
+      user_id
+      team_id
+      lists {
         project_id
         list_id
+        name
         order_index
-        links {
-          link_id
+        cards {
+          card_id
           name
-          url
-          card_id
+          deadline
           project_id
-        }
-        messages {
-          message_id
-          content
-          user_id
-          card_id
-          project_id
-          data_of_creation
-          username
-        }
-        todos {
-          todo_id
-          name
-          description
-          done
-          card_id
-          project_id
+          list_id
+          order_index
+          links {
+            link_id
+            name
+            url
+            card_id
+            project_id
+          }
+          messages {
+            message_id
+            content
+            user_id
+            card_id
+            project_id
+            data_of_creation
+            username
+          }
+          todos {
+            todo_id
+            name
+            description
+            done
+            card_id
+            project_id
+          }
         }
       }
     }

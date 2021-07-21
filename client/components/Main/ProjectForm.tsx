@@ -42,7 +42,14 @@ function ProjectForm(): JSX.Element {
     }, [data]);
 
     async function handleCreateProject(data: CreateProjectInput) {
-        await createProjectMutation({ variables: { data } });
+        await createProjectMutation({
+            variables: {
+                data: {
+                    ...data,
+                    name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
+                }
+            }
+        });
     }
 
     return (
@@ -68,18 +75,19 @@ function ProjectForm(): JSX.Element {
                                 autoComplete='off'
                                 placeholder='Enter project name...'
                                 {...register('name', {
-                                    validate: (data: string) => data.trim().length !== 0,
-                                    minLength: 1,
-                                    maxLength: 20
+                                    validate: {
+                                        min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 1 },
+                                        max_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length <= 20 }
+                                    }
                                 })} />
                             {errors.name && errors.name.type === 'validate' && (
                                 <div className='error_message'>Name is empty!</div>
                             )}
-                            {errors.name && errors.name.type === 'minLength' && (
-                                <div className='error_message'>Name has to be at least 3 characters long!</div>
+                            {errors.name && errors.name.type === 'min_length' && (
+                                <div className='error_message'>Name has to be at least 1 characters long!</div>
                             )}
-                            {errors.name && errors.name.type === 'maxLength' && (
-                                <div className='error_message'>Name cannot be longer than 15 characters!</div>
+                            {errors.name && errors.name.type === 'max_length' && (
+                                <div className='error_message'>Name cannot be longer than 20 characters!</div>
                             )}
                         </div>
                         <div className={projectFormStyles.input_wrapper}>

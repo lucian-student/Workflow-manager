@@ -22,7 +22,7 @@ export default class CreateTodoResolver {
 
         const todo = new Todo();
 
-        todo.name = name;
+        todo.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
         todo.description = description;
         todo.card = { card_id } as Card;
         todo.project = { project_id } as Project;

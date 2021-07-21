@@ -13,7 +13,7 @@ class IsUsernameAlreadyUsedConstraint
     implements ValidatorConstraintInterface {
     async validate(username: string) {
 
-        const user = await User.findOne({ where: { username } });
+        const user = await User.findOne({ where: { username: username.trimEnd().trimStart() } });
 
         return !user;
     };

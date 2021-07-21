@@ -21,7 +21,10 @@ export default class EditTodoResolver {
         const result = await getManager()
             .createQueryBuilder()
             .update(Todo)
-            .set({ ...data })
+            .set({
+                ...data,
+                name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
+            })
             .where('todo_id= :todo_id', { todo_id })
             .returning('*')
             .execute();

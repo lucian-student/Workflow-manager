@@ -13,7 +13,7 @@ const getTeamRole: MiddlewareFn<MyContext> = async ({ context, args }, next) => 
 
     if (team_id) {
 
-        const connection = await UserTeamConnection.findOne({ where: { user_id, team_id } });
+        const connection = await UserTeamConnection.findOne({ where: { user_id, team_id, confirmed: true } });
 
         if (!connection) {
             throw Error('Access denied! You dont have permission to perform this action!');

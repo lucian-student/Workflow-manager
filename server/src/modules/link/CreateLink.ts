@@ -10,7 +10,7 @@ import LinkInput from "./shared/LinkInput";
 @Resolver()
 export default class CreateLinkResolver {
 
-    @UseMiddleware(isAuth, isCardAccessible,checkIfTeamAdmin)
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => Link)
     async createLink(
         @Arg('data') data: LinkInput,
@@ -22,7 +22,7 @@ export default class CreateLinkResolver {
 
         const link = new Link();
 
-        link.name = name;
+        link.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
         link.url = url;
         link.card = { card_id } as Card;
         link.project = { project_id } as Project;

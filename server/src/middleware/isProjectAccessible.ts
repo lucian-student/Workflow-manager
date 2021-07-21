@@ -26,9 +26,10 @@ const isProjectAccessible: MiddlewareFn<MyContext> = async ({ context, args }, n
             .innerJoin(UserTeamConnection, 't3', 't3.team_id=t2.team_id')
             .where('t3.user_id= :user_id', { user_id })
             .andWhere('t1.project_id= :project_id', { project_id })
+            .andWhere('t3.confirmed=true')
             .getRawOne();
         if (!result) {
-            throw new Error('Project doesnt exist!');
+            throw new Error('Access denied! You dont have permission to perform this action!');
         }
 
         context.payload.role = result.role;

@@ -19,7 +19,14 @@ function Register() {
     const [registerMutation, { data, error }] = useRegisterMutation();
 
     async function handleRegister(input: RegisterInput) {
-        await registerMutation({ variables: { data: input } }).catch((err) => {
+        await registerMutation({
+            variables: {
+                data: {
+                    ...input,
+                    username: input.username.trimEnd().trimStart().replace(/\s+/g, " ")
+                }
+            }
+        }).catch((err) => {
             console.log(err.message);
         });
     }
@@ -79,17 +86,15 @@ function Register() {
                             autoComplete='on'
                             placeholder='Enter your username...'
                             {...register('username', {
-                                required: true,
-                                minLength: 3,
-                                maxLength: 15
+                                validate: {
+                                    min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 3 },
+                                    max_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length <= 15 }
+                                }
                             })} />
-                        {errors.username && errors.username.type === 'required' && (
-                            <div className='error_message'>Username is empty!</div>
-                        )}
-                        {errors.username && errors.username.type === 'minLength' && (
+                        {errors.username && errors.username.type === 'min_length' && (
                             <div className='error_message'>Username has to be at least 3 characters long!</div>
                         )}
-                        {errors.username && errors.username.type === 'maxLength' && (
+                        {errors.username && errors.username.type === 'max_Length' && (
                             <div className='error_message'>Username cannot be longer than 15 characters!</div>
                         )}
                         {errors.username && errors.username.type === 'IsUsernameAlreadyUsedConstraint' && (
