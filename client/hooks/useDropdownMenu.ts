@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 
-interface DropdownProps {
+export interface DropdownProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     open: boolean,
     menuRef: React.MutableRefObject<HTMLDivElement>

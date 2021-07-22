@@ -48,7 +48,7 @@ function ProjectPage(): JSX.Element {
         <div className={projectPageStyles.project_page_wrapper}>
             <Background />
             {data && (
-                <ProjectContextProvider role={data.getProject.role}>
+                <ProjectContextProvider role={data.getProject.role} project={data.getProject.project as Project}>
                     <div className={projectPageStyles.content_wrapper}>
                         <OptionBar project={data.getProject.project as Project} />
                         <ListDisplay lists={data.getProject.project.lists as List[]}

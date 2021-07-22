@@ -54,6 +54,7 @@
 
 .text_area {
     resize: vertical;
+    white-space: pre-wrap;
 }
 
 .input {
@@ -158,6 +159,7 @@
     border-radius: 15px;
     width: 75%;
     position: relative;
+    min-height: 50%
 }
 
 .cancel_modal {

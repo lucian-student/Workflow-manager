@@ -1,18 +1,28 @@
 import React, { createContext } from "react";
+import { Project } from "../generated/apolloComponents";
 
-export const ProjectContext = createContext({
-    role: null
+
+interface IProjectContext {
+    role?: number,
+    project: Project
+}
+
+export const ProjectContext = createContext<IProjectContext>({
+    role: null,
+    project: null
 });
 
 interface Props {
     children: any,
-    role?: number
+    role?: number,
+    project: Project
 }
 
-export const ProjectContextProvider = ({ children, role }: Props) => {
+export const ProjectContextProvider = ({ children, role, project }: Props) => {
     return (
         <ProjectContext.Provider value={{
-            role
+            role,
+            project
         }}>
             {children}
         </ProjectContext.Provider>
