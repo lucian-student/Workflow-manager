@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { BsThreeDots } from 'react-icons/bs';
 import projectOptionsStyles from './ProjectOptions/ProjectOptions.module.css';
+import { useStackingMenu } from "../../hooks/useStackingMenu";
 import { useDropDownMenu } from "../../hooks/useDropdownMenu";
 import ProjectView from "./ProjectView";
 import { ProjectContext } from '../../context/project';
@@ -10,7 +11,7 @@ function ProjectOptions(): JSX.Element {
 
     const { open, setOpen, menuRef } = useDropDownMenu();
 
-    const modal = useDropDownMenu();
+    const modal = useStackingMenu();
 
     const { role } = useContext(ProjectContext);
 

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useCreateListMutation } from '../../generated/apolloComponents';
 import { getProjectQuery } from '../../graphql/project/query/getProject';
 import update from 'immutability-helper';
+import { useDropDownMenu } from '../../hooks/useDropdownMenu';
 
 interface Props {
     project_id: string
@@ -13,9 +14,10 @@ interface Props {
 }
 
 function ListForm({ project_id, team_id }: Props): JSX.Element {
-    const [openForm, setOpenForm] = useState<boolean>(false);
 
     const { register, handleSubmit, reset } = useForm();
+
+    const { open, setOpen, menuRef } = useDropDownMenu();
 
     const [createListMutation, { data }] = useCreateListMutation({
         update(proxy, result) {
@@ -44,7 +46,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
     useEffect(() => {
         if (data) {
             reset();
-            setOpenForm(false);
+            setOpen(false);
         }
     }, [data])
 
@@ -59,12 +61,12 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
     }
     return (
         <div className={listFormStyles.list_form_wrapper}>
-            <div className={listFormStyles.content_wrapper}>
+            <div className={listFormStyles.content_wrapper} ref={menuRef}>
                 <form className={listFormStyles.form}
                     onSubmit={handleSubmit(handleCreateList)}>
-                    {!openForm ? (
+                    {!open ? (
                         <button className={listFormStyles.toggle_button}
-                            onClick={() => setOpenForm(true)}>
+                            onClick={() => setOpen(true)}>
                             <VscAdd className={listFormStyles.icon} />
                             <div className={listFormStyles.heading}>
                                 create list
@@ -88,7 +90,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
                                     Add column
                                 </button>
                                 <ImCancelCircle className={listFormStyles.cancel_icon}
-                                    onClick={() => setOpenForm(false)} />
+                                    onClick={() => { setOpen(false); reset() }} />
                             </div>
                         </div>
                     )}

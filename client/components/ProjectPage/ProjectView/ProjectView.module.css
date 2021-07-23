@@ -3,6 +3,7 @@
 }
 
 .modal_bg {
+    z-index: 30;
     position: fixed;
     top: 0;
     left: 0;
@@ -19,7 +20,8 @@
     border-radius: 15px;
     width: 75%;
     position: relative;
-    min-height: 50%;
+    height: 95%;
+    overflow-y: auto;
 }
 
 .cancel_modal {
@@ -31,10 +33,42 @@
     margin: 0.25em;
 }
 
-.content{
+.content {
     margin: 2em;
     margin-left: 4em;
     margin-right: 4em;
+}
+
+.icon {
+    color: inherit;
+    margin: 0.25em;
+    font-size: 1.5em;
+}
+
+.toggle_button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.5s ease-in-out 0s, color 0.5s ease-in-out 0s;
+    border-radius: 15px 0px 0px 0px;
+    margin: 3px;
+}
+
+.toggle_button:hover,
+.toggle_button:focus {
+    background-color: #184b44;
+    color: #fff;
+    outline: none;
 }
 
 @media screen and (max-width:500px) {
