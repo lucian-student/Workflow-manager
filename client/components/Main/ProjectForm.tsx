@@ -7,6 +7,8 @@ import { useDropDownMenu } from "../../hooks/useDropdownMenu";
 import { CreateProjectInput, useCreateProjectMutation } from '../../generated/apolloComponents';
 import { getProjectsQuery } from '../../graphql/project/query/getProjects';
 import { ProjectSortContext } from '../../context/projectSort';
+import { GiProgression } from 'react-icons/gi';
+import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md'
 
 function ProjectForm(): JSX.Element {
 
@@ -65,9 +67,12 @@ function ProjectForm(): JSX.Element {
                     <form onSubmit={handleSubmit(handleCreateProject)}
                         className={projectFormStyles.form}>
                         <div className={projectFormStyles.input_wrapper}>
-                            <label className={projectFormStyles.label}>
-                                Name
-                            </label>
+                            <div className={projectFormStyles.form_label}>
+                                <MdSubtitles className={projectFormStyles.display_icon} />
+                                <label className={projectFormStyles.label}>
+                                    Name
+                                </label>
+                            </div>
                             <input
                                 className={projectFormStyles.input}
                                 name='name'
@@ -91,9 +96,12 @@ function ProjectForm(): JSX.Element {
                             )}
                         </div>
                         <div className={projectFormStyles.input_wrapper}>
-                            <label className={projectFormStyles.label}>
-                                Status
-                            </label>
+                            <div className={projectFormStyles.form_label}>
+                                <GiProgression className={projectFormStyles.display_icon} />
+                                <label className={projectFormStyles.label}>
+                                    Status
+                                </label>
+                            </div>
                             <input
                                 className={projectFormStyles.input}
                                 name='status'
@@ -116,9 +124,12 @@ function ProjectForm(): JSX.Element {
                             )}
                         </div>
                         <div className={projectFormStyles.input_wrapper}>
-                            <label className={projectFormStyles.label}>
-                                Deadline
-                            </label>
+                            <div className={projectFormStyles.form_label}>
+                                <MdDateRange className={projectFormStyles.display_icon} />
+                                <label className={projectFormStyles.label}>
+                                    Deadline
+                                </label>
+                            </div>
                             <input
                                 className={projectFormStyles.input}
                                 name='deadline'
@@ -133,9 +144,12 @@ function ProjectForm(): JSX.Element {
                             )}
                         </div>
                         <div className={projectFormStyles.input_wrapper}>
-                            <label className={projectFormStyles.label}>
-                                Description
-                            </label>
+                            <div className={projectFormStyles.form_label}>
+                                <MdDescription className={projectFormStyles.display_icon} />
+                                <label className={projectFormStyles.label}>
+                                    Description
+                                </label>
+                            </div>
                             <textarea
                                 className={[projectFormStyles.input, projectFormStyles.text_area].join(' ')}
                                 name='description'

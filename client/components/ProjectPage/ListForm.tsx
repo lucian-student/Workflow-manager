@@ -4,9 +4,9 @@ import { VscAdd } from 'react-icons/vsc';
 import { ImCancelCircle } from 'react-icons/im';
 import { useForm } from 'react-hook-form';
 import { useCreateListMutation } from '../../generated/apolloComponents';
-import { getProjectQuery } from '../../graphql/project/query/getProject';
 import update from 'immutability-helper';
 import { useDropDownMenu } from '../../hooks/useDropdownMenu';
+import { getProjectQuery } from '../../graphql/project/query/getProject';
 
 interface Props {
     project_id: string
@@ -39,7 +39,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
             });
         },
         onError(err) {
-            console.log(err);
+            console.log(err.message);
         }
     });
 

@@ -2,7 +2,6 @@ import React from "react";
 import { Project } from "../../generated/apolloComponents";
 import optionBarStyles from './OptionBar/OptionBar.module.css';
 import ProjectOptions from './ProjectOptions';
-import { MenuContextProvider } from '../../context/menu';
 
 interface Props {
     project: Project
@@ -15,9 +14,7 @@ function OptionBar({ project }: Props): JSX.Element {
             <div className={optionBarStyles.project_name}>
                 {project.name}
             </div>
-            <MenuContextProvider>
-                <ProjectOptions />
-            </MenuContextProvider>
+            <ProjectOptions />
         </div>
     )
 }

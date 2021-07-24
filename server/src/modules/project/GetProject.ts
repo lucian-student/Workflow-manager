@@ -191,6 +191,7 @@ export default class GetProjectResolver {
         project.lists = lists;
 
         return {
+            project_id,
             project,
             role: ctx.payload.role
         };

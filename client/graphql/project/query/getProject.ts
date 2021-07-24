@@ -10,7 +10,8 @@ query GetProject(
         project_id:$project_id,
         team_id:$team_id
     ){
-      role
+    project_id
+    role
     project {
       project_id
       name

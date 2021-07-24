@@ -4,7 +4,6 @@ import listCardStyles from './ListCard/ListCard.module.css';
 import ListOptions from './ListOptions';
 import CardDisplay from './CardDisplay';
 import { ProjectContext } from '../../context/project';
-import { Fragment } from "react";
 
 interface Props {
     list: List
@@ -13,7 +12,6 @@ interface Props {
 function ListCard({ list }: Props): JSX.Element {
 
     const { role } = useContext(ProjectContext);
-    console.log(role);
 
     return (
         <div className={listCardStyles.list_card_wrapper}>
@@ -25,13 +23,15 @@ function ListCard({ list }: Props): JSX.Element {
                         </div>
                     </div>
                     {role ? (
-                        <Fragment>
+                        <div className={listCardStyles.icon_wrapper}>
                             {role <= 2 && (
                                 <ListOptions />
                             )}
-                        </Fragment>
+                        </div>
                     ) : (
-                        <ListOptions />
+                        <div className={listCardStyles.icon_wrapper}>
+                            <ListOptions />
+                        </div>
                     )}
                 </div>
                 <div className={listCardStyles.card_body}>

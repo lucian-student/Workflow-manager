@@ -35,9 +35,14 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .card_body {
     flex-grow: 1;
     overflow-y: auto;
+}
+
+.icon_wrapper {
+    align-self: stretch;
 }
