@@ -33,7 +33,7 @@ function ProjectData(): JSX.Element {
                 </div>
                 <div className={projectDataStyles.text}>
                     <div>
-                        {`Status: ${project.status}`}
+                        {`${project.status}`}
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@ function ProjectData(): JSX.Element {
                 </div>
                 <div className={projectDataStyles.text}>
                     <div>
-                        {`Deadline: ${dayjs(project.deadline).format('DD/MM/YYYY')}`}
+                        {`${dayjs(project.deadline).format('DD/MM/YYYY')}`}
                     </div>
                 </div>
             </div>

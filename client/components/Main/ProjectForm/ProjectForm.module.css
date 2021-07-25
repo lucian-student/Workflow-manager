@@ -63,6 +63,7 @@
     border-color: #184b44;
     border-style: solid;
     width: 100%;
+    font-size: 1em;
 }
 
 .input::placeholder {
@@ -160,7 +161,8 @@
     border-radius: 15px;
     width: 75%;
     position: relative;
-    min-height: 50%
+    height: 95%;
+    overflow-y: auto;
 }
 
 .cancel_modal {

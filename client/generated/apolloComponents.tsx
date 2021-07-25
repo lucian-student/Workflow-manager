@@ -481,6 +481,34 @@ export type CreateListMutation = (
   ) }
 );
 
+export type DeleteListMutationVariables = Exact<{
+  project_id: Scalars['Float'];
+  list_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type DeleteListMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteList'>
+);
+
+export type EditListMutationVariables = Exact<{
+  project_id: Scalars['Float'];
+  list_id: Scalars['Float'];
+  data: ListInput;
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type EditListMutation = (
+  { __typename?: 'Mutation' }
+  & { editList: (
+    { __typename?: 'List' }
+    & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+  ) }
+);
+
 export type CreateProjectMutationVariables = Exact<{
   data: CreateProjectInput;
   team_id?: Maybe<Scalars['Float']>;
@@ -704,6 +732,83 @@ export function useCreateListMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateListMutationHookResult = ReturnType<typeof useCreateListMutation>;
 export type CreateListMutationResult = Apollo.MutationResult<CreateListMutation>;
 export type CreateListMutationOptions = Apollo.BaseMutationOptions<CreateListMutation, CreateListMutationVariables>;
+export const DeleteListDocument = gql`
+    mutation DeleteList($project_id: Float!, $list_id: Float!, $team_id: Float) {
+  deleteList(project_id: $project_id, list_id: $list_id, team_id: $team_id)
+}
+    `;
+export type DeleteListMutationFn = Apollo.MutationFunction<DeleteListMutation, DeleteListMutationVariables>;
+
+/**
+ * __useDeleteListMutation__
+ *
+ * To run a mutation, you first call `useDeleteListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteListMutation, { data, loading, error }] = useDeleteListMutation({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *      list_id: // value for 'list_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useDeleteListMutation(baseOptions?: Apollo.MutationHookOptions<DeleteListMutation, DeleteListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, options);
+      }
+export type DeleteListMutationHookResult = ReturnType<typeof useDeleteListMutation>;
+export type DeleteListMutationResult = Apollo.MutationResult<DeleteListMutation>;
+export type DeleteListMutationOptions = Apollo.BaseMutationOptions<DeleteListMutation, DeleteListMutationVariables>;
+export const EditListDocument = gql`
+    mutation EditList($project_id: Float!, $list_id: Float!, $data: ListInput!, $team_id: Float) {
+  editList(
+    project_id: $project_id
+    list_id: $list_id
+    data: $data
+    team_id: $team_id
+  ) {
+    project_id
+    list_id
+    name
+    order_index
+  }
+}
+    `;
+export type EditListMutationFn = Apollo.MutationFunction<EditListMutation, EditListMutationVariables>;
+
+/**
+ * __useEditListMutation__
+ *
+ * To run a mutation, you first call `useEditListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editListMutation, { data, loading, error }] = useEditListMutation({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *      list_id: // value for 'list_id'
+ *      data: // value for 'data'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useEditListMutation(baseOptions?: Apollo.MutationHookOptions<EditListMutation, EditListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditListMutation, EditListMutationVariables>(EditListDocument, options);
+      }
+export type EditListMutationHookResult = ReturnType<typeof useEditListMutation>;
+export type EditListMutationResult = Apollo.MutationResult<EditListMutation>;
+export type EditListMutationOptions = Apollo.BaseMutationOptions<EditListMutation, EditListMutationVariables>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($data: CreateProjectInput!, $team_id: Float) {
   createProject(data: $data, team_id: $team_id) {

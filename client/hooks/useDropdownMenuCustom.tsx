@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 
 export interface DropdownProps {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    open: boolean,
     menuRef: React.MutableRefObject<HTMLDivElement>
 }
 
-export function useDropDownMenu(): DropdownProps {
+interface Props {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-    const [open, setOpen] = useState<boolean>(false);
+export function useDropdownCustom({ setOpen }: Props): DropdownProps {
+
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -39,5 +40,5 @@ export function useDropDownMenu(): DropdownProps {
         }
     }, []);
 
-    return { menuRef, open, setOpen };
+    return { menuRef };
 }

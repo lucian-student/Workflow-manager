@@ -42,6 +42,7 @@
     border-color: #184b44;
     border-style: solid;
     width: 100%;
+    font-size: 1em;
 }
 
 .input::placeholder {

@@ -1,22 +1,22 @@
 import React, { createContext, useState } from 'react';
 
 interface IMenuContext {
-    editing: boolean
-    setEditing: React.Dispatch<React.SetStateAction<boolean>>
+    open: boolean
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const MenuContext = createContext({
-    editing: false,
-    setEditing: null
+export const MenuContext = createContext<IMenuContext>({
+    open: false,
+    setOpen: null
 });
 
 
 export const MenuContextProvider = ({ children }) => {
-    const [editing, setEditing] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
     return (
         <MenuContext.Provider value={{
-            editing,
-            setEditing
+            open,
+            setOpen
         }}>
             {children}
         </MenuContext.Provider>
