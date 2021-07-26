@@ -155,12 +155,7 @@ function ProjectForm(): JSX.Element {
                                 name='description'
                                 autoComplete='off'
                                 placeholder='Enter project description...'
-                                {...register('description', {
-                                    minLength: 1
-                                })} />
-                            {errors.status && errors.status.type === 'minLength' && (
-                                <div className='error_message'>Description has to be at least 1 characters long!</div>
-                            )}
+                                {...register('description')} />
                         </div>
                         <button className={projectFormStyles.submit_button}
                             type='submit'>

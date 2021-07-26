@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { BsThreeDots } from 'react-icons/bs';
 import listOptionsStyles from './ListOptions/ListOptions.module.css';
-import { useDropDownMenu } from '../../hooks/useDropdownMenu';
+import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { CloseMenuContext } from '../../context/closeMenu';
 import { List, useDeleteListMutation } from '../../generated/apolloComponents';
 import { ProjectContext } from '../../context/project';
@@ -10,16 +10,18 @@ import update from 'immutability-helper';
 import { CardAddContext } from '../../context/cardAdd';
 
 interface Props {
-    list: List
+    list: List,
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function ListOptions({ list }: Props): JSX.Element {
+function ListOptions({ list, open, setOpen }: Props): JSX.Element {
 
     const { setEditing } = useContext(CloseMenuContext);
 
     const cardForm = useContext(CardAddContext);
 
-    const { open, setOpen, menuRef } = useDropDownMenu();
+    const { menuRef } = useDropdownCustom({ setOpen });
 
     const { project: { team_id } } = useContext(ProjectContext);
 

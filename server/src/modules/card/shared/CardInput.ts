@@ -11,7 +11,6 @@ export default class CardInput {
     name: string;
 
     @Field()
-    @MinLength(1)
     description: string;
 
     @Field()

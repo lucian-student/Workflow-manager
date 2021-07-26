@@ -1,0 +1,25 @@
+.toggle_button {
+    font-size: 1em;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.25em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #184b44;
+    color: #fff;
+    border: none;
+    transition: all 0.5s ease-in-out 0s;
+    text-align: center;
+    border: solid #184b44 1px;
+    /* border:1px solid #184b44;*/
+}
+
+.toggle_button:hover,
+.toggle_button:focus {
+    background-color: transparent;
+    color: #184b44;
+}

@@ -35,8 +35,8 @@
 
 .content {
     margin: 2em;
-    margin-left: 4em;
-    margin-right: 4em;
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 .icon {

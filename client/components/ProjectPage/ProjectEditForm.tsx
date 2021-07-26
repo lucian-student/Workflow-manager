@@ -10,11 +10,11 @@ import { EditProjectInput, useEditProjectMutation } from '../../generated/apollo
 import update from 'immutability-helper';
 import { getProjectQuery } from '../../graphql/project/query/getProject';
 
-interface Props{
-    setEditing:React.Dispatch<React.SetStateAction<boolean>>
+interface Props {
+    setEditing: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function ProjectEditForm({setEditing}): JSX.Element {
+function ProjectEditForm({ setEditing }): JSX.Element {
 
     const { project } = useContext(ProjectContext);
 
@@ -51,7 +51,9 @@ function ProjectEditForm({setEditing}): JSX.Element {
 
     useEffect(() => {
         if (data) {
-            setEditing(false);
+            if (data.editProject) {
+                setEditing(false);
+            }
         }
     }, [data]);
 
@@ -162,12 +164,7 @@ function ProjectEditForm({setEditing}): JSX.Element {
                         autoComplete='off'
                         placeholder='Enter project description...'
                         defaultValue={project.description}
-                        {...register('description', {
-                            minLength: 1
-                        })} />
-                    {errors.status && errors.status.type === 'minLength' && (
-                        <div className='error_message'>Description has to be at least 1 characters long!</div>
-                    )}
+                        {...register('description')} />
                 </div>
                 <button className={projectEditFormStyles.submit_button}
                     type='submit'>

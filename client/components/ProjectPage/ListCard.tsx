@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { List } from "../../generated/apolloComponents";
 import listCardStyles from './ListCard/ListCard.module.css';
 import ListOptions from './ListOptions';
@@ -17,6 +17,7 @@ function ListCard({ list }: Props): JSX.Element {
 
     const { editing, formRef } = useContext(CloseMenuContext);
 
+    const [open, setOpen] = useState<boolean>(false);
 
     return (
         <div className={listCardStyles.list_card_wrapper}>
@@ -32,12 +33,12 @@ function ListCard({ list }: Props): JSX.Element {
                             {role ? (
                                 <div className={listCardStyles.icon_wrapper}>
                                     {role <= 2 && (
-                                        <ListOptions list={list} />
+                                        <ListOptions open={open} setOpen={setOpen} list={list} />
                                     )}
                                 </div>
                             ) : (
                                 <div className={listCardStyles.icon_wrapper}>
-                                    <ListOptions list={list}/>
+                                    <ListOptions open={open} setOpen={setOpen} list={list} />
                                 </div>
                             )}
                         </div>

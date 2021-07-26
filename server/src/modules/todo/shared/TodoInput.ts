@@ -11,7 +11,6 @@ export default class TodoInput {
     name: string;
 
     @Field()
-    @MinLength(1)
     description: string;
 
 }
