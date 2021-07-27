@@ -1,11 +1,17 @@
 import React from 'react';
+import { TodoInput } from '../../generated/apolloComponents';
 
-function TodoInputCard(): JSX.Element {
+interface Props {
+    todo: TodoInput
+}
 
+function TodoInputCard({ todo }: Props): JSX.Element {
 
     return (
         <div>
-
+            <div>
+                {todo.name}
+            </div>
         </div>
     )
 }

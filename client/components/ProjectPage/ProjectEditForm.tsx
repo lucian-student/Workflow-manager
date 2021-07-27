@@ -113,7 +113,7 @@ function ProjectEditForm({ setEditing }): JSX.Element {
                         name='status'
                         type='text'
                         autoComplete='off'
-                        placeholder='Enter project status...'
+                        placeholder='Enter projects status...'
                         defaultValue={project.status}
                         {...register('status', {
                             validate: (data: string) => data.trim().length !== 0,
@@ -142,7 +142,7 @@ function ProjectEditForm({ setEditing }): JSX.Element {
                         name='deadline'
                         type='date'
                         autoComplete='off'
-                        placeholder='Enter project deadline...'
+                        placeholder='Enter projects deadline...'
                         defaultValue={dayjs(project.deadline).toISOString().substr(0, 10)}
                         {...register('deadline', {
                             required: true
@@ -162,7 +162,7 @@ function ProjectEditForm({ setEditing }): JSX.Element {
                         className={[projectEditFormStyles.input, projectEditFormStyles.textarea].join(' ')}
                         name='description'
                         autoComplete='off'
-                        placeholder='Enter project description...'
+                        placeholder='Enter projects description...'
                         defaultValue={project.description}
                         {...register('description')} />
                 </div>

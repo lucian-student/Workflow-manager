@@ -6,7 +6,11 @@ import { BsLink45Deg } from 'react-icons/bs';
 import { CardAddContext } from '../../context/cardAdd';
 import { LinkInput } from '../../generated/apolloComponents';
 
-function LinkForm(): JSX.Element {
+interface Props {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function LinkForm({ setOpen }: Props): JSX.Element {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
 
@@ -16,6 +20,7 @@ function LinkForm(): JSX.Element {
         setLinks(links => {
             return [data, ...links]
         })
+        setOpen(false);
     }
 
     return (
@@ -34,7 +39,7 @@ function LinkForm(): JSX.Element {
                         name='name'
                         type='text'
                         autoComplete='off'
-                        placeholder='Enter card name...'
+                        placeholder='Enter link name...'
                         {...register('name', {
                             validate: {
                                 min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 1 },
@@ -63,7 +68,7 @@ function LinkForm(): JSX.Element {
                         name='url'
                         type='text'
                         autoComplete='off'
-                        placeholder='Enter card url...'
+                        placeholder='Enter links url...'
                         {...register('url')} />
                 </div>
                 <button className={linkFormStyles.submit_button}

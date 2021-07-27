@@ -56,7 +56,6 @@ export default class CreateCardResolver {
                         project_id,
                         card_id: card.card_id,
                         name: todo.name,
-                        description: todo.description
                     }))])
                 .returning('*')
                 .execute();

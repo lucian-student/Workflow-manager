@@ -419,7 +419,6 @@ export type Todo = {
   __typename?: 'Todo';
   todo_id: Scalars['ID'];
   name: Scalars['String'];
-  description: Scalars['String'];
   done: Scalars['Boolean'];
   card_id: Scalars['ID'];
   card: Card;
@@ -428,7 +427,6 @@ export type Todo = {
 
 export type TodoInput = {
   name: Scalars['String'];
-  description: Scalars['String'];
 };
 
 export type User = {
@@ -475,7 +473,7 @@ export type CreateListMutation = (
         & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
       )>, todos: Array<(
         { __typename?: 'Todo' }
-        & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
       )> }
     )> }
   ) }
@@ -577,7 +575,7 @@ export type GetProjectQuery = (
             & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
           )>, todos: Array<(
             { __typename?: 'Todo' }
-            & Pick<Todo, 'todo_id' | 'name' | 'description' | 'done' | 'card_id' | 'project_id'>
+            & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
           )> }
         )> }
       )> }
@@ -695,7 +693,6 @@ export const CreateListDocument = gql`
       todos {
         todo_id
         name
-        description
         done
         card_id
         project_id
@@ -968,7 +965,6 @@ export const GetProjectDocument = gql`
           todos {
             todo_id
             name
-            description
             done
             card_id
             project_id

@@ -17,9 +17,9 @@ export default class Todo extends BaseEntity {
     @Column()
     name: string;
 
-    @Field()
+    /*@Field()
     @Column()
-    description: string;
+    description: string;*/
 
     @Field(() => Boolean)
     @Column({

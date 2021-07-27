@@ -10,7 +10,7 @@ function TodoInputDisplay(): JSX.Element {
     return (
         <div className={todoInputDisplay.display_wrapper}>
             {todos.map((todo, index) => (
-                <TodoInputCard key={index} />
+                <TodoInputCard key={index} todo={todo} />
             ))}
         </div>
     )

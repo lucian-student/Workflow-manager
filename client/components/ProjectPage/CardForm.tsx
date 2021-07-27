@@ -99,7 +99,7 @@ function CardForm(): JSX.Element {
                             name='deadline'
                             type='date'
                             autoComplete='off'
-                            placeholder='Enter card deadline...'
+                            placeholder='Enter cards deadline...'
                             {...register('deadline', {
                                 required: true
                             })} />
@@ -118,7 +118,7 @@ function CardForm(): JSX.Element {
                             className={[cardFormStyles.input, cardFormStyles.text_area].join(' ')}
                             name='description'
                             autoComplete='off'
-                            placeholder='Enter card description...'
+                            placeholder='Enter cards description...'
                             {...register('description')} />
                     </div>
                 </form>
@@ -130,7 +130,7 @@ function CardForm(): JSX.Element {
                             <div>Add Todo</div>
                         </button>
                         {openTodoForm && (
-                            <TodoForm />
+                            <TodoForm setOpen={setOpenTodoForm} />
                         )}
                     </div>
                     <div ref={linkForm.menuRef}>
@@ -140,7 +140,7 @@ function CardForm(): JSX.Element {
                             <div>Add Link</div>
                         </button>
                         {openLinkForm && (
-                            <LinkForm />
+                            <LinkForm setOpen={setOpenLinkForm} />
                         )}
                     </div>
                 </div>

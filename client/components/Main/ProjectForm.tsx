@@ -107,7 +107,7 @@ function ProjectForm(): JSX.Element {
                                 name='status'
                                 type='text'
                                 autoComplete='off'
-                                placeholder='Enter project status...'
+                                placeholder='Enter projects status...'
                                 {...register('status', {
                                     validate: (data: string) => data.trim().length !== 0,
                                     minLength: 1,
@@ -135,7 +135,7 @@ function ProjectForm(): JSX.Element {
                                 name='deadline'
                                 type='date'
                                 autoComplete='off'
-                                placeholder='Enter project deadline...'
+                                placeholder='Enter projects deadline...'
                                 {...register('deadline', {
                                     required: true
                                 })} />
@@ -154,7 +154,7 @@ function ProjectForm(): JSX.Element {
                                 className={[projectFormStyles.input, projectFormStyles.text_area].join(' ')}
                                 name='description'
                                 autoComplete='off'
-                                placeholder='Enter project description...'
+                                placeholder='Enter projects description...'
                                 {...register('description')} />
                         </div>
                         <button className={projectFormStyles.submit_button}

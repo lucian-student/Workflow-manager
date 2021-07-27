@@ -51,7 +51,6 @@ query GetProject(
           todos {
             todo_id
             name
-            description
             done
             card_id
             project_id

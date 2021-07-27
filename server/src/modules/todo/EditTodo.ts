@@ -22,7 +22,6 @@ export default class EditTodoResolver {
             .createQueryBuilder()
             .update(Todo)
             .set({
-                ...data,
                 name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
             })
             .where('todo_id= :todo_id', { todo_id })

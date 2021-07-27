@@ -5,7 +5,11 @@ import { MdSubtitles, MdDescription } from 'react-icons/md';
 import { CardAddContext } from '../../context/cardAdd';
 import { TodoInput } from '../../generated/apolloComponents';
 
-function TodoForm(): JSX.Element {
+interface Props {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function TodoForm({ setOpen }: Props): JSX.Element {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
 
@@ -15,6 +19,8 @@ function TodoForm(): JSX.Element {
         setTodos(todos => {
             return [data, ...todos]
         })
+
+        setOpen(false);
     }
 
     return (
@@ -33,11 +39,10 @@ function TodoForm(): JSX.Element {
                         name='name'
                         type='text'
                         autoComplete='off'
-                        placeholder='Enter card name...'
+                        placeholder='Enter todo name...'
                         {...register('name', {
                             validate: {
-                                min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 1 },
-                                max_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length <= 15 }
+                                min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 1 }
                             }
                         })} />
                     {errors.name && errors.name.type === 'validate' && (
@@ -46,23 +51,6 @@ function TodoForm(): JSX.Element {
                     {errors.name && errors.name.type === 'min_length' && (
                         <div className='error_message'>Name has to be at least 1 characters long!</div>
                     )}
-                    {errors.name && errors.name.type === 'max_length' && (
-                        <div className='error_message'>Name cannot be longer than 20 characters!</div>
-                    )}
-                </div>
-                <div className={todoFormStyles.input_wrapper}>
-                    <div className={todoFormStyles.form_label}>
-                        <MdDescription className={todoFormStyles.display_icon} />
-                        <label className={todoFormStyles.label}>
-                            Description
-                        </label>
-                    </div>
-                    <textarea
-                        className={[todoFormStyles.input, todoFormStyles.text_area].join(' ')}
-                        name='description'
-                        autoComplete='off'
-                        placeholder='Enter card description...'
-                        {...register('description')} />
                 </div>
                 <button className={todoFormStyles.submit_button}
                     type='submit'>

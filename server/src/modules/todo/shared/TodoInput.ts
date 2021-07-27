@@ -6,11 +6,8 @@ import StringLength from '../../../custom_validators/StringLength';
 export default class TodoInput {
 
     @Field()
-    @StringLength(1, 15, { message: "Name length has to be between 1 and 15 characters!" })
+    @StringLength(1, null, { message: "Name length has to be 1 or more characters long!" })
     @IsNotEmpty()
     name: string;
-
-    @Field()
-    description: string;
 
 }

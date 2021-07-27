@@ -18,12 +18,12 @@ export default class CreateTodoResolver {
         @Arg('card_id') card_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<Todo> {
-        const { name, description } = data;
+        const { name } = data;
 
         const todo = new Todo();
 
         todo.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
-        todo.description = description;
+        //todo.description = description;
         todo.card = { card_id } as Card;
         todo.project = { project_id } as Project;
 
