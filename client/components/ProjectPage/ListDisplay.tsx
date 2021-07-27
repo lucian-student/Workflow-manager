@@ -6,7 +6,7 @@ import ListForm from './ListForm';
 import { CloseMenuContextProvider } from '../../context/closeMenu';
 import { CardAddContextProvider } from '../../context/cardAdd';
 import CardForm from './CardForm';
-import { Fragment } from "react";
+import { MenuContextProvider } from '../../context/menu';
 
 interface Props {
     lists: List[]
@@ -20,7 +20,7 @@ function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
         <div className={listDisplayStyles.list_display_wrapper}>
             <CardAddContextProvider>
                 {(list_id) => (
-                    <Fragment>
+                    <MenuContextProvider>
                         {list_id && (
                             <CardForm />
                         )}
@@ -30,7 +30,7 @@ function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
                             </CloseMenuContextProvider>
                         ))}
                         <ListForm project_id={project_id} team_id={team_id} />
-                    </Fragment>
+                    </MenuContextProvider>
                 )}
             </CardAddContextProvider>
         </div>

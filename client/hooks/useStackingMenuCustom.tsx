@@ -1,24 +1,24 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect,useContext, useRef } from "react";
 import { MenuContext } from '../context/menu';
 
-
 export interface DropdownProps {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    open: boolean,
     menuRef: React.MutableRefObject<HTMLDivElement>
 }
 
-export function useStackingMenu(): DropdownProps {
+interface Props {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
+export function useStackingMenuCustom({ setOpen }: Props): DropdownProps {
 
-    const [open, setOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const ctx = useContext(MenuContext);
 
     useEffect(() => {
         const hadleClickOutside = (event) => {
-            if (event.target instanceof Element && !ctx.open) {
-                if (!menuRef.current.contains(event.target)) {
+            if (event.target instanceof Element) {
+                if (!menuRef.current) return;
+                if (!menuRef.current.contains(event.target)&& !ctx.open) {
                     //console.log('closing');
                     setOpen(false);
                 }
@@ -34,11 +34,13 @@ export function useStackingMenu(): DropdownProps {
 
         document.addEventListener('keydown', handleEscape)
         document.addEventListener('mousedown', hadleClickOutside);
+
+
         return () => {
             document.removeEventListener('mousedown', hadleClickOutside);
             document.removeEventListener('keydown', handleEscape)
         }
     }, [ctx.open]);
 
-    return { menuRef, open, setOpen };
+    return { menuRef };
 }

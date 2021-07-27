@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export interface DropdownProps {
     menuRef: React.MutableRefObject<HTMLDivElement>

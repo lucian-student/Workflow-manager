@@ -78,7 +78,7 @@ function ListOptions({ list, open, setOpen }: Props): JSX.Element {
                         Add card
                     </button>
                     <button className={listOptionsStyles.menu_item}
-                        onClick={() => setEditing(true)}>
+                        onClick={() => { setEditing(true); setOpen(false) }}>
                         Edit list
                     </button>
                     <button className={listOptionsStyles.menu_item}

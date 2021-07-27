@@ -200,9 +200,42 @@
 }
 
 .options {
+    position: relative;
     column-gap: 0.5em;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+.toggle_button {
+    font-size: 1em;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.25em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #184b44;
+    color: #fff;
+    border: none;
+    transition: all 0.5s ease-in-out 0s;
+    text-align: center;
+    /*border: solid #184b44 1px;*/
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    /* border:1px solid #184b44;*/
+}
+
+.toggle_button:hover,
+.toggle_button:focus {
+    background-color: transparent;
+    color: #184b44;
+}
+
+.icon{
+    color: inherit;
+    font-size: 1.5em;
 }
 
 @media screen and (max-width:500px) {

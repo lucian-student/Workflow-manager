@@ -1,12 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import cardFormStyles from './CardForm/CardForm.module.css';
 import { useForm } from 'react-hook-form';
 import { ImCancelCircle } from 'react-icons/im';
 import { CardAddContext } from '../../context/cardAdd';
+import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md';
 import LinkForm from './LinkForm';
-import ListForm from './TodoForm';
+import TodoForm from './TodoForm';
+import { VscAdd } from 'react-icons/vsc';
+import TodoInputDisplay from './TodoInputDisplay';
+import LinkInputDisplay from './LinkInputDisplay';
+import { MenuContext } from '../../context/menu';
+
 
 function CardForm(): JSX.Element {
 
@@ -14,11 +20,28 @@ function CardForm(): JSX.Element {
 
     const { open, setOpen, list } = useContext(CardAddContext);
 
-    const { menuRef } = useDropdownCustom({ setOpen });
+    const closeBlock = useContext(MenuContext);
+
+    const { menuRef } = useStackingMenuCustom({ setOpen });
 
     const [openLinkForm, setOpenLinkForm] = useState<boolean>(false);
 
+    const linkForm = useDropdownCustom({ setOpen: setOpenLinkForm });
+
     const [openTodoForm, setOpenTodoForm] = useState<boolean>(false);
+
+    const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm })
+
+    useEffect(() => {
+        if (openTodoForm || openLinkForm) {
+            closeBlock.setOpen(true);
+        } else {
+            closeBlock.setOpen(false);
+        }
+    }, [
+        openLinkForm,
+        openTodoForm
+    ]);
 
     async function createCard(data) {
         console.log(data);
@@ -100,11 +123,31 @@ function CardForm(): JSX.Element {
                     </div>
                 </form>
                 <div className={cardFormStyles.options}>
-                    <LinkForm setOpen={setOpenLinkForm} />
-                    <ListForm setOpen={setOpenTodoForm} />
+                    <div ref={todoForm.menuRef}>
+                        <button className={cardFormStyles.toggle_button}
+                            onClick={() => setOpenTodoForm(old => !old)}>
+                            <VscAdd className={cardFormStyles.icon} />
+                            <div>Add Todo</div>
+                        </button>
+                        {openTodoForm && (
+                            <TodoForm />
+                        )}
+                    </div>
+                    <div ref={linkForm.menuRef}>
+                        <button className={cardFormStyles.toggle_button}
+                            onClick={() => setOpenLinkForm(old => !old)}>
+                            <VscAdd className={cardFormStyles.icon} />
+                            <div>Add Link</div>
+                        </button>
+                        {openLinkForm && (
+                            <LinkForm />
+                        )}
+                    </div>
                 </div>
+                <TodoInputDisplay />
+                <LinkInputDisplay />
             </div>
-        </div>
+        </div >
     )
 }
 
