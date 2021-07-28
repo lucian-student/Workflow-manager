@@ -1,0 +1,39 @@
+.todo_input_card {
+    display: flex;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.input_wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em;
+    width: 100%;
+    align-items: center;
+}
+
+.type_icon_wrapper {
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    align-items: center;
+    background-color: #184b44;
+}
+
+.type_icon {
+    font-size: 2em;
+    color: #184b44;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 0.25em;
+}
+
+.text {
+    color: #184b44;
+    display: flex;
+    align-items: center;
+}
+
+.options_wrapper{
+    display: flex;
+    align-items: center;
+}

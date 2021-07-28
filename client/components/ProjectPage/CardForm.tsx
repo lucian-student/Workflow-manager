@@ -18,7 +18,17 @@ function CardForm(): JSX.Element {
 
     const { handleSubmit, register, formState: { errors }, reset } = useForm();
 
-    const { open, setOpen, list } = useContext(CardAddContext);
+    const {
+        open,
+        setOpen,
+        list,
+        setLinks,
+        setTodos,
+        setOpenLinkOptions,
+        setOpenTodoOptions,
+        openLinkOptions,
+        openTodoOptions
+    } = useContext(CardAddContext);
 
     const closeBlock = useContext(MenuContext);
 
@@ -33,15 +43,26 @@ function CardForm(): JSX.Element {
     const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm })
 
     useEffect(() => {
-        if (openTodoForm || openLinkForm) {
+        if (openTodoForm || openLinkForm || openLinkOptions || openTodoOptions) {
             closeBlock.setOpen(true);
         } else {
             closeBlock.setOpen(false);
         }
     }, [
         openLinkForm,
-        openTodoForm
+        openTodoForm,
+        openLinkOptions,
+        openTodoOptions
     ]);
+
+    useEffect(() => {
+        return () => {
+            setLinks([]);
+            setTodos([]);
+            setOpenLinkOptions(false);
+            setOpenTodoOptions(false);
+        }
+    }, []);
 
     async function createCard(data) {
         console.log(data);

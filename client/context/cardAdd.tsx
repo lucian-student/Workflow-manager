@@ -11,7 +11,11 @@ interface IMenuContext {
     links: LinkInput[],
     setLinks: React.Dispatch<React.SetStateAction<LinkInput[]>>,
     todos: TodoInput[],
-    setTodos: React.Dispatch<React.SetStateAction<TodoInput[]>>
+    setTodos: React.Dispatch<React.SetStateAction<TodoInput[]>>,
+    openTodoOptions: boolean,
+    setOpenTodoOptions: React.Dispatch<React.SetStateAction<boolean>>,
+    openLinkOptions: boolean,
+    setOpenLinkOptions: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const CardAddContext = createContext<IMenuContext>({
@@ -22,7 +26,11 @@ export const CardAddContext = createContext<IMenuContext>({
     links: [],
     setLinks: null,
     todos: [],
-    setTodos: null
+    setTodos: null,
+    openTodoOptions: false,
+    setOpenTodoOptions: null,
+    openLinkOptions: false,
+    setOpenLinkOptions: null
 });
 
 
@@ -36,6 +44,10 @@ export const CardAddContextProvider = ({ children }) => {
     const [links, setLinks] = useState<LinkInput[]>([]);
 
     const [todos, setTodos] = useState<TodoInput[]>([]);
+
+    const [openTodoOptions, setOpenTodoOptions] = useState<boolean>(false);
+
+    const [openLinkOptions, setOpenLinkOptions] = useState<boolean>(false);
 
     useEffect(() => {
         if (!open) {
@@ -52,7 +64,11 @@ export const CardAddContextProvider = ({ children }) => {
             links,
             setLinks,
             todos,
-            setTodos
+            setTodos,
+            openTodoOptions,
+            setOpenTodoOptions,
+            openLinkOptions,
+            setOpenLinkOptions
         }}>
             {children(list)}
         </CardAddContext.Provider>

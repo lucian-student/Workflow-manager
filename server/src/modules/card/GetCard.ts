@@ -15,7 +15,7 @@ import { deserialize } from "v8";
 interface resItem {
     t2_todo_id?: number,
     t2_name: string,
-    t2_description: string,
+    //t2_description: string,
     t2_done: boolean,
     t2_card_id: number,
     t2_project_id: number,
@@ -91,7 +91,7 @@ export default class GetCardResolver {
                     const todo = new Todo();
                     todo.todo_id = item.t2_todo_id
                     todo.name = item.t2_name
-                    todo.description = item.t2_description
+                  //  todo.description = item.t2_description
                     todo.done = item.t2_done
                     todo.card_id = item.t2_card_id
                     todo.project_id = item.t2_project_id
