@@ -1,46 +1,53 @@
 import React, { useContext } from 'react';
-import todoFormStyles from './TodoForm/TodoForm.module.css';
+import TodoEditFormStyles from './TodoEditForm/TodoEditForm.module.css';
+import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { useForm } from 'react-hook-form';
 import { MdSubtitles } from 'react-icons/md';
-import { CardAddContext } from '../../context/cardAdd';
 import { TodoInput } from '../../generated/apolloComponents';
-
+import { CardAddContext } from '../../context/cardAdd';
+import update from 'immutability-helper';
 
 interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    todo: TodoInput
+    index: number
 }
 
-function TodoForm({ setOpen }: Props): JSX.Element {
+function TodoEditForm({ setOpen, todo, index }: Props): JSX.Element {
 
-    const { handleSubmit, register, formState: { errors } } = useForm();
+    const { menuRef } = useDropdownCustom({ setOpen });
 
-    const { setTodos } = useContext(CardAddContext);
+    const { setTodos, todos } = useContext(CardAddContext);
 
-    function addTodo(data: TodoInput) {
-        setTodos(todos => {
-            return [data, ...todos]
-        })
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
+    function editTodo(data: TodoInput) {
         setOpen(false);
+        setTodos(update(todos, {
+            [index]: {
+                $set: data
+            }
+        }));
     }
 
     return (
-        <div className={todoFormStyles.todo_form_wrapper}>
-            <form onSubmit={handleSubmit(addTodo)}
-                className={todoFormStyles.form}>
-                <div className={todoFormStyles.input_wrapper}>
-                    <div className={todoFormStyles.form_label}>
-                        <MdSubtitles className={todoFormStyles.display_icon} />
-                        <label className={todoFormStyles.label}>
+        <div ref={menuRef} className={TodoEditFormStyles.todo_form_wrapper}>
+            <form onSubmit={handleSubmit(editTodo)}
+                className={TodoEditFormStyles.form}>
+                <div className={TodoEditFormStyles.input_wrapper}>
+                    <div className={TodoEditFormStyles.form_label}>
+                        <MdSubtitles className={TodoEditFormStyles.display_icon} />
+                        <label className={TodoEditFormStyles.label}>
                             Name
                         </label>
                     </div>
                     <input
-                        className={todoFormStyles.input}
+                        className={TodoEditFormStyles.input}
                         name='name'
                         type='text'
                         autoComplete='off'
                         placeholder='Enter todo name...'
+                        defaultValue={todo.name}
                         {...register('name', {
                             validate: {
                                 min_length: (value) => { return value.trimStart().trimEnd().replace(/\s+/g, " ").length >= 1 }
@@ -53,7 +60,7 @@ function TodoForm({ setOpen }: Props): JSX.Element {
                         <div className='error_message'>Name has to be at least 1 characters long!</div>
                     )}
                 </div>
-                <button className={todoFormStyles.submit_button}
+                <button className={TodoEditFormStyles.submit_button}
                     type='submit'>
                     Add Todo
                 </button>
@@ -62,4 +69,4 @@ function TodoForm({ setOpen }: Props): JSX.Element {
     )
 }
 
-export default TodoForm;
+export default TodoEditForm;

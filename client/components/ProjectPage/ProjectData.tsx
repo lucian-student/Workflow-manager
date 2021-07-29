@@ -14,9 +14,6 @@ function ProjectData(): JSX.Element {
             <div className={projectDataStyles.input_wrapper}>
                 <div className={projectDataStyles.form_label}>
                     <MdSubtitles className={projectDataStyles.display_icon} />
-                    <label className={projectDataStyles.label}>
-                        Name
-                    </label>
                 </div>
                 <div className={projectDataStyles.text}>
                     <div>
@@ -27,9 +24,6 @@ function ProjectData(): JSX.Element {
             <div className={projectDataStyles.input_wrapper}>
                 <div className={projectDataStyles.form_label}>
                     <GiProgression className={projectDataStyles.display_icon} />
-                    <label className={projectDataStyles.label}>
-                        Status
-                    </label>
                 </div>
                 <div className={projectDataStyles.text}>
                     <div>
@@ -40,9 +34,6 @@ function ProjectData(): JSX.Element {
             <div className={projectDataStyles.input_wrapper}>
                 <div className={projectDataStyles.form_label}>
                     <MdDateRange className={projectDataStyles.display_icon} />
-                    <label className={projectDataStyles.label}>
-                        Deadline
-                    </label>
                 </div>
                 <div className={projectDataStyles.text}>
                     <div>
@@ -53,9 +44,6 @@ function ProjectData(): JSX.Element {
             <div className={projectDataStyles.input_wrapper}>
                 <div className={projectDataStyles.form_label}>
                     <MdDescription className={projectDataStyles.display_icon} />
-                    <label className={projectDataStyles.label}>
-                        Description
-                    </label>
                 </div>
                 <p className={projectDataStyles.description}>
                     {project.description}

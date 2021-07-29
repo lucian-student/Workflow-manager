@@ -1,29 +1,30 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import todoInputOptionsStyles from './TodoInputOptions/TodoInputOptions.module.css';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { CardAddContext } from '../../context/cardAdd';
+import update from 'immutability-helper';
 
-function TodoInputOptions(): JSX.Element {
+interface Props {
+    index: number
+    setEditing: React.Dispatch<React.SetStateAction<boolean>>
+    open: boolean
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-    const [open, setOpen] = useState<boolean>(false);
+function TodoInputOptions({ index, setEditing, open, setOpen }: Props): JSX.Element {
 
-    const { setOpenTodoOptions } = useContext(CardAddContext);
+    const { setOpenTodoOptions, setTodos, todos } = useContext(CardAddContext);
 
     const { menuRef } = useDropdownCustom({ setOpen });
 
-    useEffect(() => {
-        return () => {
-            if (!open) {
-                setOpenTodoOptions(false);
-            } else {
-                setOpenTodoOptions(true);
-            }
-        }
-    }, [open]);
-
     function removeTodo() {
         setOpenTodoOptions(false);
+        setTodos(update(todos, {
+            $splice: [
+                [index, 1]
+            ]
+        }));
     }
 
     return (
@@ -36,7 +37,7 @@ function TodoInputOptions(): JSX.Element {
                 {open && (
                     <div className={todoInputOptionsStyles.menu}>
                         <button className={todoInputOptionsStyles.menu_item}
-                            onClick={() => { }}>
+                            onClick={() => { setOpen(false); setEditing(true) }}>
                             Edit Todo
                         </button>
                         <button className={todoInputOptionsStyles.menu_item}

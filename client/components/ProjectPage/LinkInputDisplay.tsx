@@ -10,7 +10,7 @@ function LinkInputDisplay(): JSX.Element {
     return (
         <div className={linkInputDisplay.display_wrapper}>
             {links.map((link, index) => (
-                <LinkInputCard key={index} link={link} />
+                <LinkInputCard key={index} link={link} index={index} />
             ))}
         </div>
     )
