@@ -86,6 +86,8 @@ export default class CreateCardResolver {
             }
         });
 
+        card.messages = [];
+
         return card;
     }
 

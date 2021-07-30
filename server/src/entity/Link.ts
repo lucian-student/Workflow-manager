@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColu
 import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
 import Project from './Project';
+import List from './List';
 
 @ObjectType()
 @Entity()
@@ -44,4 +45,19 @@ export default class Link extends BaseEntity {
     @ManyToOne(() => Project, project => project.links, { nullable: true })
     @JoinColumn({ name: 'project_id' })
     project: Project;
+
+
+    /*@Index()
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    list_id: number;
+
+    @Field(() => List)
+    @ManyToOne(() => List, list => list.links, { onDelete: 'CASCADE', nullable: false })
+    @JoinColumn({ name: 'list_id' })
+    list: List;*/
+
+   
 }

@@ -2,6 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColu
 import { ObjectType, Field, ID } from 'type-graphql';
 import Project from './Project';
 import Card from './Card';
+import Message from './Message';
+import Link from './Link';
+import Todo from './Todo';
 
 @ObjectType()
 @Entity()
@@ -19,13 +22,25 @@ export default class List extends BaseEntity {
 
     @Field()
     @Column()
-    order_index:number;
+    order_index: number;
 
     //oneToMany cards
 
     @Field(() => [Card])
     @OneToMany(() => Card, card => card.list)
     cards: Card[];
+
+    /*@Field(() => [Message])
+    @OneToMany(() => Message, message => message.list)
+    messages: Message[];
+
+    @Field(() => [Link])
+    @OneToMany(() => Link, link => link.list)
+    links: Link[];
+
+    @Field(() => [Todo])
+    @OneToMany(() => Todo, todo => todo.list)
+    todos: Todo[];*/
 
     //many to one project
     @Index()
@@ -36,7 +51,7 @@ export default class List extends BaseEntity {
     project_id: number;
 
     @Field(() => Project)
-    @ManyToOne(() => Project, project => project.lists, { onDelete: 'CASCADE',nullable:false })
+    @ManyToOne(() => Project, project => project.lists, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'project_id' })
     project: Project;
 

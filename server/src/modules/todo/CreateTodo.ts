@@ -6,28 +6,51 @@ import TodoInput from "./shared/TodoInput";
 import Card from "../../entity/Card";
 import Project from "../../entity/Project";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import { getManager } from "typeorm";
+import TodoResponse from "./shared/TodoResponse";
 
 @Resolver()
 export default class CreateTodoResolver {
 
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
-    @Mutation(() => Todo)
+    @Mutation(() => TodoResponse)
     async createTodo(
         @Arg('data') data: TodoInput,
         @Arg('project_id') project_id: number,
         @Arg('card_id') card_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
-    ): Promise<Todo> {
+    ): Promise<TodoResponse> {
         const { name } = data;
 
-        const todo = new Todo();
+        const res = new TodoResponse();
 
-        todo.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
-        //todo.description = description;
-        todo.card = { card_id } as Card;
-        todo.project = { project_id } as Project;
+        await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
 
-        return await todo.save();
+            let todo = new Todo();
+
+            todo.name = name.trimStart().trimEnd().replace(/\s+/g, " ");
+            todo.card = { card_id } as Card;
+            todo.project = { project_id } as Project;
+
+            todo = await transactionalEntityManager.save(todo);
+
+            res.todo = todo;
+
+            const list: { list_id: number } = await transactionalEntityManager
+                .createQueryBuilder()
+                .select('t1.list_id', 'list_id')
+                .from(Card, 't1')
+                .where('t1.card_id= :card_id', { card_id })
+                .getRawOne();
+
+            if (!list) {
+                throw Error('List doesnt exist!');
+            }
+
+            res.list_id = list.list_id;
+        });
+
+        return res;
     }
 
 }

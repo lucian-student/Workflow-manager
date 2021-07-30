@@ -1,27 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import linkFormStyles from './LinkForm/LinkForm.module.css';
 import { useForm } from 'react-hook-form';
 import { MdSubtitles } from 'react-icons/md';
 import { BsLink45Deg } from 'react-icons/bs';
-import { CardAddContext } from '../../context/cardAdd';
 import { LinkInput } from '../../generated/apolloComponents';
 
 interface Props {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    addLink: (data: LinkInput) => void | Promise<void>
 }
 
-function LinkForm({ setOpen }: Props): JSX.Element {
+function LinkForm({ addLink }: Props): JSX.Element {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
-
-    const { setLinks } = useContext(CardAddContext);
-
-    function addLink(data: LinkInput) {
-        setLinks(links => {
-            return [data, ...links]
-        })
-        setOpen(false);
-    }
 
     return (
         <div className={linkFormStyles.link_form_wrapper}>

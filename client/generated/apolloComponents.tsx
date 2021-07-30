@@ -450,6 +450,32 @@ export type UserTeamConnection = {
   team: Team;
 };
 
+export type CreateCardMutationVariables = Exact<{
+  data: CreateCardInput;
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateCardMutation = (
+  { __typename?: 'Mutation' }
+  & { createCard: (
+    { __typename?: 'Card' }
+    & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+    & { links: Array<(
+      { __typename?: 'Link' }
+      & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+    )>, messages: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+    )>, todos: Array<(
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+    )> }
+  ) }
+);
+
 export type CreateListMutationVariables = Exact<{
   data: ListInput;
   project_id: Scalars['Float'];
@@ -660,6 +686,75 @@ export type MeQuery = (
 );
 
 
+export const CreateCardDocument = gql`
+    mutation CreateCard($data: CreateCardInput!, $list_id: Float!, $project_id: Float!, $team_id: Float) {
+  createCard(
+    data: $data
+    list_id: $list_id
+    project_id: $project_id
+    team_id: $team_id
+  ) {
+    card_id
+    name
+    deadline
+    project_id
+    list_id
+    order_index
+    links {
+      link_id
+      name
+      url
+      card_id
+      project_id
+    }
+    messages {
+      message_id
+      content
+      user_id
+      card_id
+      project_id
+      data_of_creation
+      username
+    }
+    todos {
+      todo_id
+      name
+      done
+      card_id
+      project_id
+    }
+  }
+}
+    `;
+export type CreateCardMutationFn = Apollo.MutationFunction<CreateCardMutation, CreateCardMutationVariables>;
+
+/**
+ * __useCreateCardMutation__
+ *
+ * To run a mutation, you first call `useCreateCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCardMutation, { data, loading, error }] = useCreateCardMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      list_id: // value for 'list_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useCreateCardMutation(baseOptions?: Apollo.MutationHookOptions<CreateCardMutation, CreateCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCardMutation, CreateCardMutationVariables>(CreateCardDocument, options);
+      }
+export type CreateCardMutationHookResult = ReturnType<typeof useCreateCardMutation>;
+export type CreateCardMutationResult = Apollo.MutationResult<CreateCardMutation>;
+export type CreateCardMutationOptions = Apollo.BaseMutationOptions<CreateCardMutation, CreateCardMutationVariables>;
 export const CreateListDocument = gql`
     mutation CreateList($data: ListInput!, $project_id: Float!, $team_id: Float) {
   createList(data: $data, project_id: $project_id, team_id: $team_id) {

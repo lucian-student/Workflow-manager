@@ -12,18 +12,24 @@ import { VscAdd } from 'react-icons/vsc';
 import TodoInputDisplay from './TodoInputDisplay';
 import LinkInputDisplay from './LinkInputDisplay';
 import { MenuContext } from '../../context/menu';
-
+import { TodoInput, LinkInput, CardInput } from '../../generated/apolloComponents';
+import { useCreateCardMutation } from '../../generated/apolloComponents';
+import { ProjectContext } from '../../context/project';
+import update from 'immutability-helper';
+import { getProjectQuery } from '../../graphql/project/query/getProject';
 
 function CardForm(): JSX.Element {
 
-    const { handleSubmit, register, formState: { errors }, reset } = useForm();
+    const { handleSubmit, register, formState: { errors } } = useForm();
 
     const {
         open,
         setOpen,
-        list,
+        list: { project_id, list_id },
         setLinks,
         setTodos,
+        links,
+        todos,
         setOpenLinkOptions,
         setOpenTodoOptions,
         openLinkOptions,
@@ -31,6 +37,8 @@ function CardForm(): JSX.Element {
     } = useContext(CardAddContext);
 
     const closeBlock = useContext(MenuContext);
+
+    const { project } = useContext(ProjectContext);
 
     const { menuRef } = useStackingMenuCustom({ setOpen });
 
@@ -64,8 +72,76 @@ function CardForm(): JSX.Element {
         }
     }, []);
 
-    async function createCard(data) {
-        console.log(data);
+
+
+    function addTodo(data: TodoInput) {
+        setTodos(todos => {
+            return [data, ...todos]
+        })
+
+        setOpenTodoForm(false);
+    }
+
+    function addLink(data: LinkInput) {
+        setLinks(links => {
+            return [data, ...links]
+        })
+        setOpenLinkForm(false);
+    }
+
+    const [createCardMutation, options] = useCreateCardMutation({
+        onError(err) {
+            console.log(err)
+        },
+        update(proxy, result) {
+            const data = proxy.readQuery({
+                query: getProjectQuery,
+                variables: {
+                    project_id: Number(project_id),
+                    team_id: !Number(project.team_id) ? null : Number(project.team_id)
+                }
+            }) as any;
+
+            proxy.writeQuery({
+                query: getProjectQuery,
+                data: {
+                    getProject: update(data.getProject, {
+                        project: {
+                            lists: {
+                                [project.lists.findIndex(l => Number(l.list_id) === Number(list_id))]: {
+                                    cards: {
+                                        $unshift: [result.data.createCard]
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+            });
+        }
+    });
+
+    useEffect(() => {
+        if (options.data) {
+            setOpen(false);
+        }
+    }, [options.data]);
+
+    async function createCard(data: CardInput) {
+
+        const newCard = {
+            ...data,
+            todos,
+            links
+        }
+        await createCardMutation({
+            variables: {
+                data: newCard,
+                project_id: Number(project_id),
+                list_id: Number(list_id),
+                team_id: Number(project.team_id)
+            }
+        });
     }
 
     return (
@@ -151,7 +227,7 @@ function CardForm(): JSX.Element {
                             <div>Add Todo</div>
                         </button>
                         {openTodoForm && (
-                            <TodoForm setOpen={setOpenTodoForm} />
+                            <TodoForm addTodo={addTodo} />
                         )}
                     </div>
                     <div ref={linkForm.menuRef}>
@@ -161,7 +237,7 @@ function CardForm(): JSX.Element {
                             <div>Add Link</div>
                         </button>
                         {openLinkForm && (
-                            <LinkForm setOpen={setOpenLinkForm} />
+                            <LinkForm addLink={addLink} />
                         )}
                     </div>
                 </div>

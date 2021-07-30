@@ -8,29 +8,52 @@ import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
 import MyContext from "../../types/MyContext";
 import MessageInput from "./shared/MessageInput";
+import MessageResponse from './shared/MessageResponse';
+import { getManager } from 'typeorm';
 
 @Resolver()
 export default class CreateMessageResolver {
 
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
-    @Mutation(() => Message)
+    @Mutation(() => MessageResponse)
     async createMessage(
         @Arg('data') data: MessageInput,
         @Arg('project_id') project_id: number,
         @Arg('card_id') card_id: number,
         @Ctx() ctx: MyContext,
         @Arg('team_id', { nullable: true }) team_id?: number
-    ) {
+    ): Promise<MessageResponse> {
         const { content } = data;
         const user_id = ctx.payload.user_id;
 
-        const message = new Message();
+        let message = new Message();
         message.content = content;
         message.card = { card_id } as Card;
         message.project = { project_id } as Project;
         message.user = { user_id } as User;
 
-        return await message.save();
+        const messageResponse = new MessageResponse();
+
+        await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
+            message = await transactionalEntityManager.save(message);
+
+            messageResponse.message = message;
+
+            const list: { list_id: number } = await transactionalEntityManager
+                .createQueryBuilder()
+                .select('t1.list_id', 'list_id')
+                .from(Card, 't1')
+                .where('t1.card_id= :card_id', { card_id })
+                .getRawOne();
+
+            if (!list) {
+                throw Error('List doesnt exist!');
+            }
+
+            messageResponse.list_id = list.list_id;
+        });
+
+        return messageResponse;
     }
 
 }

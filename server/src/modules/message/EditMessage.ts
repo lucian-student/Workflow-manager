@@ -5,34 +5,56 @@ import isMessageAccessible from "../../middleware/isMessageAccessible";
 import MessageInput from "./shared/MessageInput";
 import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import MessageResponse from "./shared/MessageResponse";
+import Card from "../../entity/Card";
 
 @Resolver()
 export default class EditMessageResolover {
 
     @UseMiddleware(isAuth, isMessageAccessible, checkIfTeamAdmin)
-    @Mutation(() => Message)
+    @Mutation(() => MessageResponse)
     async editMessage(
         @Arg('data') data: MessageInput,
         @Arg('project_id') project_id: number,
         @Arg('message_id') message_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
-    ): Promise<Message> {
-        const result = await getManager()
-            .createQueryBuilder()
-            .update(Message)
-            .set({
-                ...data
-            })
-            .where('message_id= :message_id', { message_id })
-            .returning('*')
-            .execute();
-        if (!result.raw) {
-            throw Error('Message doesnt exist!');
-        }
+    ): Promise<MessageResponse> {
 
-        const message = result.raw[0] as Message;
+        const messageResponse = new MessageResponse();
 
-        return message;
+        await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
+            const result = await getManager()
+                .createQueryBuilder()
+                .update(Message)
+                .set({
+                    ...data
+                })
+                .where('message_id= :message_id', { message_id })
+                .returning('*')
+                .execute();
+            if (!result.raw) {
+                throw Error('Message doesnt exist!');
+            }
+
+            messageResponse.message = result.raw[0] as Message;
+
+
+            const list: { list_id: number } = await transactionalEntityManager
+                .createQueryBuilder()
+                .select('t2.list_id', 'list_id')
+                .from(Message, 't1')
+                .where('t1.message_id= :message_id', { message_id })
+                .innerJoin(Card, 't2', 't2.card_id=t1.card_id')
+                .getRawOne();
+
+            if (!list) {
+                throw Error('List doesnt exist!');
+            }
+
+            messageResponse.list_id = list.list_id
+        });
+
+        return messageResponse;
     }
 
 }

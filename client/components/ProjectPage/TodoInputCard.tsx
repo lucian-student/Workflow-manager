@@ -1,11 +1,11 @@
-import React, { useState, Fragment, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { TodoInput } from '../../generated/apolloComponents';
 import todoInputCardStyles from './TodoInputCard/TodoInputCard.module.css';
 import { RiTodoLine } from 'react-icons/ri';
 import TodoInputOptions from './TodoInputOptions';
 import TodoEditForm from './TodoEditForm';
 import { CardAddContext } from '../../context/cardAdd';
-
+import update from 'immutability-helper';
 
 interface Props {
     todo: TodoInput
@@ -18,7 +18,16 @@ function TodoInputCard({ todo, index }: Props): JSX.Element {
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const { setOpenTodoOptions } = useContext(CardAddContext);
+    const { setOpenTodoOptions, setTodos, todos } = useContext(CardAddContext);
+
+    function editTodo(data: TodoInput) {
+        setEditing(false);
+        setTodos(update(todos, {
+            [index]: {
+                $set: data
+            }
+        }));
+    }
 
     useEffect(() => {
         if (open || editing) {
@@ -30,24 +39,21 @@ function TodoInputCard({ todo, index }: Props): JSX.Element {
 
     return (
         <div className={todoInputCardStyles.todo_input_card}>
-            {!editing ? (
-                <Fragment>
-                    <div className={todoInputCardStyles.type_icon_wrapper}>
-                        <RiTodoLine className={todoInputCardStyles.type_icon} />
+            <div className={todoInputCardStyles.type_icon_wrapper}>
+                <RiTodoLine className={todoInputCardStyles.type_icon} />
+            </div>
+            <div className={todoInputCardStyles.input_wrapper}>
+                <div>
+                    <div className={todoInputCardStyles.text}>
+                        {todo.name}
                     </div>
-                    <div className={todoInputCardStyles.input_wrapper}>
-                        <div>
-                            <div className={todoInputCardStyles.text}>
-                                {todo.name}
-                            </div>
-                        </div>
-                        <div className={todoInputCardStyles.options_wrapper}>
-                            <TodoInputOptions setEditing={setEditing} index={index} open={open} setOpen={setOpen} />
-                        </div>
-                    </div>
-                </Fragment>
-            ) : (
-                <TodoEditForm setOpen={setEditing} todo={todo} index={index} />
+                </div>
+                <div className={todoInputCardStyles.options_wrapper}>
+                    <TodoInputOptions setEditing={setEditing} index={index} open={open} setOpen={setOpen} />
+                </div>
+            </div>
+            {editing && (
+                <TodoEditForm setOpen={setEditing} todo={todo} editTodo={editTodo} />
             )}
         </div>
     )

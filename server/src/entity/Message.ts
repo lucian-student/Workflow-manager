@@ -3,6 +3,7 @@ import { ObjectType, Field, ID } from 'type-graphql';
 import Card from './Card';
 import Project from './Project';
 import User from './User';
+import List from './List';
 
 @ObjectType()
 @Entity()
@@ -64,4 +65,17 @@ export default class Message extends BaseEntity {
 
     @Field({ nullable: true })
     username: string
+
+   /* @Index()
+    @Field(() => ID)
+    @Column({
+        type: 'bigint'
+    })
+    list_id: number;
+
+    @Field(() => List)
+    @ManyToOne(() => List, list => list.messages, { onDelete: 'CASCADE', nullable: false })
+    @JoinColumn({ name: 'list_id' })
+    list: List;*/
+    
 }

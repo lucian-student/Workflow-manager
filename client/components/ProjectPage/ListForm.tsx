@@ -25,7 +25,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
                 query: getProjectQuery,
                 variables: {
                     project_id: Number(project_id),
-                    team_id: !team_id ? null : Number(team_id)
+                    team_id: !Number(team_id) ? null : Number(team_id)
                 }
             }) as any;
 

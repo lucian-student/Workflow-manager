@@ -1,28 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import todoFormStyles from './TodoForm/TodoForm.module.css';
 import { useForm } from 'react-hook-form';
 import { MdSubtitles } from 'react-icons/md';
-import { CardAddContext } from '../../context/cardAdd';
 import { TodoInput } from '../../generated/apolloComponents';
 
 
 interface Props {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    addTodo: (data: TodoInput) => void | Promise<void>
 }
 
-function TodoForm({ setOpen }: Props): JSX.Element {
+function TodoForm({ addTodo }: Props): JSX.Element {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
-
-    const { setTodos } = useContext(CardAddContext);
-
-    function addTodo(data: TodoInput) {
-        setTodos(todos => {
-            return [data, ...todos]
-        })
-
-        setOpen(false);
-    }
 
     return (
         <div className={todoFormStyles.todo_form_wrapper}>

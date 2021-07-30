@@ -1,34 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import TodoEditFormStyles from './TodoEditForm/TodoEditForm.module.css';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { useForm } from 'react-hook-form';
 import { MdSubtitles } from 'react-icons/md';
 import { TodoInput } from '../../generated/apolloComponents';
-import { CardAddContext } from '../../context/cardAdd';
-import update from 'immutability-helper';
 
 interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     todo: TodoInput
-    index: number
+    editTodo: (data: TodoInput) => void | Promise<void>
 }
 
-function TodoEditForm({ setOpen, todo, index }: Props): JSX.Element {
+function TodoEditForm({ setOpen, todo, editTodo }: Props): JSX.Element {
 
     const { menuRef } = useDropdownCustom({ setOpen });
 
-    const { setTodos, todos } = useContext(CardAddContext);
-
     const { register, handleSubmit, formState: { errors } } = useForm();
-
-    function editTodo(data: TodoInput) {
-        setOpen(false);
-        setTodos(update(todos, {
-            [index]: {
-                $set: data
-            }
-        }));
-    }
 
     return (
         <div ref={menuRef} className={TodoEditFormStyles.todo_form_wrapper}>
@@ -62,7 +49,7 @@ function TodoEditForm({ setOpen, todo, index }: Props): JSX.Element {
                 </div>
                 <button className={TodoEditFormStyles.submit_button}
                     type='submit'>
-                    Add Todo
+                    Save
                 </button>
             </form>
         </div>
