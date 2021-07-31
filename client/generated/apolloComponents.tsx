@@ -53,6 +53,24 @@ export type CreateProjectInput = {
 };
 
 
+export type DeleteLinkResponse = {
+  __typename?: 'DeleteLinkResponse';
+  list_id: Scalars['ID'];
+  link_id: Scalars['ID'];
+};
+
+export type DeleteMessageResponse = {
+  __typename?: 'DeleteMessageResponse';
+  list_id: Scalars['ID'];
+  message_id: Scalars['ID'];
+};
+
+export type DeleteTodoResponse = {
+  __typename?: 'DeleteTodoResponse';
+  todo_id: Scalars['ID'];
+  list_id: Scalars['ID'];
+};
+
 export type EditProjectInput = {
   status: Scalars['String'];
   deadline: Scalars['DateTime'];
@@ -80,6 +98,12 @@ export type Link = {
 export type LinkInput = {
   name: Scalars['String'];
   url: Scalars['String'];
+};
+
+export type LinkResponse = {
+  __typename?: 'LinkResponse';
+  list_id: Scalars['ID'];
+  link: Link;
 };
 
 export type List = {
@@ -119,31 +143,37 @@ export type MessageInput = {
   content: Scalars['String'];
 };
 
+export type MessageResponse = {
+  __typename?: 'MessageResponse';
+  list_id: Scalars['ID'];
+  message: Message;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCard: Card;
   deleteCard: Scalars['ID'];
   editCard: Card;
   moveCard: Scalars['Boolean'];
-  createLink: Link;
-  deleteLink: Scalars['ID'];
-  editLink?: Maybe<Link>;
+  createLink: LinkResponse;
+  deleteLink: DeleteLinkResponse;
+  editLink: LinkResponse;
   createList: List;
   deleteList: Scalars['ID'];
   editList: List;
   moveList: Scalars['Boolean'];
-  createMessage: Message;
-  deleteMessage: Scalars['ID'];
-  editMessage: Message;
+  createMessage: MessageResponse;
+  deleteMessage: DeleteMessageResponse;
+  editMessage: MessageResponse;
   createProject: Project;
   deleteProject: Scalars['ID'];
   editProject: Project;
   createTeam: Team;
   deleteTeam: Scalars['ID'];
   leaveTeam: Scalars['ID'];
-  createTodo: Todo;
-  deleteTodo: Scalars['ID'];
-  editTodo?: Maybe<Todo>;
+  createTodo: TodoResponse;
+  deleteTodo: DeleteTodoResponse;
+  editTodo: TodoResponse;
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   register: RegisterResponse;
@@ -429,6 +459,12 @@ export type TodoInput = {
   name: Scalars['String'];
 };
 
+export type TodoResponse = {
+  __typename?: 'TodoResponse';
+  todo: Todo;
+  list_id: Scalars['ID'];
+};
+
 export type User = {
   __typename?: 'User';
   user_id: Scalars['ID'];
@@ -474,6 +510,31 @@ export type CreateCardMutation = (
       & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
     )> }
   ) }
+);
+
+export type GetCardQueryVariables = Exact<{
+  project_id: Scalars['Float'];
+  card_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetCardQuery = (
+  { __typename?: 'Query' }
+  & { getCard?: Maybe<(
+    { __typename?: 'Card' }
+    & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+    & { links: Array<(
+      { __typename?: 'Link' }
+      & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+    )>, messages: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+    )>, todos: Array<(
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+    )> }
+  )> }
 );
 
 export type CreateListMutationVariables = Exact<{
@@ -755,6 +816,71 @@ export function useCreateCardMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateCardMutationHookResult = ReturnType<typeof useCreateCardMutation>;
 export type CreateCardMutationResult = Apollo.MutationResult<CreateCardMutation>;
 export type CreateCardMutationOptions = Apollo.BaseMutationOptions<CreateCardMutation, CreateCardMutationVariables>;
+export const GetCardDocument = gql`
+    query GetCard($project_id: Float!, $card_id: Float!, $team_id: Float) {
+  getCard(project_id: $project_id, card_id: $card_id, team_id: $team_id) {
+    card_id
+    name
+    deadline
+    project_id
+    list_id
+    order_index
+    links {
+      link_id
+      name
+      url
+      card_id
+      project_id
+    }
+    messages {
+      message_id
+      content
+      user_id
+      card_id
+      project_id
+      data_of_creation
+      username
+    }
+    todos {
+      todo_id
+      name
+      done
+      card_id
+      project_id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCardQuery__
+ *
+ * To run a query within a React component, call `useGetCardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCardQuery({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *      card_id: // value for 'card_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useGetCardQuery(baseOptions: Apollo.QueryHookOptions<GetCardQuery, GetCardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCardQuery, GetCardQueryVariables>(GetCardDocument, options);
+      }
+export function useGetCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCardQuery, GetCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCardQuery, GetCardQueryVariables>(GetCardDocument, options);
+        }
+export type GetCardQueryHookResult = ReturnType<typeof useGetCardQuery>;
+export type GetCardLazyQueryHookResult = ReturnType<typeof useGetCardLazyQuery>;
+export type GetCardQueryResult = Apollo.QueryResult<GetCardQuery, GetCardQueryVariables>;
 export const CreateListDocument = gql`
     mutation CreateList($data: ListInput!, $project_id: Float!, $team_id: Float) {
   createList(data: $data, project_id: $project_id, team_id: $team_id) {

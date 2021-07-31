@@ -13,6 +13,7 @@ interface Props {
 
 function Card({ card }: Props): JSX.Element {
 
+
     function todoDone(): string {
         const todo_count = card.todos.length;
         let todo_done = 0;

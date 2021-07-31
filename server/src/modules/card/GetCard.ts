@@ -4,13 +4,9 @@ import Card from "../../entity/Card";
 import Todo from "../../entity/Todo";
 import Message from "../../entity/Message";
 import User from "../../entity/User";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
-import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamMember from "../../middleware/isTeamMember";
 import Link from "../../entity/Link";
-import { deserialize } from "v8";
 
 interface resItem {
     t2_todo_id?: number,
