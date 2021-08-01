@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card as CardType } from "../../generated/apolloComponents";
 import cardStyles from './Card/Card.module.css';
 import dayjs from 'dayjs';
@@ -6,6 +6,7 @@ import { RiTodoLine } from 'react-icons/ri';
 import { TiMessages } from 'react-icons/ti';
 import { BsLink45Deg } from 'react-icons/bs';
 import { AiOutlineEdit } from 'react-icons/ai';
+import { CardViewContext } from '../../context/cardView';
 
 interface Props {
     card: CardType
@@ -13,6 +14,7 @@ interface Props {
 
 function Card({ card }: Props): JSX.Element {
 
+    const { setOpen, setCard_id } = useContext(CardViewContext);
 
     function todoDone(): string {
         const todo_count = card.todos.length;
@@ -29,7 +31,7 @@ function Card({ card }: Props): JSX.Element {
 
 
     return (
-        <div className={cardStyles.card}>
+        <div className={cardStyles.card} onClick={() => { setCard_id(card.card_id); setOpen(true) }}>
             <div className={cardStyles.edit_icon_wrapper}>
                 <AiOutlineEdit className={cardStyles.edit_icon} />
             </div>

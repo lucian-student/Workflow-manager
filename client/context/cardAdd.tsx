@@ -1,7 +1,7 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import { useEffect } from 'react';
 import { LinkInput, List, TodoInput } from '../generated/apolloComponents';
-
+import { ManagerContext } from './manager';
 
 interface IMenuContext {
     open: boolean
@@ -39,7 +39,7 @@ export const CardAddContextProvider = ({ children }) => {
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const [list, setList] = useState<List | null>(null);
+    const { list, setList } = useContext(ManagerContext);
 
     const [links, setLinks] = useState<LinkInput[]>([]);
 

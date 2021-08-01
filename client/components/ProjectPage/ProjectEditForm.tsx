@@ -68,7 +68,7 @@ function ProjectEditForm({ setEditing }): JSX.Element {
     }
 
     return (
-        <div className={projectEditFormStyles.project_data_wrapper}>
+        <div className={projectEditFormStyles.project_form_wrapper}>
             <form className={projectEditFormStyles.form}
                 onSubmit={handleSubmit(handleEditProject)}>
                 <div className={projectEditFormStyles.input_wrapper}>

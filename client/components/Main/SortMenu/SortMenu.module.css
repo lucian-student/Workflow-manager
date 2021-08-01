@@ -118,3 +118,12 @@
     overflow: hidden;
     transition: color 1s linear 0s;
 }
+
+@media screen and (max-width:550px) {
+    .sort_menu_wrapper {
+        width: 100%;
+    }
+    .toggle_button{
+        width: 100%;
+    }
+}

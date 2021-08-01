@@ -17,7 +17,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color, color 0.5s ease-in-out 0s;
+    transition: background-color 0.5s ease-in-out 0s,
+    color 0.5s ease-in-out 0s;
     border-radius: 3px;
     color: #fff;
 }
@@ -44,8 +45,6 @@
 
 .form {
     margin: 2em;
-    padding-left: 2em;
-    padding-right: 2em;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -193,4 +192,8 @@
         width: 95%
     }
 
+    .form {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+    }
 }

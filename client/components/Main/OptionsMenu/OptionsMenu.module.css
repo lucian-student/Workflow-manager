@@ -9,6 +9,7 @@
     color: #fff;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .settings_button:hover,
@@ -20,3 +21,10 @@
     padding-left: 0.25em;
     padding-right: 0.25em;
 }
+
+@media screen and (max-width:550px) {
+    .settings_button {
+        width: 100%;
+    }
+}
+
