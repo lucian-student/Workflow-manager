@@ -1,10 +1,5 @@
-/*.form{
-
-}*/
-
-.project_data_wrapper {
+.card_data_wrapper {
     display: flex;
-    height: 100%;
     flex-direction: column;
 }
 
@@ -71,4 +66,10 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     width: 100%;
+}
+
+@media screen and (max-width:500px) {
+    .form {
+        margin: 2em;
+    }
 }

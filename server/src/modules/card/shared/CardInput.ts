@@ -6,7 +6,7 @@ import StringLength from "../../../custom_validators/StringLength";
 export default class CardInput {
 
     @Field()
-    @StringLength(1, 15,{message:"Name length has to be between 1 and 15 characters!"})
+    @StringLength(1, 20,{message:"Name length has to be between 1 and 20 characters!"})
     @IsNotEmpty()
     name: string;
 

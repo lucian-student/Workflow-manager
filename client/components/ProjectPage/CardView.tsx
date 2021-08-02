@@ -4,10 +4,15 @@ import { ImCancelCircle } from 'react-icons/im';
 import cardViewStyles from './CardView/CardView.module.css';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { CardViewContext } from '../../context/cardView';
-import { Card, useGetCardQuery } from '../../generated/apolloComponents';
+import { Card, CardInput, useGetCardQuery } from '../../generated/apolloComponents';
 import { CardContextProvider } from '../../context/card';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { ProjectContext } from '../../context/project';
+import CardDataForm from './CardDataForm';
+import CardData from './CardData';
+import { useTwoPartMenuCustom } from '../../hooks/useTwoPartMenuCustom';
+import { useEffect } from 'react';
+import { MenuContext } from '../../context/menu';
 
 interface Props {
     project_id?: string,
@@ -22,10 +27,26 @@ function CardView(): JSX.Element {
 
     const { menuRef } = useStackingMenuCustom({ setOpen });
 
+    const blockClose = useContext(MenuContext);
+
     const router = useRouter();
     const { project_id, team_id }: Props = router.query;
 
     const [editing, setEditing] = useState<boolean>(false);
+
+    const editForm = useTwoPartMenuCustom({ setOpen: setEditing });
+
+    useEffect(() => {
+        if (editing) {
+            blockClose.setOpen(true);
+        } else {
+            blockClose.setOpen(false);
+        }
+    }, [editing]);
+
+    async function createCard(input: CardInput) {
+        console.log(input)
+    }
 
     const { data, loading, error } = useGetCardQuery({
         variables: {
@@ -63,14 +84,14 @@ function CardView(): JSX.Element {
                                     <ImCancelCircle className={cardViewStyles.cancel_modal}
                                         onClick={() => setOpen(false)} />
                                     {!role ? (
-                                        <button className={cardViewStyles.toggle_button}
+                                        <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
                                             onClick={() => setEditing(old => !old)}>
                                             <AiOutlineEdit className={cardViewStyles.icon} />
                                         </button>
                                     ) : (
                                         <Fragment>
                                             {role <= 2 && (
-                                                <button className={cardViewStyles.toggle_button}
+                                                <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
                                                     onClick={() => setEditing(old => !old)}>
                                                     <AiOutlineEdit className={cardViewStyles.icon} />
                                                 </button>
@@ -78,7 +99,13 @@ function CardView(): JSX.Element {
                                         </Fragment>
                                     )}
                                     <div className={cardViewStyles.modal_content}>
-
+                                        {!editing ? (
+                                            <CardData card={data.getCard as Card} />
+                                        ) : (
+                                            <div ref={editForm.menuRef}>
+                                                <CardDataForm createCard={createCard} card={data.getCard as Card} />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
