@@ -31,6 +31,8 @@
     color: #184b44;
     display: flex;
     align-items: center;
+    border: solid 2px transparent;
+    padding: 1px;
 }
 
 .description {

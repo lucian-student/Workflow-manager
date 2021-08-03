@@ -1,10 +1,11 @@
 import React, { useContext, Fragment, useState } from 'react';
 import { useRouter } from 'next/router';
+import { VscAdd } from 'react-icons/vsc';
 import { ImCancelCircle } from 'react-icons/im';
 import cardViewStyles from './CardView/CardView.module.css';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { CardViewContext } from '../../context/cardView';
-import { Card, CardInput, useGetCardQuery } from '../../generated/apolloComponents';
+import { Card, CardInput, Link, LinkInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
 import { CardContextProvider } from '../../context/card';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { ProjectContext } from '../../context/project';
@@ -13,6 +14,13 @@ import CardData from './CardData';
 import { useTwoPartMenuCustom } from '../../hooks/useTwoPartMenuCustom';
 import { useEffect } from 'react';
 import { MenuContext } from '../../context/menu';
+import LinkForm from './LinkForm';
+import TodoForm from './TodoForm';
+import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
+import TodoDisplay from './TodoDisplay';
+import LinkDisplay from './LinkDisplay';
+import { useEditCardMutation } from '../../graphqlHooks/useEditCardMutation';
+
 
 interface Props {
     project_id?: string,
@@ -21,7 +29,7 @@ interface Props {
 
 function CardView(): JSX.Element {
 
-    const { role } = useContext(ProjectContext);
+    const { role, project } = useContext(ProjectContext);
 
     const { setOpen, card_id } = useContext(CardViewContext);
 
@@ -36,17 +44,13 @@ function CardView(): JSX.Element {
 
     const editForm = useTwoPartMenuCustom({ setOpen: setEditing });
 
-    useEffect(() => {
-        if (editing) {
-            blockClose.setOpen(true);
-        } else {
-            blockClose.setOpen(false);
-        }
-    }, [editing]);
+    const [openLinkForm, setOpenLinkForm] = useState<boolean>(false);
 
-    async function createCard(input: CardInput) {
-        console.log(input)
-    }
+    const linkForm = useDropdownCustom({ setOpen: setOpenLinkForm });
+
+    const [openTodoForm, setOpenTodoForm] = useState<boolean>(false);
+
+    const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm });
 
     const { data, loading, error } = useGetCardQuery({
         variables: {
@@ -56,6 +60,43 @@ function CardView(): JSX.Element {
         },
         fetchPolicy: 'network-only'
     });
+
+    useEffect(() => {
+        if (editing || openLinkForm || openTodoForm) {
+            blockClose.setOpen(true);
+        } else {
+            blockClose.setOpen(false);
+        }
+    }, [editing, openLinkForm, openTodoForm]);
+
+
+    const { editCardMutation } = useEditCardMutation({
+        project,
+        project_id,
+        team_id,
+        card_id,
+        setEditing
+    });
+
+    async function saveCard(input: CardInput) {
+        await editCardMutation({
+            variables: {
+                data: input,
+                team_id: Number(team_id),
+                project_id: Number(project_id),
+                card_id: Number(card_id)
+            }
+        })
+    }
+
+    async function addTodo(todo: TodoInput) {
+
+    }
+
+
+    async function addLink(link: LinkInput) {
+
+    }
 
     if (loading) {
         return (
@@ -99,13 +140,38 @@ function CardView(): JSX.Element {
                                         </Fragment>
                                     )}
                                     <div className={cardViewStyles.modal_content}>
-                                        {!editing ? (
+                                        <div className={cardViewStyles.card_data_wrapper}>
                                             <CardData card={data.getCard as Card} />
-                                        ) : (
-                                            <div ref={editForm.menuRef}>
-                                                <CardDataForm createCard={createCard} card={data.getCard as Card} />
+                                            {editing && (
+                                                <div ref={editForm.menuRef} className={cardViewStyles.data_form_wrapper}>
+                                                    <CardDataForm createCard={saveCard} card={data.getCard as Card} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={cardViewStyles.options}>
+                                            <div ref={todoForm.menuRef}>
+                                                <button className={cardViewStyles.toggle_button_2}
+                                                    onClick={() => setOpenTodoForm(old => !old)}>
+                                                    <VscAdd className={cardViewStyles.icon_2} />
+                                                    <div>Add Todo</div>
+                                                </button>
+                                                {openTodoForm && (
+                                                    <TodoForm addTodo={addTodo} />
+                                                )}
                                             </div>
-                                        )}
+                                            <div ref={linkForm.menuRef}>
+                                                <button className={cardViewStyles.toggle_button_2}
+                                                    onClick={() => setOpenLinkForm(old => !old)}>
+                                                    <VscAdd className={cardViewStyles.icon_2} />
+                                                    <div>Add Link</div>
+                                                </button>
+                                                {openLinkForm && (
+                                                    <LinkForm addLink={addLink} />
+                                                )}
+                                            </div>
+                                        </div>
+                                        <TodoDisplay todos={data.getCard.todos as Todo[]} />
+                                        <LinkDisplay links={data.getCard.links as Link[]} />
                                     </div>
                                 </div>
                             </div>

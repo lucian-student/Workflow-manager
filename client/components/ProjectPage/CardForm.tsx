@@ -1,11 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import cardFormStyles from './CardForm/CardForm.module.css';
-import { useForm } from 'react-hook-form';
 import { ImCancelCircle } from 'react-icons/im';
 import { CardAddContext } from '../../context/cardAdd';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
-import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md';
 import LinkForm from './LinkForm';
 import TodoForm from './TodoForm';
 import { VscAdd } from 'react-icons/vsc';

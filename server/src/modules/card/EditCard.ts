@@ -15,7 +15,7 @@ export default class EditCardResolver {
         @Arg('data') data: CardInput,
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
-        @Arg('team_id', { nullable: true }) team_id: number
+        @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<Card> {
 
         const result = await getManager()

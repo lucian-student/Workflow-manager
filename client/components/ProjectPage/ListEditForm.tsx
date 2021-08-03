@@ -52,9 +52,12 @@ function ListEditForm({ list }: Props): JSX.Element {
                         project: {
                             lists: {
                                 $apply: lists => lists.map((item) => {
-                                    if (item.list_id as string !== result.data.editList.project_id) return item;
-                                    return {
-                                        ...result.data.editList
+                                    if (item.list_id as string !== result.data.editList.list_id) {
+                                        return item;
+                                    } else {
+                                        return {
+                                            ...result.data.editList
+                                        }
                                     }
                                 })
                             }

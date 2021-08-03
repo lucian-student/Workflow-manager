@@ -16,9 +16,7 @@ function ProjectData(): JSX.Element {
                     <MdSubtitles className={projectDataStyles.display_icon} />
                 </div>
                 <div className={projectDataStyles.text}>
-                    <div>
-                        {project.name}
-                    </div>
+                    {project.name}
                 </div>
             </div>
             <div className={projectDataStyles.input_wrapper}>
@@ -26,9 +24,7 @@ function ProjectData(): JSX.Element {
                     <GiProgression className={projectDataStyles.display_icon} />
                 </div>
                 <div className={projectDataStyles.text}>
-                    <div>
-                        {`${project.status}`}
-                    </div>
+                    {`${project.status}`}
                 </div>
             </div>
             <div className={projectDataStyles.input_wrapper}>
@@ -36,9 +32,7 @@ function ProjectData(): JSX.Element {
                     <MdDateRange className={projectDataStyles.display_icon} />
                 </div>
                 <div className={projectDataStyles.text}>
-                    <div>
-                        {`${dayjs(project.deadline).format('DD/MM/YYYY')}`}
-                    </div>
+                    {`${dayjs(project.deadline).format('DD/MM/YYYY')}`}
                 </div>
             </div>
             <div className={projectDataStyles.input_wrapper}>
