@@ -48,7 +48,7 @@ export default class Todo extends BaseEntity {
     })
     project_id: number;
 
-    @ManyToOne(() => Project, project => project.todos, { nullable: false })
+    @ManyToOne(() => Project, project => project.todos, { onDelete: 'CASCADE',nullable: false })
     @JoinColumn({ name: 'project_id' })
     project: Project;
 

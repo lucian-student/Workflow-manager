@@ -42,7 +42,7 @@ export default class Link extends BaseEntity {
     })
     project_id: number;
 
-    @ManyToOne(() => Project, project => project.links, { nullable: true })
+    @ManyToOne(() => Project, project => project.links, { onDelete: 'CASCADE', nullable: true })
     @JoinColumn({ name: 'project_id' })
     project: Project;
 
@@ -59,5 +59,5 @@ export default class Link extends BaseEntity {
     @JoinColumn({ name: 'list_id' })
     list: List;*/
 
-   
+
 }

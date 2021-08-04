@@ -31,6 +31,10 @@ function ProjectForm(): JSX.Element {
             }) as any;
             proxy.writeQuery({
                 query: getProjectsQuery,
+                variables: {
+                    sort_option: sortOptions.order_param + sortOptions.order,
+                    search: sortOptions.search
+                },
                 data: { getProjects: [result.data.createProject, ...data.getProjects] }
             });
         }

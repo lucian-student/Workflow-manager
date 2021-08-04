@@ -67,7 +67,7 @@ export default class Card extends BaseEntity {
     })
     project_id: number;
 
-    @ManyToOne(() => Project, project => project.cards, { nullable: false })
+    @ManyToOne(() => Project, project => project.cards, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'project_id' })
     project: Project;
 

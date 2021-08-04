@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Todo } from '../../generated/apolloComponents';
 
 interface Props {
@@ -7,11 +7,15 @@ interface Props {
 
 function TodoDisplay({ todos }: Props): JSX.Element {
 
+    useEffect(() => {
+        console.log(todos)
+    }, [todos]);
+
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
             {todos.map(todo => (
                 <div key={todo.todo_id}>
-                    todo
+                    {todo.name}
                 </div>
             ))}
         </div>

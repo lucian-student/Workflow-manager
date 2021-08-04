@@ -20,7 +20,7 @@ import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import TodoDisplay from './TodoDisplay';
 import LinkDisplay from './LinkDisplay';
 import { useEditCardMutation } from '../../graphqlHooks/useEditCardMutation';
-
+import { useCreateTodoMutation } from '../../graphqlHooks/useCreateTodoMutation';
 
 interface Props {
     project_id?: string,
@@ -89,8 +89,21 @@ function CardView(): JSX.Element {
         })
     }
 
-    async function addTodo(todo: TodoInput) {
+    const { createTodoMutation } = useCreateTodoMutation({
+        project_id,
+        team_id,
+        project,
+        card_id,
+        setOpen: setOpenTodoForm
+    });
 
+    async function addTodo(todo: TodoInput) {
+        await createTodoMutation({variables:{
+            data:todo,
+            team_id: Number(team_id),
+            project_id: Number(project_id),
+            card_id: Number(card_id)
+        }});
     }
 
 

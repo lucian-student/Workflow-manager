@@ -25,6 +25,9 @@ function ProjectOptions(): JSX.Element {
         },
         onError(err) {
             console.log(err.message);
+        },
+        update(proxy, result) {
+           // add modification of cache
         }
     });
 

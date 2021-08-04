@@ -35,6 +35,10 @@ function ProjectEditForm({ setEditing }): JSX.Element {
 
             proxy.writeQuery({
                 query: getProjectQuery,
+                variables: {
+                    project_id: Number(project.project_id),
+                    team_id: !project.team_id ? null : Number(project.team_id)
+                },
                 data: {
                     getProject: update(data.getProject, {
                         project: {

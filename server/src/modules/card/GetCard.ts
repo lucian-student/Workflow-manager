@@ -1,4 +1,4 @@
-import { Arg, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, ID, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getManager } from "typeorm";
 import Card from "../../entity/Card";
 import Todo from "../../entity/Todo";
@@ -43,7 +43,7 @@ export default class GetCardResolver {
     @Query(() => Card, { nullable: true })
     async getCard(
         @Arg('project_id') project_id: number,
-        @Arg('card_id') card_id: number,
+        @Arg('card_id', () => ID) card_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
     ): Promise<Card | null> {
 
@@ -87,7 +87,7 @@ export default class GetCardResolver {
                     const todo = new Todo();
                     todo.todo_id = item.t2_todo_id
                     todo.name = item.t2_name
-                  //  todo.description = item.t2_description
+                    //  todo.description = item.t2_description
                     todo.done = item.t2_done
                     todo.card_id = item.t2_card_id
                     todo.project_id = item.t2_project_id
@@ -118,11 +118,10 @@ export default class GetCardResolver {
             }
         });
 
-        card.todos = Array.from(todos.values());
+        card.todos = [...Array.from(todos.values()).reverse()];
         card.messages = Array.from(messages.values());
-        card.links = Array.from(links.values());
+        card.links = Array.from(links.values()).reverse();
 
         return card;
     }
-
 }

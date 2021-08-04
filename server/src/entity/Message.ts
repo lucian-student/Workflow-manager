@@ -52,7 +52,7 @@ export default class Message extends BaseEntity {
     })
     project_id: number;
 
-    @ManyToOne(() => Project, project => project.messages, { nullable: false })
+    @ManyToOne(() => Project, project => project.messages, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'project_id' })
     project: Project;
 
@@ -66,16 +66,16 @@ export default class Message extends BaseEntity {
     @Field({ nullable: true })
     username: string
 
-   /* @Index()
-    @Field(() => ID)
-    @Column({
-        type: 'bigint'
-    })
-    list_id: number;
+    /* @Index()
+     @Field(() => ID)
+     @Column({
+         type: 'bigint'
+     })
+     list_id: number;
+ 
+     @Field(() => List)
+     @ManyToOne(() => List, list => list.messages, { onDelete: 'CASCADE', nullable: false })
+     @JoinColumn({ name: 'list_id' })
+     list: List;*/
 
-    @Field(() => List)
-    @ManyToOne(() => List, list => list.messages, { onDelete: 'CASCADE', nullable: false })
-    @JoinColumn({ name: 'list_id' })
-    list: List;*/
-    
 }

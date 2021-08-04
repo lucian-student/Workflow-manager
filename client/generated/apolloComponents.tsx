@@ -396,7 +396,7 @@ export type Query = {
 
 export type QueryGetCardArgs = {
   team_id?: Maybe<Scalars['Float']>;
-  card_id: Scalars['Float'];
+  card_id: Scalars['ID'];
   project_id: Scalars['Float'];
 };
 
@@ -530,7 +530,7 @@ export type EditCardMutation = (
 
 export type GetCardQueryVariables = Exact<{
   project_id: Scalars['Float'];
-  card_id: Scalars['Float'];
+  card_id: Scalars['ID'];
   team_id?: Maybe<Scalars['Float']>;
 }>;
 
@@ -698,6 +698,26 @@ export type GetProjectsQuery = (
     { __typename?: 'Project' }
     & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated' | 'team_name'>
   )> }
+);
+
+export type CreateTodoMutationVariables = Exact<{
+  data: TodoInput;
+  project_id: Scalars['Float'];
+  card_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { createTodo: (
+    { __typename?: 'TodoResponse' }
+    & Pick<TodoResponse, 'list_id'>
+    & { todo: (
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+    ) }
+  ) }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -879,7 +899,7 @@ export type EditCardMutationHookResult = ReturnType<typeof useEditCardMutation>;
 export type EditCardMutationResult = Apollo.MutationResult<EditCardMutation>;
 export type EditCardMutationOptions = Apollo.BaseMutationOptions<EditCardMutation, EditCardMutationVariables>;
 export const GetCardDocument = gql`
-    query GetCard($project_id: Float!, $card_id: Float!, $team_id: Float) {
+    query GetCard($project_id: Float!, $card_id: ID!, $team_id: Float) {
   getCard(project_id: $project_id, card_id: $card_id, team_id: $team_id) {
     card_id
     name
@@ -1331,6 +1351,54 @@ export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
+export const CreateTodoDocument = gql`
+    mutation CreateTodo($data: TodoInput!, $project_id: Float!, $card_id: Float!, $team_id: Float) {
+  createTodo(
+    data: $data
+    project_id: $project_id
+    card_id: $card_id
+    team_id: $team_id
+  ) {
+    todo {
+      todo_id
+      name
+      done
+      card_id
+      project_id
+    }
+    list_id
+  }
+}
+    `;
+export type CreateTodoMutationFn = Apollo.MutationFunction<CreateTodoMutation, CreateTodoMutationVariables>;
+
+/**
+ * __useCreateTodoMutation__
+ *
+ * To run a mutation, you first call `useCreateTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTodoMutation, { data, loading, error }] = useCreateTodoMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      project_id: // value for 'project_id'
+ *      card_id: // value for 'card_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useCreateTodoMutation(baseOptions?: Apollo.MutationHookOptions<CreateTodoMutation, CreateTodoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTodoMutation, CreateTodoMutationVariables>(CreateTodoDocument, options);
+      }
+export type CreateTodoMutationHookResult = ReturnType<typeof useCreateTodoMutation>;
+export type CreateTodoMutationResult = Apollo.MutationResult<CreateTodoMutation>;
+export type CreateTodoMutationOptions = Apollo.BaseMutationOptions<CreateTodoMutation, CreateTodoMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
