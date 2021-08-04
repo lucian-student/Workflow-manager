@@ -29,6 +29,12 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
                 }
             }) as any;
 
+            const updatedProject = update(data.getProject, {
+                project: { lists: { $push: [result.data.createList] } }
+            });
+
+            //console.log(updatedProject);
+
             proxy.writeQuery({
                 query: getProjectQuery,
                 variables: {
@@ -36,9 +42,7 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
                     team_id: !Number(team_id) ? null : Number(team_id)
                 },
                 data: {
-                    getProject: update(data.getProject, {
-                        project: { lists: { $push: [result.data.createList] } }
-                    })
+                    getProject: updatedProject
                 }
             });
         },

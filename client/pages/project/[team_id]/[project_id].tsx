@@ -24,7 +24,8 @@ function ProjectPage(): JSX.Element {
             project_id: Number(project_id),
             team_id: Number(team_id)
         },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-only'
     });
 
     if (loading) {

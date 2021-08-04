@@ -96,20 +96,13 @@ function CardForm(): JSX.Element {
                 }
             }) as any;
 
-            console.log(update(data.getProject, {
-                project: {
-                    lists: {
-                        [project.lists.findIndex(l => Number(l.list_id) === Number(list_id))]: {
-                            cards: {
-                                $unshift: [result.data.createCard]
-                            }
-                        }
-                    }
-                }
-            }))
 
             proxy.writeQuery({
                 query: getProjectQuery,
+                variables: {
+                    project_id: Number(project_id),
+                    team_id: !Number(project.team_id) ? null : Number(project.team_id)
+                },
                 data: {
                     getProject: update(data.getProject, {
                         project: {

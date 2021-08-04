@@ -21,23 +21,13 @@ function ProjectForm(): JSX.Element {
         onError(err) {
             console.log(err.message);
         },
-        update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectsQuery,
-                variables: {
-                    sort_option: sortOptions.order_param + sortOptions.order,
-                    search: sortOptions.search
-                }
-            }) as any;
-            proxy.writeQuery({
-                query: getProjectsQuery,
-                variables: {
-                    sort_option: sortOptions.order_param + sortOptions.order,
-                    search: sortOptions.search
-                },
-                data: { getProjects: [result.data.createProject, ...data.getProjects] }
-            });
-        }
+        refetchQueries: [{
+            query: getProjectsQuery,
+            variables: {
+                sort_option: sortOptions.order_param + sortOptions.order,
+                search: sortOptions.search
+            }
+        }]
     });
 
     useEffect(() => {

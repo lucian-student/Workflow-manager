@@ -58,7 +58,8 @@ function CardView(): JSX.Element {
             card_id: Number(card_id),
             team_id: Number(team_id)
         },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-only'
     });
 
     useEffect(() => {
@@ -98,12 +99,14 @@ function CardView(): JSX.Element {
     });
 
     async function addTodo(todo: TodoInput) {
-        await createTodoMutation({variables:{
-            data:todo,
-            team_id: Number(team_id),
-            project_id: Number(project_id),
-            card_id: Number(card_id)
-        }});
+        await createTodoMutation({
+            variables: {
+                data: todo,
+                team_id: Number(team_id),
+                project_id: Number(project_id),
+                card_id: Number(card_id)
+            }
+        });
     }
 
 

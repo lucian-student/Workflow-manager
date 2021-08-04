@@ -38,9 +38,7 @@ export function useCreateTodoMutation({ project_id, card_id, setOpen, team_id, p
                 data: {
                     getCard: update(query.getCard, {
                         todos: {
-                            $apply: todos => {
-                                return [...todos, result.data.createTodo.todo];
-                            }
+                            $unshift: [result.data.createTodo.todo]
                         }
                     })
                 }
