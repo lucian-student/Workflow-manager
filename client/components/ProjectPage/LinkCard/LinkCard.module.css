@@ -1,0 +1,87 @@
+.link_input_card {
+    display: flex;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.input_wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em;
+    width: 100%;
+    align-items: center;
+}
+
+.type_icon_wrapper {
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    align-items: center;
+    background-color: #184b44;
+}
+
+.text {
+    color: #184b44;
+    display: flex;
+    align-items: center;
+}
+
+.options_wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.type_icon {
+    font-size: 2em;
+    color: inherit;
+    background-color: inherit;
+    border-radius: 50%;
+    padding: 0.25em;
+}
+
+.link_background{
+    background-color: #fff;
+    border-radius: 50%;
+    height: fit-content;
+    width: fit-content;
+}
+
+.link {
+    position: relative;
+    border-radius: 50%;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    text-align: center;
+    flex-basis: 100%;
+    color: #184b44;
+}
+
+.link::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: '';
+    background-color: #184b44;
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s linear 0s;
+}
+
+
+.link:hover::before {
+    transform: scaleX(1);
+}
+
+.link:hover {
+    color: #fff;
+}
+

@@ -21,42 +21,39 @@ interface Props {
 function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
 
     return (
-        <div className={listDisplayStyles.list_display_wrapper}>
-            <ManagerContextProvider>
-                <CardAddContextProvider>
-                    {(list_id) => (
-                        <CardViewContextProvider>
-                            {(card_id) => (
-                                <MenuContextProvider>
-                                    {(() => {
-                                        if (card_id) {
-                                            return (
-                                                <CardView />
-                                            )
-                                        } else if (list_id) {
-                                            return (
-                                                <CardForm />
-                                            )
-                                        } else {
-                                            return (
-                                                <Fragment>
-                                                </Fragment>
-                                            )
-                                        }
-                                    })()}
+        <ManagerContextProvider>
+            <CardAddContextProvider>
+                {(list_id) => (
+                    <CardViewContextProvider>
+                        {(card_id) => (
+                            <MenuContextProvider>
+                                {(() => {
+                                    if (card_id) {
+                                        return <CardView />
+                                    } else if (list_id) {
+                                        return <CardForm />
+                                    } else {
+                                        return (
+                                            <Fragment>
+                                            </Fragment>
+                                        )
+                                    }
+                                })()}
+                                <div className={listDisplayStyles.list_display_wrapper}>
                                     {lists.map(list => (
                                         <CloseMenuContextProvider key={list.list_id}>
                                             <ListCard list={list} />
                                         </CloseMenuContextProvider>
                                     ))}
                                     <ListForm project_id={project_id} team_id={team_id} />
-                                </MenuContextProvider>
-                            )}
-                        </CardViewContextProvider>
-                    )}
-                </CardAddContextProvider>
-            </ManagerContextProvider>
-        </div>
+                                </div>
+                            </MenuContextProvider>
+                        )}
+                    </CardViewContextProvider>
+                )}
+            </CardAddContextProvider>
+        </ManagerContextProvider>
+
     )
 }
 

@@ -43,7 +43,7 @@ export default class GetCardResolver {
     @Query(() => Card, { nullable: true })
     async getCard(
         @Arg('project_id') project_id: number,
-        @Arg('card_id', () => ID) card_id: number,
+        @Arg('card_id') card_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
     ): Promise<Card | null> {
 

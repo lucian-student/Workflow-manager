@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import { LinkInput } from '../../generated/apolloComponents';
 import { BsLink45Deg } from 'react-icons/bs';
 import linkInputCardStyles from './LinkInputCard/LinkInputCard.module.css';
-import LinkInputOptions from './LinkInputOptions';
+import Options from './Options';
 import { CardAddContext } from '../../context/cardAdd';
 import LinkEditForm from './LinkEditForm';
 import update from 'immutability-helper';
@@ -37,9 +37,17 @@ function LinkInputCard({ link, index }: Props): JSX.Element {
         }));
     }
 
+    function removeLink() {
+        setOpenLinkOptions(false);
+        setLinks(update(links, {
+            $splice: [
+                [index, 1]
+            ]
+        }));
+    }
+
     return (
         <div className={linkInputCardStyles.link_input_card}>
-
             <div className={linkInputCardStyles.type_icon_wrapper}>
                 <div className={linkInputCardStyles.link_background}>
                     <a href={link.url} className={linkInputCardStyles.link}>
@@ -54,7 +62,7 @@ function LinkInputCard({ link, index }: Props): JSX.Element {
                     </div>
                 </div>
                 <div className={linkInputCardStyles.options_wrapper}>
-                    <LinkInputOptions setEditing={setEditing} index={index} open={open} setOpen={setOpen} />
+                    <Options type='link' setEditing={setEditing} open={open} setOpen={setOpen} remove={removeLink} />
                 </div>
             </div>
             {editing && (

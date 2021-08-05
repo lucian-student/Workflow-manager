@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Todo } from '../../generated/apolloComponents';
+import todoDisplayStyles from './TodoDisplay/TodoDisplay.module.css';
+import TodoCard from './TodoCard';
 
 interface Props {
     todos: Todo[]
@@ -7,16 +9,10 @@ interface Props {
 
 function TodoDisplay({ todos }: Props): JSX.Element {
 
-    useEffect(() => {
-        console.log(todos)
-    }, [todos]);
-
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className={todoDisplayStyles.display_wrapper}>
             {todos.map(todo => (
-                <div key={todo.todo_id}>
-                    {todo.name}
-                </div>
+                <TodoCard key={todo.todo_id} todo={todo} />
             ))}
         </div>
     )

@@ -37,6 +37,11 @@ export function useEditCardMutation({
 
             proxy.writeQuery({
                 query: getCardQuery,
+                variables: {
+                    project_id: Number(project_id),
+                    card_id: Number(card_id),
+                    team_id: Number(team_id)
+                },
                 data: {
                     getCard: update(query.getCard, {
                         name: { $set: result.data.editCard.name },

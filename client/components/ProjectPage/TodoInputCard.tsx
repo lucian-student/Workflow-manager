@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { TodoInput } from '../../generated/apolloComponents';
 import todoInputCardStyles from './TodoInputCard/TodoInputCard.module.css';
 import { RiTodoLine } from 'react-icons/ri';
-import TodoInputOptions from './TodoInputOptions';
+import Options from './Options';
 import TodoEditForm from './TodoEditForm';
 import { CardAddContext } from '../../context/cardAdd';
 import update from 'immutability-helper';
@@ -29,6 +29,15 @@ function TodoInputCard({ todo, index }: Props): JSX.Element {
         }));
     }
 
+    function removeTodo() {
+        setOpenTodoOptions(false);
+        setTodos(update(todos, {
+            $splice: [
+                [index, 1]
+            ]
+        }));
+    }
+
     useEffect(() => {
         if (open || editing) {
             setOpenTodoOptions(true);
@@ -49,7 +58,7 @@ function TodoInputCard({ todo, index }: Props): JSX.Element {
                     </div>
                 </div>
                 <div className={todoInputCardStyles.options_wrapper}>
-                    <TodoInputOptions setEditing={setEditing} index={index} open={open} setOpen={setOpen} />
+                    <Options type='todo' setEditing={setEditing} open={open} setOpen={setOpen} remove={removeTodo} />
                 </div>
             </div>
             {editing && (

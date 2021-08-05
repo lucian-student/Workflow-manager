@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export const getCardQuery = gql`
 query GetCard(
     $project_id:Float!
-    $card_id:ID!
+    $card_id:Float!
     $team_id:Float
 ){
     getCard(

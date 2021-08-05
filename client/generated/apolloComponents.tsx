@@ -396,7 +396,7 @@ export type Query = {
 
 export type QueryGetCardArgs = {
   team_id?: Maybe<Scalars['Float']>;
-  card_id: Scalars['ID'];
+  card_id: Scalars['Float'];
   project_id: Scalars['Float'];
 };
 
@@ -530,7 +530,7 @@ export type EditCardMutation = (
 
 export type GetCardQueryVariables = Exact<{
   project_id: Scalars['Float'];
-  card_id: Scalars['ID'];
+  card_id: Scalars['Float'];
   team_id?: Maybe<Scalars['Float']>;
 }>;
 
@@ -551,6 +551,26 @@ export type GetCardQuery = (
       & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
     )> }
   )> }
+);
+
+export type CreateLinkMutationVariables = Exact<{
+  data: LinkInput;
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateLinkMutation = (
+  { __typename?: 'Mutation' }
+  & { createLink: (
+    { __typename?: 'LinkResponse' }
+    & Pick<LinkResponse, 'list_id'>
+    & { link: (
+      { __typename?: 'Link' }
+      & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+    ) }
+  ) }
 );
 
 export type CreateListMutationVariables = Exact<{
@@ -899,7 +919,7 @@ export type EditCardMutationHookResult = ReturnType<typeof useEditCardMutation>;
 export type EditCardMutationResult = Apollo.MutationResult<EditCardMutation>;
 export type EditCardMutationOptions = Apollo.BaseMutationOptions<EditCardMutation, EditCardMutationVariables>;
 export const GetCardDocument = gql`
-    query GetCard($project_id: Float!, $card_id: ID!, $team_id: Float) {
+    query GetCard($project_id: Float!, $card_id: Float!, $team_id: Float) {
   getCard(project_id: $project_id, card_id: $card_id, team_id: $team_id) {
     card_id
     name
@@ -963,6 +983,54 @@ export function useGetCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetCardQueryHookResult = ReturnType<typeof useGetCardQuery>;
 export type GetCardLazyQueryHookResult = ReturnType<typeof useGetCardLazyQuery>;
 export type GetCardQueryResult = Apollo.QueryResult<GetCardQuery, GetCardQueryVariables>;
+export const CreateLinkDocument = gql`
+    mutation CreateLink($data: LinkInput!, $card_id: Float!, $project_id: Float!, $team_id: Float) {
+  createLink(
+    data: $data
+    card_id: $card_id
+    project_id: $project_id
+    team_id: $team_id
+  ) {
+    link {
+      link_id
+      name
+      url
+      card_id
+      project_id
+    }
+    list_id
+  }
+}
+    `;
+export type CreateLinkMutationFn = Apollo.MutationFunction<CreateLinkMutation, CreateLinkMutationVariables>;
+
+/**
+ * __useCreateLinkMutation__
+ *
+ * To run a mutation, you first call `useCreateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLinkMutation, { data, loading, error }] = useCreateLinkMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      card_id: // value for 'card_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useCreateLinkMutation(baseOptions?: Apollo.MutationHookOptions<CreateLinkMutation, CreateLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLinkMutation, CreateLinkMutationVariables>(CreateLinkDocument, options);
+      }
+export type CreateLinkMutationHookResult = ReturnType<typeof useCreateLinkMutation>;
+export type CreateLinkMutationResult = Apollo.MutationResult<CreateLinkMutation>;
+export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<CreateLinkMutation, CreateLinkMutationVariables>;
 export const CreateListDocument = gql`
     mutation CreateList($data: ListInput!, $project_id: Float!, $team_id: Float) {
   createList(data: $data, project_id: $project_id, team_id: $team_id) {

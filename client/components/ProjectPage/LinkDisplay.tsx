@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from '../../generated/apolloComponents';
+import LinkCard from './LinkCard';
+import linkDisplayStyles from './LinkDisplay/LinkDisplay.module.css';
 
 interface Props {
     links: Link[]
@@ -8,11 +10,9 @@ interface Props {
 function LinkDisplay({ links }: Props): JSX.Element {
 
     return (
-        <div>
+        <div className={linkDisplayStyles.display_wrapper}>
             {links.map(link => (
-                <div key={link.link_id}>
-                    link
-                </div>
+                <LinkCard key={link.link_id} link={link} />
             ))}
         </div>
     )

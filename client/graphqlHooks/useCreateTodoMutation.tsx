@@ -8,11 +8,10 @@ interface Props {
     project_id: string
     card_id: string
     team_id?: string
-    project: Project
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function useCreateTodoMutation({ project_id, card_id, setOpen, team_id, project }: Props) {
+export function useCreateTodoMutation({ project_id, card_id, setOpen, team_id }: Props) {
 
     const [createTodoMutation, { data }] = useMutation({
         onError(err) {
@@ -43,15 +42,6 @@ export function useCreateTodoMutation({ project_id, card_id, setOpen, team_id, p
                     })
                 }
             });
-
-            console.log(proxy.readQuery({
-                query: getCardQuery,
-                variables: {
-                    project_id: Number(project_id),
-                    card_id: Number(card_id),
-                    team_id: Number(team_id)
-                }
-            }) as any);
 
             const query2 = proxy.readQuery({
                 query: getProjectQuery,

@@ -21,6 +21,7 @@ import TodoDisplay from './TodoDisplay';
 import LinkDisplay from './LinkDisplay';
 import { useEditCardMutation } from '../../graphqlHooks/useEditCardMutation';
 import { useCreateTodoMutation } from '../../graphqlHooks/useCreateTodoMutation';
+import { useCreateLinkMutation } from '../../graphqlHooks/useCreateLinkMutation';
 
 interface Props {
     project_id?: string,
@@ -31,7 +32,7 @@ function CardView(): JSX.Element {
 
     const { role, project } = useContext(ProjectContext);
 
-    const { setOpen, card_id } = useContext(CardViewContext);
+    const { setOpen, card_id, openLinkOptions, openTodoOptions } = useContext(CardViewContext);
 
     const { menuRef } = useStackingMenuCustom({ setOpen });
 
@@ -52,7 +53,7 @@ function CardView(): JSX.Element {
 
     const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm });
 
-    const { data, loading, error } = useGetCardQuery({
+    const { data, error, loading } = useGetCardQuery({
         variables: {
             project_id: Number(project_id),
             card_id: Number(card_id),
@@ -63,7 +64,7 @@ function CardView(): JSX.Element {
     });
 
     useEffect(() => {
-        if (editing || openLinkForm || openTodoForm) {
+        if (editing || openLinkForm || openTodoForm || openTodoOptions || openLinkOptions) {
             blockClose.setOpen(true);
         } else {
             blockClose.setOpen(false);
@@ -93,7 +94,6 @@ function CardView(): JSX.Element {
     const { createTodoMutation } = useCreateTodoMutation({
         project_id,
         team_id,
-        project,
         card_id,
         setOpen: setOpenTodoForm
     });
@@ -109,93 +109,102 @@ function CardView(): JSX.Element {
         });
     }
 
+    const { createLinkMutation } = useCreateLinkMutation({
+        project_id,
+        team_id,
+        card_id,
+        setOpen: setOpenLinkForm
+    });
 
     async function addLink(link: LinkInput) {
-
+        await createLinkMutation({
+            variables: {
+                data: link,
+                team_id: Number(team_id),
+                project_id: Number(project_id),
+                card_id: Number(card_id)
+            }
+        });
     }
 
     if (loading) {
         return (
-            <div>
-                loading...
-            </div>
+            <Fragment>
+            </Fragment>
         )
     }
 
     if (error) {
         return (
-            <div>
-                {error.message}
-            </div>
+            <Fragment>
+            </Fragment>
         )
     }
 
     return (
-        <Fragment>
-            {data && (
-                <Fragment>
-                    {data.getCard && (
-                        <CardContextProvider card={data.getCard as Card}>
-                            <div className={cardViewStyles.modal_bg}>
-                                <div ref={menuRef} className={cardViewStyles.modal}>
-                                    <ImCancelCircle className={cardViewStyles.cancel_modal}
-                                        onClick={() => setOpen(false)} />
-                                    {!role ? (
-                                        <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
-                                            onClick={() => setEditing(old => !old)}>
-                                            <AiOutlineEdit className={cardViewStyles.icon} />
-                                        </button>
-                                    ) : (
-                                        <Fragment>
-                                            {role <= 2 && (
-                                                <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
-                                                    onClick={() => setEditing(old => !old)}>
-                                                    <AiOutlineEdit className={cardViewStyles.icon} />
-                                                </button>
-                                            )}
-                                        </Fragment>
-                                    )}
-                                    <div className={cardViewStyles.modal_content}>
-                                        <div className={cardViewStyles.card_data_wrapper}>
-                                            <CardData card={data.getCard as Card} />
-                                            {editing && (
-                                                <div ref={editForm.menuRef} className={cardViewStyles.data_form_wrapper}>
-                                                    <CardDataForm createCard={saveCard} card={data.getCard as Card} />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className={cardViewStyles.options}>
-                                            <div ref={todoForm.menuRef}>
-                                                <button className={cardViewStyles.toggle_button_2}
-                                                    onClick={() => setOpenTodoForm(old => !old)}>
-                                                    <VscAdd className={cardViewStyles.icon_2} />
-                                                    <div>Add Todo</div>
-                                                </button>
-                                                {openTodoForm && (
-                                                    <TodoForm addTodo={addTodo} />
-                                                )}
+        <div className={cardViewStyles.modal_bg}>
+            <div ref={menuRef} className={cardViewStyles.modal}>
+                {data && (
+                    <Fragment>
+                        {data.getCard && (
+                            <CardContextProvider card={data.getCard as Card}>
+                                <ImCancelCircle className={cardViewStyles.cancel_modal}
+                                    onClick={() => setOpen(false)} />
+                                {!role ? (
+                                    <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                        onClick={() => setEditing(old => !old)}>
+                                        <AiOutlineEdit className={cardViewStyles.icon} />
+                                    </button>
+                                ) : (
+                                    <Fragment>
+                                        {role <= 2 && (
+                                            <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                                onClick={() => setEditing(old => !old)}>
+                                                <AiOutlineEdit className={cardViewStyles.icon} />
+                                            </button>
+                                        )}
+                                    </Fragment>
+                                )}
+                                <div className={cardViewStyles.modal_content}>
+                                    <div className={cardViewStyles.card_data_wrapper}>
+                                        <CardData card={data.getCard as Card} />
+                                        {editing && (
+                                            <div ref={editForm.menuRef} className={cardViewStyles.data_form_wrapper}>
+                                                <CardDataForm createCard={saveCard} card={data.getCard as Card} />
                                             </div>
-                                            <div ref={linkForm.menuRef}>
-                                                <button className={cardViewStyles.toggle_button_2}
-                                                    onClick={() => setOpenLinkForm(old => !old)}>
-                                                    <VscAdd className={cardViewStyles.icon_2} />
-                                                    <div>Add Link</div>
-                                                </button>
-                                                {openLinkForm && (
-                                                    <LinkForm addLink={addLink} />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <TodoDisplay todos={data.getCard.todos as Todo[]} />
-                                        <LinkDisplay links={data.getCard.links as Link[]} />
+                                        )}
                                     </div>
+                                    <div className={cardViewStyles.options}>
+                                        <div ref={todoForm.menuRef}>
+                                            <button className={cardViewStyles.toggle_button_2}
+                                                onClick={() => setOpenTodoForm(old => !old)}>
+                                                <VscAdd className={cardViewStyles.icon_2} />
+                                                <div>Add Todo</div>
+                                            </button>
+                                            {openTodoForm && (
+                                                <TodoForm addTodo={addTodo} />
+                                            )}
+                                        </div>
+                                        <div ref={linkForm.menuRef}>
+                                            <button className={cardViewStyles.toggle_button_2}
+                                                onClick={() => setOpenLinkForm(old => !old)}>
+                                                <VscAdd className={cardViewStyles.icon_2} />
+                                                <div>Add Link</div>
+                                            </button>
+                                            {openLinkForm && (
+                                                <LinkForm addLink={addLink} />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <TodoDisplay todos={data.getCard.todos as Todo[]} />
+                                    <LinkDisplay links={data.getCard.links as Link[]} />
                                 </div>
-                            </div>
-                        </CardContextProvider>
-                    )}
-                </Fragment>
-            )}
-        </Fragment>
+                            </CardContextProvider>
+                        )}
+                    </Fragment>
+                )}
+            </div>
+        </div>
     )
 }
 
