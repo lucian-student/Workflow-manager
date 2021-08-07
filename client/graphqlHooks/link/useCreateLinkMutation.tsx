@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { Card, GetProjectResponse, Link, useCreateLinkMutation as useMutation } from '../generated/apolloComponents';
-import { getCardQuery } from '../graphql/card/query/getCard';
+import { Card, GetProjectResponse, Link, useCreateLinkMutation as useMutation } from '../../generated/apolloComponents';
+import { getCardQuery } from '../../graphql/card/query/getCard';
 import update from 'immutability-helper'
-import { getProjectQuery } from '../graphql/project/query/getProject';
+import { getProjectQuery } from '../../graphql/project/query/getProject';
 
 interface Props {
     project_id: string

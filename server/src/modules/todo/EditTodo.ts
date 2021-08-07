@@ -48,6 +48,7 @@ export default class EditTodoResolver {
                 .innerJoin(Card, 't2', 't2.card_id=t1.card_id')
                 .getRawOne();
 
+            console.log(list);
 
             if (!list) {
                 throw Error('List doesnt exist!');

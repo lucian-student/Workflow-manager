@@ -19,9 +19,9 @@ import TodoForm from './TodoForm';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import TodoDisplay from './TodoDisplay';
 import LinkDisplay from './LinkDisplay';
-import { useEditCardMutation } from '../../graphqlHooks/useEditCardMutation';
-import { useCreateTodoMutation } from '../../graphqlHooks/useCreateTodoMutation';
-import { useCreateLinkMutation } from '../../graphqlHooks/useCreateLinkMutation';
+import { useEditCardMutation } from '../../graphqlHooks/card/useEditCardMutation';
+import { useCreateTodoMutation } from '../../graphqlHooks/todo/useCreateTodoMutation';
+import { useCreateLinkMutation } from '../../graphqlHooks/link/useCreateLinkMutation';
 
 interface Props {
     project_id?: string,

@@ -1,4 +1,4 @@
-import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Todo from "../../entity/Todo";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
@@ -21,7 +21,28 @@ export default class DeleteTodoResolver {
         const res = new DeleteTodoResponse();
 
         await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
-            const result = await Todo.delete({ todo_id });
+
+            const list: { list_id: number } = await transactionalEntityManager
+                .createQueryBuilder()
+                .select('t2.list_id', 'list_id')
+                .from(Todo, 't1')
+                .where('t1.todo_id= :todo_id', { todo_id })
+                .innerJoin(Card, 't2', 't2.card_id=t1.card_id')
+                .getRawOne();
+
+            if (!list) {
+                throw Error('List doesnt exist!');
+            }
+
+            res.list_id = list.list_id;
+
+            const result = await transactionalEntityManager
+                .createQueryBuilder()
+                .delete()
+                .from(Todo)
+                .where('todo_id= :todo_id', { todo_id })
+                .returning('card_id')
+                .execute();
 
             if (!result.affected) {
                 throw Error('Project doesnt exist!');
@@ -33,20 +54,8 @@ export default class DeleteTodoResolver {
 
             res.todo_id = todo_id;
 
-            const list: { list_id: number } = await transactionalEntityManager
-                .createQueryBuilder()
-                .select('t2.list_id', 'list_id')
-                .from(Todo, 't1')
-                .where('t1.todo_id= :todo_id', { todo_id })
-                .innerJoin(Card, 't2', 't2.card_id=t1.card_id')
-                .getRawOne();
+            res.card_id = result.raw[0].card_id
 
-
-            if (!list) {
-                throw Error('List doesnt exist!');
-            }
-
-            res.list_id = list.list_id
         });
 
 

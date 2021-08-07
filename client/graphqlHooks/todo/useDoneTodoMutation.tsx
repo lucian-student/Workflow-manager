@@ -1,27 +1,18 @@
-import React, { useEffect } from 'react';
-import { Project, useEditCardMutation as useMutation } from '../generated/apolloComponents';
-import { getCardQuery } from '../graphql/card/query/getCard';
+import React from 'react';
+import { useDoneTodoMutation as useMutation } from '../../generated/apolloComponents';
+import { getCardQuery } from '../../graphql/card/query/getCard';
 import update from 'immutability-helper'
-import { getProjectQuery } from '../graphql/project/query/getProject';
-
+import { getProjectQuery } from '../../graphql/project/query/getProject';
 
 interface Props {
     project_id: string
     card_id: string
     team_id?: string
-    setEditing: React.Dispatch<React.SetStateAction<boolean>>
-    project: Project
 }
 
-export function useEditCardMutation({
-    project_id,
-    card_id,
-    team_id,
-    setEditing,
-    project
-}: Props) {
+export function useDoneTodoMutation({ project_id, card_id, team_id }: Props) {
 
-    const [editCardMutation, editCard] = useMutation({
+    const [doneTodoMutation] = useMutation({
         onError(err) {
             console.log(err);
         },
@@ -33,7 +24,7 @@ export function useEditCardMutation({
                     card_id: Number(card_id),
                     team_id: Number(team_id)
                 }
-            }) as any;;
+            }) as any;
 
             proxy.writeQuery({
                 query: getCardQuery,
@@ -44,9 +35,11 @@ export function useEditCardMutation({
                 },
                 data: {
                     getCard: update(query.getCard, {
-                        name: { $set: result.data.editCard.name },
-                        deadline: { $set: result.data.editCard.deadline },
-                        description: { $set: result.data.editCard.description }
+                        todos: {
+                            [query.getCard.todos.findIndex(t => Number(t.todo_id) === Number(result.data.doneTodo.todo.todo_id))]: {
+                                $set: result.data.doneTodo.todo
+                            }
+                        }
                     })
                 }
             });
@@ -59,6 +52,15 @@ export function useEditCardMutation({
                 }
             }) as any;
 
+            const listIndex = query2.getProject.project.lists
+                .findIndex(l => Number(l.list_id) === Number(result.data.doneTodo.list_id));
+
+            const cardIndex = query2.getProject.project.lists[listIndex].cards
+                .findIndex(c => Number(c.card_id) === Number(result.data.doneTodo.todo.card_id));
+
+            const todoIndex = query2.getProject.project.lists[listIndex].cards[cardIndex].todos
+                .findIndex(t => Number(t.todo_id) === Number(result.data.doneTodo.todo.todo_id));
+
             proxy.writeQuery({
                 query: getProjectQuery,
                 variables: {
@@ -69,18 +71,16 @@ export function useEditCardMutation({
                     getProject: update(query2.getProject, {
                         project: {
                             lists: {
-                                [project.lists.findIndex(l => Number(l.list_id) === Number(result.data.editCard.list_id))]: {
+                                [listIndex]: {
                                     cards: {
-                                        $apply: cards => cards.map((item) => {
-                                            if (item.card_id as string === result.data.editCard.card_id) {
-                                                return {
-                                                    ...item,
-                                                    ...result.data.editCard
+                                        [cardIndex]:
+                                        {
+                                            todos: {
+                                                [todoIndex]: {
+                                                    $set: result.data.doneTodo.todo
                                                 }
-                                            } else {
-                                                return item;
                                             }
-                                        })
+                                        }
                                     }
                                 }
                             }
@@ -91,13 +91,7 @@ export function useEditCardMutation({
         }
     });
 
-    useEffect(() => {
-        if (editCard.data) {
-            setEditing(false);
-        }
-    }, [editCard.data]);
-
     return {
-        editCardMutation
+        doneTodoMutation
     }
 }

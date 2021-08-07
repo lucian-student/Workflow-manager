@@ -8,4 +8,7 @@ export default class DeleteTodoResponse {
 
     @Field(() => ID)
     list_id: number
+
+    @Field(() => ID)
+    card_id: number
 }
