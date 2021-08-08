@@ -5,7 +5,7 @@ import { ImCancelCircle } from 'react-icons/im';
 import cardViewStyles from './CardView/CardView.module.css';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { CardViewContext } from '../../context/cardView';
-import { Card, CardInput, Link, LinkInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
+import { Card, CardInput, Link, LinkInput, MessageInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
 import { CardContextProvider } from '../../context/card';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { ProjectContext } from '../../context/project';
@@ -22,6 +22,8 @@ import LinkDisplay from './LinkDisplay';
 import { useEditCardMutation } from '../../graphqlHooks/card/useEditCardMutation';
 import { useCreateTodoMutation } from '../../graphqlHooks/todo/useCreateTodoMutation';
 import { useCreateLinkMutation } from '../../graphqlHooks/link/useCreateLinkMutation';
+import MessageForm from './MessageForm';
+import MessageDisplay from './MessageDisplay';
 
 interface Props {
     project_id?: string,
@@ -53,6 +55,10 @@ function CardView(): JSX.Element {
 
     const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm });
 
+    const [openMessageForm, setOpenMessageForm] = useState<boolean>(false);
+
+    const messageForm = useDropdownCustom({ setOpen: setOpenMessageForm });
+
     const { data, error, loading } = useGetCardQuery({
         variables: {
             project_id: Number(project_id),
@@ -64,19 +70,18 @@ function CardView(): JSX.Element {
     });
 
     useEffect(() => {
-        if (editing || openLinkForm || openTodoForm || openTodoOptions || openLinkOptions) {
+        if (editing || openLinkForm || openTodoForm || openTodoOptions || openLinkOptions || openMessageForm) {
             blockClose.setOpen(true);
         } else {
             blockClose.setOpen(false);
         }
-    }, [editing, openLinkForm, openTodoForm]);
+    }, [editing, openLinkForm, openTodoForm, openMessageForm, openTodoOptions, openLinkOptions]);
 
 
     const { editCardMutation } = useEditCardMutation({
         project,
         project_id,
         team_id,
-        card_id,
         setEditing
     });
 
@@ -127,6 +132,10 @@ function CardView(): JSX.Element {
         });
     }
 
+    async function addMessage(message: MessageInput) {
+
+    }
+
     if (loading) {
         return (
             <Fragment>
@@ -174,30 +183,61 @@ function CardView(): JSX.Element {
                                             </div>
                                         )}
                                     </div>
-                                    <div className={cardViewStyles.options}>
-                                        <div ref={todoForm.menuRef}>
-                                            <button className={cardViewStyles.toggle_button_2}
-                                                onClick={() => setOpenTodoForm(old => !old)}>
-                                                <VscAdd className={cardViewStyles.icon_2} />
-                                                <div>Add Todo</div>
-                                            </button>
-                                            {openTodoForm && (
-                                                <TodoForm addTodo={addTodo} />
-                                            )}
+                                    {!role ? (
+                                        <div className={cardViewStyles.options}>
+                                            <div ref={todoForm.menuRef}>
+                                                <button className={cardViewStyles.toggle_button_2}
+                                                    onClick={() => setOpenTodoForm(old => !old)}>
+                                                    <VscAdd className={cardViewStyles.icon_2} />
+                                                    <div>Add Todo</div>
+                                                </button>
+                                                {openTodoForm && (
+                                                    <TodoForm addTodo={addTodo} />
+                                                )}
+                                            </div>
+                                            <div ref={linkForm.menuRef}>
+                                                <button className={cardViewStyles.toggle_button_2}
+                                                    onClick={() => setOpenLinkForm(old => !old)}>
+                                                    <VscAdd className={cardViewStyles.icon_2} />
+                                                    <div>Add Link</div>
+                                                </button>
+                                                {openLinkForm && (
+                                                    <LinkForm addLink={addLink} />
+                                                )}
+                                            </div>
                                         </div>
-                                        <div ref={linkForm.menuRef}>
-                                            <button className={cardViewStyles.toggle_button_2}
-                                                onClick={() => setOpenLinkForm(old => !old)}>
-                                                <VscAdd className={cardViewStyles.icon_2} />
-                                                <div>Add Link</div>
-                                            </button>
-                                            {openLinkForm && (
-                                                <LinkForm addLink={addLink} />
+                                    ) : (
+                                        <Fragment>
+                                            {role <= 2 && (
+                                                <div className={cardViewStyles.options}>
+                                                    <div ref={todoForm.menuRef}>
+                                                        <button className={cardViewStyles.toggle_button_2}
+                                                            onClick={() => setOpenTodoForm(old => !old)}>
+                                                            <VscAdd className={cardViewStyles.icon_2} />
+                                                            <div>Add Todo</div>
+                                                        </button>
+                                                        {openTodoForm && (
+                                                            <TodoForm addTodo={addTodo} />
+                                                        )}
+                                                    </div>
+                                                    <div ref={linkForm.menuRef}>
+                                                        <button className={cardViewStyles.toggle_button_2}
+                                                            onClick={() => setOpenLinkForm(old => !old)}>
+                                                            <VscAdd className={cardViewStyles.icon_2} />
+                                                            <div>Add Link</div>
+                                                        </button>
+                                                        {openLinkForm && (
+                                                            <LinkForm addLink={addLink} />
+                                                        )}
+                                                    </div>
+                                                </div>
                                             )}
-                                        </div>
-                                    </div>
+                                        </Fragment>
+                                    )}
                                     <TodoDisplay todos={data.getCard.todos as Todo[]} />
                                     <LinkDisplay links={data.getCard.links as Link[]} />
+                                    <MessageForm addMessage={addMessage} setOpen={setOpenMessageForm} buttonRef={messageForm.menuRef} />
+                                    <MessageDisplay />
                                 </div>
                             </CardContextProvider>
                         )}

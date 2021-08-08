@@ -22,18 +22,6 @@ export default class DeleteLinkResolver {
 
         await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
 
-            const result = await transactionalEntityManager.delete(Link, { link_id });
-
-            if (!result.affected) {
-                throw Error('Project doesnt exist!');
-            }
-
-            if (result.affected === 0) {
-                throw Error('Project doesnt exist!');
-            }
-
-            res.link_id = link_id;
-
             const list: { list_id: number } = await transactionalEntityManager
                 .createQueryBuilder()
                 .select('t2.list_id', 'list_id')
@@ -49,6 +37,27 @@ export default class DeleteLinkResolver {
 
             res.list_id = list.list_id
 
+
+
+            const result = await transactionalEntityManager
+                .createQueryBuilder()
+                .delete()
+                .from(Link)
+                .where('link_id= :link_id', { link_id })
+                .returning('card_id')
+                .execute();
+
+            if (!result.affected) {
+                throw Error('Project doesnt exist!');
+            }
+
+            if (result.affected === 0) {
+                throw Error('Project doesnt exist!');
+            }
+
+            res.link_id = link_id;
+
+            res.card_id = result.raw[0].card_id
         });
 
         return res;

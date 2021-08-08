@@ -7,7 +7,6 @@ import { getProjectQuery } from '../../graphql/project/query/getProject';
 
 interface Props {
     project_id: string
-    card_id: string
     team_id?: string
     setEditing: React.Dispatch<React.SetStateAction<boolean>>
     project: Project
@@ -15,7 +14,6 @@ interface Props {
 
 export function useEditCardMutation({
     project_id,
-    card_id,
     team_id,
     setEditing,
     project
@@ -30,7 +28,7 @@ export function useEditCardMutation({
                 query: getCardQuery,
                 variables: {
                     project_id: Number(project_id),
-                    card_id: Number(card_id),
+                    card_id: Number(result.data.editCard.card_id),
                     team_id: Number(team_id)
                 }
             }) as any;;
@@ -39,7 +37,7 @@ export function useEditCardMutation({
                 query: getCardQuery,
                 variables: {
                     project_id: Number(project_id),
-                    card_id: Number(card_id),
+                    card_id: Number(result.data.editCard.card_id),
                     team_id: Number(team_id)
                 },
                 data: {

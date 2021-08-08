@@ -60,6 +60,7 @@ function ListEditForm({ list }: Props): JSX.Element {
                                         return item;
                                     } else {
                                         return {
+                                            ...item,
                                             ...result.data.editList
                                         }
                                     }

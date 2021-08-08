@@ -8,4 +8,7 @@ export default class DeleteLinkResponse {
 
     @Field(() => ID)
     link_id: number
+
+    @Field(() => ID)
+    card_id: number
 }

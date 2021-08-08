@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Card, GetProjectResponse, Link, useCreateLinkMutation as useMutation } from '../../generated/apolloComponents';
+import React, { useEffect } from 'react';
+import { Card, GetProjectResponse, Link, useEditLinkMutation as useMutation } from '../../generated/apolloComponents';
 import { getCardQuery } from '../../graphql/card/query/getCard';
 import update from 'immutability-helper'
 import { getProjectQuery } from '../../graphql/project/query/getProject';
@@ -11,9 +11,9 @@ interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function useCreateLinkMutation({ project_id, card_id, team_id, setOpen }: Props) {
+export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: Props) {
 
-    const [createLinkMutation, { data }] = useMutation({
+    const [editLinkMutation, { data }] = useMutation({
         onError(err) {
             console.log(err);
         },
@@ -37,7 +37,9 @@ export function useCreateLinkMutation({ project_id, card_id, team_id, setOpen }:
                 data: {
                     getCard: update(query.getCard, {
                         links: {
-                            $unshift: [result.data.createLink.link as Link]
+                            [query.getCard.links.findIndex(l => Number(l.link_id) === Number(result.data.editLink.link.link_id))]: {
+                                $set: result.data.editLink.link as Link
+                            }
                         }
                     })
                 }
@@ -51,8 +53,11 @@ export function useCreateLinkMutation({ project_id, card_id, team_id, setOpen }:
                 }
             }) as { getProject: GetProjectResponse };
 
-            const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(result.data.createLink.list_id));
-            const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(result.data.createLink.link.card_id));
+            const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(result.data.editLink.list_id));
+            const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(result.data.editLink.link.card_id));
+
+            const linkIndex = query2.getProject.project.lists[listIndex].cards[cardIndex].links
+                .findIndex(l => Number(l.link_id) === Number(result.data.editLink.link.link_id));
 
             proxy.writeQuery({
                 query: getProjectQuery,
@@ -68,7 +73,9 @@ export function useCreateLinkMutation({ project_id, card_id, team_id, setOpen }:
                                     cards: {
                                         [cardIndex]: {
                                             links: {
-                                                $unshift: [result.data.createLink.link as Link]
+                                                [linkIndex]: {
+                                                    $set: result.data.editLink.link as Link
+                                                }
                                             }
                                         }
                                     }
@@ -88,6 +95,6 @@ export function useCreateLinkMutation({ project_id, card_id, team_id, setOpen }:
     }, [data]);
 
     return {
-        createLinkMutation
+        editLinkMutation
     }
 }

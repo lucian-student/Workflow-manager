@@ -57,6 +57,7 @@ export type DeleteLinkResponse = {
   __typename?: 'DeleteLinkResponse';
   list_id: Scalars['ID'];
   link_id: Scalars['ID'];
+  card_id: Scalars['ID'];
 };
 
 export type DeleteMessageResponse = {
@@ -583,6 +584,41 @@ export type CreateLinkMutation = (
   ) }
 );
 
+export type DeleteLinkMutationVariables = Exact<{
+  link_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type DeleteLinkMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteLink: (
+    { __typename?: 'DeleteLinkResponse' }
+    & Pick<DeleteLinkResponse, 'list_id' | 'link_id' | 'card_id'>
+  ) }
+);
+
+export type EditLinkMutationVariables = Exact<{
+  data: LinkInput;
+  link_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type EditLinkMutation = (
+  { __typename?: 'Mutation' }
+  & { editLink: (
+    { __typename?: 'LinkResponse' }
+    & Pick<LinkResponse, 'list_id'>
+    & { link: (
+      { __typename?: 'Link' }
+      & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+    ) }
+  ) }
+);
+
 export type CreateListMutationVariables = Exact<{
   data: ListInput;
   project_id: Scalars['Float'];
@@ -1096,6 +1132,91 @@ export function useCreateLinkMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateLinkMutationHookResult = ReturnType<typeof useCreateLinkMutation>;
 export type CreateLinkMutationResult = Apollo.MutationResult<CreateLinkMutation>;
 export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<CreateLinkMutation, CreateLinkMutationVariables>;
+export const DeleteLinkDocument = gql`
+    mutation DeleteLink($link_id: Float!, $project_id: Float!, $team_id: Float) {
+  deleteLink(link_id: $link_id, project_id: $project_id, team_id: $team_id) {
+    list_id
+    link_id
+    card_id
+  }
+}
+    `;
+export type DeleteLinkMutationFn = Apollo.MutationFunction<DeleteLinkMutation, DeleteLinkMutationVariables>;
+
+/**
+ * __useDeleteLinkMutation__
+ *
+ * To run a mutation, you first call `useDeleteLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLinkMutation, { data, loading, error }] = useDeleteLinkMutation({
+ *   variables: {
+ *      link_id: // value for 'link_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useDeleteLinkMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLinkMutation, DeleteLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLinkMutation, DeleteLinkMutationVariables>(DeleteLinkDocument, options);
+      }
+export type DeleteLinkMutationHookResult = ReturnType<typeof useDeleteLinkMutation>;
+export type DeleteLinkMutationResult = Apollo.MutationResult<DeleteLinkMutation>;
+export type DeleteLinkMutationOptions = Apollo.BaseMutationOptions<DeleteLinkMutation, DeleteLinkMutationVariables>;
+export const EditLinkDocument = gql`
+    mutation EditLink($data: LinkInput!, $link_id: Float!, $project_id: Float!, $team_id: Float) {
+  editLink(
+    data: $data
+    link_id: $link_id
+    project_id: $project_id
+    team_id: $team_id
+  ) {
+    link {
+      link_id
+      name
+      url
+      card_id
+      project_id
+    }
+    list_id
+  }
+}
+    `;
+export type EditLinkMutationFn = Apollo.MutationFunction<EditLinkMutation, EditLinkMutationVariables>;
+
+/**
+ * __useEditLinkMutation__
+ *
+ * To run a mutation, you first call `useEditLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editLinkMutation, { data, loading, error }] = useEditLinkMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      link_id: // value for 'link_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useEditLinkMutation(baseOptions?: Apollo.MutationHookOptions<EditLinkMutation, EditLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditLinkMutation, EditLinkMutationVariables>(EditLinkDocument, options);
+      }
+export type EditLinkMutationHookResult = ReturnType<typeof useEditLinkMutation>;
+export type EditLinkMutationResult = Apollo.MutationResult<EditLinkMutation>;
+export type EditLinkMutationOptions = Apollo.BaseMutationOptions<EditLinkMutation, EditLinkMutationVariables>;
 export const CreateListDocument = gql`
     mutation CreateList($data: ListInput!, $project_id: Float!, $team_id: Float) {
   createList(data: $data, project_id: $project_id, team_id: $team_id) {
