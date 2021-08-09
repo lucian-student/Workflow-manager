@@ -5,7 +5,7 @@ import { ImCancelCircle } from 'react-icons/im';
 import cardViewStyles from './CardView/CardView.module.css';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { CardViewContext } from '../../context/cardView';
-import { Card, CardInput, Link, LinkInput, MessageInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
+import { Card, CardInput, Link, LinkInput, Message, MessageInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
 import { CardContextProvider } from '../../context/card';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { ProjectContext } from '../../context/project';
@@ -24,6 +24,9 @@ import { useCreateTodoMutation } from '../../graphqlHooks/todo/useCreateTodoMuta
 import { useCreateLinkMutation } from '../../graphqlHooks/link/useCreateLinkMutation';
 import MessageForm from './MessageForm';
 import MessageDisplay from './MessageDisplay';
+import { useCreateMessageMutation } from '../../graphqlHooks/message/useCreateMessageMutation';
+import { UseFormReset, FieldValues } from 'react-hook-form';
+import { resetApolloContext } from '@apollo/client';
 
 interface Props {
     project_id?: string,
@@ -55,10 +58,6 @@ function CardView(): JSX.Element {
 
     const todoForm = useDropdownCustom({ setOpen: setOpenTodoForm });
 
-    const [openMessageForm, setOpenMessageForm] = useState<boolean>(false);
-
-    const messageForm = useDropdownCustom({ setOpen: setOpenMessageForm });
-
     const { data, error, loading } = useGetCardQuery({
         variables: {
             project_id: Number(project_id),
@@ -70,12 +69,12 @@ function CardView(): JSX.Element {
     });
 
     useEffect(() => {
-        if (editing || openLinkForm || openTodoForm || openTodoOptions || openLinkOptions || openMessageForm) {
+        if (editing || openLinkForm || openTodoForm || openTodoOptions || openLinkOptions) {
             blockClose.setOpen(true);
         } else {
             blockClose.setOpen(false);
         }
-    }, [editing, openLinkForm, openTodoForm, openMessageForm, openTodoOptions, openLinkOptions]);
+    }, [editing, openLinkForm, openTodoForm, openTodoOptions, openLinkOptions]);
 
 
     const { editCardMutation } = useEditCardMutation({
@@ -132,8 +131,25 @@ function CardView(): JSX.Element {
         });
     }
 
-    async function addMessage(message: MessageInput) {
+    const { createMessageMutation, message } = useCreateMessageMutation({
+        project_id,
+        team_id,
+        card_id
+    });
 
+    async function addMessage(message: MessageInput) {
+        if (message.content.length < 1) {
+            return;
+        } else {
+            await createMessageMutation({
+                variables: {
+                    data: message,
+                    team_id: Number(team_id),
+                    project_id: Number(project_id),
+                    card_id: Number(card_id)
+                }
+            });
+        }
     }
 
     if (loading) {
@@ -236,8 +252,10 @@ function CardView(): JSX.Element {
                                     )}
                                     <TodoDisplay todos={data.getCard.todos as Todo[]} />
                                     <LinkDisplay links={data.getCard.links as Link[]} />
-                                    <MessageForm addMessage={addMessage} setOpen={setOpenMessageForm} buttonRef={messageForm.menuRef} />
-                                    <MessageDisplay />
+                                    <div className={cardViewStyles.messageSection}>
+                                        <MessageForm addMessage={addMessage} data={message}/>
+                                        <MessageDisplay messages={data.getCard.messages as Message[]} />
+                                    </div>
                                 </div>
                             </CardContextProvider>
                         )}

@@ -51,6 +51,15 @@ export default class CreateMessageResolver {
             }
 
             messageResponse.list_id = list.list_id;
+
+            const user: { username: string } = await transactionalEntityManager
+                .createQueryBuilder()
+                .select('t1.username', 'username')
+                .from(User, 't1')
+                .where('t1.user_id= :user_id', { user_id })
+                .getRawOne();
+
+            messageResponse.message.username = user.username;
         });
 
         return messageResponse;
