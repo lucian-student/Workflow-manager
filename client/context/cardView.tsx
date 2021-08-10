@@ -10,6 +10,8 @@ interface ICardViewContext {
     setOpenTodoOptions: React.Dispatch<React.SetStateAction<boolean>>,
     openLinkOptions: boolean,
     setOpenLinkOptions: React.Dispatch<React.SetStateAction<boolean>>
+    openMessageOptions: boolean,
+    setOpenMessageOptions: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const CardViewContext = createContext<ICardViewContext>({
@@ -20,7 +22,9 @@ export const CardViewContext = createContext<ICardViewContext>({
     openTodoOptions: false,
     setOpenTodoOptions: null,
     openLinkOptions: false,
-    setOpenLinkOptions: null
+    setOpenLinkOptions: null,
+    openMessageOptions: false,
+    setOpenMessageOptions: null
 });
 
 export const CardViewContextProvider = ({ children }) => {
@@ -31,6 +35,9 @@ export const CardViewContextProvider = ({ children }) => {
     const [openTodoOptions, setOpenTodoOptions] = useState<boolean>(false);
 
     const [openLinkOptions, setOpenLinkOptions] = useState<boolean>(false);
+
+    const [openMessageOptions, setOpenMessageOptions] = useState<boolean>(false);
+
 
     useEffect(() => {
         if (!open) {
@@ -47,7 +54,9 @@ export const CardViewContextProvider = ({ children }) => {
             openTodoOptions,
             setOpenTodoOptions,
             openLinkOptions,
-            setOpenLinkOptions
+            setOpenLinkOptions,
+            openMessageOptions,
+            setOpenMessageOptions
         }}>
             {children(card_id)}
         </CardViewContext.Provider>

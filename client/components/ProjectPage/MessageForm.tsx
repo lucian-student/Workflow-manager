@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { Fragment, useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { MessageInput, CreateMessageMutation } from '../../generated/apolloComponents';
 import messageFormStyles from './MessageForm/MessageForm.module.css';
@@ -30,9 +30,9 @@ function MessageForm({ addMessage, data }: Props): JSX.Element {
             <div className={messageFormStyles.input_wrapper}>
                 <div className={messageFormStyles.message_icon}>
                     {currentUser !== false && currentUser !== true && (
-                        <div className={messageFormStyles.icon_letter}>
+                        <Fragment>
                             {currentUser.username.charAt(0)}
-                        </div>
+                        </Fragment>
                     )}
                 </div>
                 <TextareaAutosize

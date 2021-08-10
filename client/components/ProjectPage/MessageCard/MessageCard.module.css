@@ -1,0 +1,58 @@
+.message_icon {
+    background-color: #184b44;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    width: 36px;
+    flex-shrink: 0;
+}
+
+.card_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.data_wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.content {
+    color: #184b44;
+    white-space: pre-line;
+    word-wrap: break-word;
+    word-break: break-all;
+    border-radius: 6px;
+    color: #184b44;
+    border-color: #184b44;
+    border-style: solid;
+    font-size: 1em;
+    padding: 2px;
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.text {
+    color: #184b44;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.wrapper {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}

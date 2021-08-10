@@ -9,7 +9,7 @@ interface Props {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     remove: () => void | Promise<void>
-    type: 'todo' | 'link'
+    type: 'todo' | 'link' |'message'
 }
 
 function Options({ type, setEditing, open, setOpen, remove }: Props): JSX.Element {
@@ -37,6 +37,11 @@ function Options({ type, setEditing, open, setOpen, remove }: Props): JSX.Elemen
                                     Edit Link
                                 </Fragment>
                             )}
+                            {type === 'message' && (
+                                <Fragment>
+                                    Edit Message
+                                </Fragment>
+                            )}
                         </button>
                         <button className={optionsStyles.menu_item}
                             onClick={remove}>
@@ -48,6 +53,11 @@ function Options({ type, setEditing, open, setOpen, remove }: Props): JSX.Elemen
                             {type === 'link' && (
                                 <Fragment>
                                     Remove Link
+                                </Fragment>
+                            )}
+                             {type === 'message' && (
+                                <Fragment>
+                                    Remove Message
                                 </Fragment>
                             )}
                         </button>

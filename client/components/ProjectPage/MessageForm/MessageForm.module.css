@@ -1,9 +1,9 @@
-.form{
+.form {
     padding-bottom: 1em;
 }
 
 .input {
-    border-radius: 6px;
+    border-radius: 6px !important;
     color: #184b44;
     border-color: #184b44;
     border-style: solid;
@@ -161,4 +161,5 @@
     align-items: center;
     height: 36px;
     width: 36px;
+    flex-shrink: 0;
 }

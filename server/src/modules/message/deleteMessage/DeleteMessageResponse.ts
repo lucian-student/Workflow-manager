@@ -8,4 +8,7 @@ export default class DeleteMessageResponse {
 
     @Field(() => ID)
     message_id: number
+
+    @Field(() => ID)
+    card_id: number
 }

@@ -64,6 +64,7 @@ export type DeleteMessageResponse = {
   __typename?: 'DeleteMessageResponse';
   list_id: Scalars['ID'];
   message_id: Scalars['ID'];
+  card_id: Scalars['ID'];
 };
 
 export type DeleteTodoResponse = {
@@ -687,6 +688,41 @@ export type CreateMessageMutationVariables = Exact<{
 export type CreateMessageMutation = (
   { __typename?: 'Mutation' }
   & { createMessage: (
+    { __typename?: 'MessageResponse' }
+    & Pick<MessageResponse, 'list_id'>
+    & { message: (
+      { __typename?: 'Message' }
+      & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+    ) }
+  ) }
+);
+
+export type DeleteMessageMutationVariables = Exact<{
+  message_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type DeleteMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteMessage: (
+    { __typename?: 'DeleteMessageResponse' }
+    & Pick<DeleteMessageResponse, 'message_id' | 'list_id' | 'card_id'>
+  ) }
+);
+
+export type EditMessageMutationVariables = Exact<{
+  data: MessageInput;
+  message_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type EditMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { editMessage: (
     { __typename?: 'MessageResponse' }
     & Pick<MessageResponse, 'list_id'>
     & { message: (
@@ -1433,6 +1469,97 @@ export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
+export const DeleteMessageDocument = gql`
+    mutation DeleteMessage($message_id: Float!, $project_id: Float!, $team_id: Float) {
+  deleteMessage(
+    message_id: $message_id
+    project_id: $project_id
+    team_id: $team_id
+  ) {
+    message_id
+    list_id
+    card_id
+  }
+}
+    `;
+export type DeleteMessageMutationFn = Apollo.MutationFunction<DeleteMessageMutation, DeleteMessageMutationVariables>;
+
+/**
+ * __useDeleteMessageMutation__
+ *
+ * To run a mutation, you first call `useDeleteMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMessageMutation, { data, loading, error }] = useDeleteMessageMutation({
+ *   variables: {
+ *      message_id: // value for 'message_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMessageMutation, DeleteMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMessageMutation, DeleteMessageMutationVariables>(DeleteMessageDocument, options);
+      }
+export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
+export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
+export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
+export const EditMessageDocument = gql`
+    mutation EditMessage($data: MessageInput!, $message_id: Float!, $project_id: Float!, $team_id: Float) {
+  editMessage(
+    data: $data
+    message_id: $message_id
+    project_id: $project_id
+    team_id: $team_id
+  ) {
+    message {
+      message_id
+      content
+      user_id
+      card_id
+      project_id
+      data_of_creation
+      username
+    }
+    list_id
+  }
+}
+    `;
+export type EditMessageMutationFn = Apollo.MutationFunction<EditMessageMutation, EditMessageMutationVariables>;
+
+/**
+ * __useEditMessageMutation__
+ *
+ * To run a mutation, you first call `useEditMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMessageMutation, { data, loading, error }] = useEditMessageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      message_id: // value for 'message_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useEditMessageMutation(baseOptions?: Apollo.MutationHookOptions<EditMessageMutation, EditMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditMessageMutation, EditMessageMutationVariables>(EditMessageDocument, options);
+      }
+export type EditMessageMutationHookResult = ReturnType<typeof useEditMessageMutation>;
+export type EditMessageMutationResult = Apollo.MutationResult<EditMessageMutation>;
+export type EditMessageMutationOptions = Apollo.BaseMutationOptions<EditMessageMutation, EditMessageMutationVariables>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($data: CreateProjectInput!, $team_id: Float) {
   createProject(data: $data, team_id: $team_id) {
