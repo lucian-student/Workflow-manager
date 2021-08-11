@@ -1,4 +1,4 @@
-import { Card, GetProjectResponse, Link, useDeleteLinkMutation as useMutation } from '../../generated/apolloComponents';
+import { Card, GetProjectResponse, useDeleteLinkMutation as useMutation } from '../../generated/apolloComponents';
 import { getCardQuery } from '../../graphql/card/query/getCard';
 import update from 'immutability-helper'
 import { getProjectQuery } from '../../graphql/project/query/getProject';

@@ -163,3 +163,10 @@
     width: 36px;
     flex-shrink: 0;
 }
+
+.wrapper {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}

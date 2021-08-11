@@ -7,7 +7,7 @@ import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
 import { CardViewContext } from '../../context/cardView';
 import { Card, CardInput, Link, LinkInput, Message, MessageInput, Todo, TodoInput, useGetCardQuery } from '../../generated/apolloComponents';
 import { CardContextProvider } from '../../context/card';
-import { AiOutlineEdit } from 'react-icons/ai';
+import { AiOutlineEdit, AiFillDelete } from 'react-icons/ai';
 import { ProjectContext } from '../../context/project';
 import CardDataForm from './CardDataForm';
 import CardData from './CardData';
@@ -25,8 +25,7 @@ import { useCreateLinkMutation } from '../../graphqlHooks/link/useCreateLinkMuta
 import MessageForm from './MessageForm';
 import MessageDisplay from './MessageDisplay';
 import { useCreateMessageMutation } from '../../graphqlHooks/message/useCreateMessageMutation';
-import { UseFormReset, FieldValues } from 'react-hook-form';
-import { resetApolloContext } from '@apollo/client';
+import { useDeleteCardMutation } from '../../graphqlHooks/card/useDeleteCardMutation';
 
 interface Props {
     project_id?: string,
@@ -152,6 +151,21 @@ function CardView(): JSX.Element {
         }
     }
 
+    const { deleteCardMutation } = useDeleteCardMutation({
+        project_id,
+        team_id
+    });
+
+    async function deleteCard() {
+        await deleteCardMutation({
+            variables: {
+                team_id: Number(team_id),
+                project_id: Number(project_id),
+                card_id: Number(card_id)
+            }
+        });
+    }
+
     if (loading) {
         return (
             <Fragment>
@@ -176,17 +190,29 @@ function CardView(): JSX.Element {
                                 <ImCancelCircle className={cardViewStyles.cancel_modal}
                                     onClick={() => setOpen(false)} />
                                 {!role ? (
-                                    <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
-                                        onClick={() => setEditing(old => !old)}>
-                                        <AiOutlineEdit className={cardViewStyles.icon} />
-                                    </button>
+                                    <div className={cardViewStyles.icon_wrapper}>
+                                        <button ref={editForm.toggleButtonRef} className={[cardViewStyles.toggle_button, cardViewStyles.toggle].join(' ')}
+                                            onClick={() => setEditing(old => !old)}>
+                                            <AiOutlineEdit className={cardViewStyles.icon} />
+                                        </button>
+                                        <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                            onClick={deleteCard}>
+                                            <AiFillDelete className={cardViewStyles.icon} />
+                                        </button>
+                                    </div>
                                 ) : (
                                     <Fragment>
                                         {role <= 2 && (
-                                            <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
-                                                onClick={() => setEditing(old => !old)}>
-                                                <AiOutlineEdit className={cardViewStyles.icon} />
-                                            </button>
+                                            <div className={cardViewStyles.icon_wrapper}>
+                                                <button ref={editForm.toggleButtonRef} className={[cardViewStyles.toggle_button, cardViewStyles.toggle].join(' ')}
+                                                    onClick={() => setEditing(old => !old)}>
+                                                    <AiOutlineEdit className={cardViewStyles.icon} />
+                                                </button>
+                                                <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                                    onClick={deleteCard}>
+                                                    <AiFillDelete className={cardViewStyles.icon} />
+                                                </button>
+                                            </div>
                                         )}
                                     </Fragment>
                                 )}
@@ -253,7 +279,7 @@ function CardView(): JSX.Element {
                                     <TodoDisplay todos={data.getCard.todos as Todo[]} />
                                     <LinkDisplay links={data.getCard.links as Link[]} />
                                     <div className={cardViewStyles.messageSection}>
-                                        <MessageForm addMessage={addMessage} data={message}/>
+                                        <MessageForm addMessage={addMessage} data={message} />
                                         <MessageDisplay messages={data.getCard.messages as Message[]} />
                                     </div>
                                 </div>

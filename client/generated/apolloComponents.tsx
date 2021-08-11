@@ -53,6 +53,12 @@ export type CreateProjectInput = {
 };
 
 
+export type DeleteCardResponse = {
+  __typename?: 'DeleteCardResponse';
+  list_id: Scalars['ID'];
+  card_id: Scalars['ID'];
+};
+
 export type DeleteLinkResponse = {
   __typename?: 'DeleteLinkResponse';
   list_id: Scalars['ID'];
@@ -155,7 +161,7 @@ export type MessageResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   createCard: Card;
-  deleteCard: Scalars['ID'];
+  deleteCard: DeleteCardResponse;
   editCard: Card;
   moveCard: Scalars['Boolean'];
   createLink: LinkResponse;
@@ -521,6 +527,21 @@ export type CreateCardMutation = (
       { __typename?: 'Todo' }
       & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
     )> }
+  ) }
+);
+
+export type DeleteCardMutationVariables = Exact<{
+  card_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type DeleteCardMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCard: (
+    { __typename?: 'DeleteCardResponse' }
+    & Pick<DeleteCardResponse, 'card_id' | 'list_id'>
   ) }
 );
 
@@ -1029,6 +1050,42 @@ export function useCreateCardMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateCardMutationHookResult = ReturnType<typeof useCreateCardMutation>;
 export type CreateCardMutationResult = Apollo.MutationResult<CreateCardMutation>;
 export type CreateCardMutationOptions = Apollo.BaseMutationOptions<CreateCardMutation, CreateCardMutationVariables>;
+export const DeleteCardDocument = gql`
+    mutation DeleteCard($card_id: Float!, $project_id: Float!, $team_id: Float) {
+  deleteCard(card_id: $card_id, project_id: $project_id, team_id: $team_id) {
+    card_id
+    list_id
+  }
+}
+    `;
+export type DeleteCardMutationFn = Apollo.MutationFunction<DeleteCardMutation, DeleteCardMutationVariables>;
+
+/**
+ * __useDeleteCardMutation__
+ *
+ * To run a mutation, you first call `useDeleteCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCardMutation, { data, loading, error }] = useDeleteCardMutation({
+ *   variables: {
+ *      card_id: // value for 'card_id'
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useDeleteCardMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCardMutation, DeleteCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCardMutation, DeleteCardMutationVariables>(DeleteCardDocument, options);
+      }
+export type DeleteCardMutationHookResult = ReturnType<typeof useDeleteCardMutation>;
+export type DeleteCardMutationResult = Apollo.MutationResult<DeleteCardMutation>;
+export type DeleteCardMutationOptions = Apollo.BaseMutationOptions<DeleteCardMutation, DeleteCardMutationVariables>;
 export const EditCardDocument = gql`
     mutation EditCard($data: CardInput!, $card_id: Float!, $project_id: Float!, $team_id: Float) {
   editCard(

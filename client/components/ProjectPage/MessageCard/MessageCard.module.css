@@ -56,3 +56,7 @@
     flex-direction: column;
     justify-content: flex-start;
 }
+
+.edit_form_wrapper {
+    width: 100%;
+}

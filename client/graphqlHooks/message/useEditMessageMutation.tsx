@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Card, GetProjectResponse, Link, useEditLinkMutation as useMutation } from '../../generated/apolloComponents';
+import { Message, Card, GetProjectResponse, useEditMessageMutation as useMutatation } from '../../generated/apolloComponents';
 import { getCardQuery } from '../../graphql/card/query/getCard';
 import update from 'immutability-helper'
 import { getProjectQuery } from '../../graphql/project/query/getProject';
+
 
 interface Props {
     project_id: string
@@ -11,9 +12,9 @@ interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: Props) {
+export function useEditMessageMutation({ project_id, card_id, team_id, setOpen }: Props) {
 
-    const [editLinkMutation, { data }] = useMutation({
+    const [editMessageMutation, { data }] = useMutatation({
         onError(err) {
             console.log(err);
         },
@@ -36,9 +37,14 @@ export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: P
                 },
                 data: {
                     getCard: update(query.getCard, {
-                        links: {
-                            [query.getCard.links.findIndex(l => Number(l.link_id) === Number(result.data.editLink.link.link_id))]: {
-                                $merge: result.data.editLink.link as Link
+                        messages: {
+                            [query.getCard.messages.findIndex(m => Number(m.message_id) === Number(result.data.editMessage.message.message_id))]: {
+                                $apply: (m) => {
+                                    return {
+                                        ...result.data.editMessage.message,
+                                        username: m.username
+                                    } as Message
+                                }
                             }
                         }
                     })
@@ -53,11 +59,11 @@ export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: P
                 }
             }) as { getProject: GetProjectResponse };
 
-            const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(result.data.editLink.list_id));
-            const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(result.data.editLink.link.card_id));
+            const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(result.data.editMessage.list_id));
+            const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(result.data.editMessage.message.card_id));
 
-            const linkIndex = query2.getProject.project.lists[listIndex].cards[cardIndex].links
-                .findIndex(l => Number(l.link_id) === Number(result.data.editLink.link.link_id));
+            const messageIndex = query2.getProject.project.lists[listIndex].cards[cardIndex].messages
+                .findIndex(m => Number(m.message_id) === Number(result.data.editMessage.message.message_id));
 
             proxy.writeQuery({
                 query: getProjectQuery,
@@ -72,9 +78,14 @@ export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: P
                                 [listIndex]: {
                                     cards: {
                                         [cardIndex]: {
-                                            links: {
-                                                [linkIndex]: {
-                                                    $merge: result.data.editLink.link as Link
+                                            messages: {
+                                                [messageIndex]: {
+                                                    $apply: (m) => {
+                                                        return {
+                                                            ...result.data.editMessage.message,
+                                                            username: m.username
+                                                        } as Message
+                                                    }
                                                 }
                                             }
                                         }
@@ -95,6 +106,6 @@ export function useEditLinkMutation({ project_id, card_id, team_id, setOpen }: P
     }, [data]);
 
     return {
-        editLinkMutation
+        editMessageMutation
     }
 }

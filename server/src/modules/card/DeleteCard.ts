@@ -4,24 +4,30 @@ import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
 import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import DeleteCardResponse from "./deleteCard/deleteCardResponse";
 
 interface RawItem {
     order_index: number,
-    list_id:number
+    list_id: number
 }
 
 @Resolver()
 export default class DeleteCardResolver {
 
-    @UseMiddleware(isAuth, isCardAccessible,checkIfTeamAdmin)
-    @Mutation(() => ID)
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
+    @Mutation(() => DeleteCardResponse)
     async deleteCard(
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
-    ): Promise<number> {
+    ): Promise<DeleteCardResponse> {
+
+        const res = new DeleteCardResponse();
 
         await getManager().transaction("SERIALIZABLE", async (transactionalEntityManager) => {
+
+            res.card_id = card_id;
+
             const result = await transactionalEntityManager
                 .createQueryBuilder()
                 .delete()
@@ -30,7 +36,6 @@ export default class DeleteCardResolver {
                 .returning(['order_index', 'list_id'])
                 .execute();
 
-            console.log(result);
 
             if (!result.affected) {
                 throw Error('Card doesnt exist!');
@@ -49,9 +54,11 @@ export default class DeleteCardResolver {
                 .where('order_index >:order_index', { order_index })
                 .andWhere('list_id= :list_id', { list_id })
                 .execute();
+
+            res.list_id = list_id;
         });
 
-        return card_id;
+        return res;
     }
 
 }

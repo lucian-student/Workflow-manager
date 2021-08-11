@@ -28,12 +28,14 @@ function MessageForm({ addMessage, data }: Props): JSX.Element {
     return (
         <form onSubmit={handleSubmit(addMessage)} className={messageFormStyles.form}>
             <div className={messageFormStyles.input_wrapper}>
-                <div className={messageFormStyles.message_icon}>
-                    {currentUser !== false && currentUser !== true && (
-                        <Fragment>
-                            {currentUser.username.charAt(0)}
-                        </Fragment>
-                    )}
+                <div className={messageFormStyles.wrapper}>
+                    <div className={messageFormStyles.message_icon}>
+                        {currentUser !== false && currentUser !== true && (
+                            <Fragment>
+                                {currentUser.username.charAt(0)}
+                            </Fragment>
+                        )}
+                    </div>
                 </div>
                 <TextareaAutosize
                     className={[messageFormStyles.input, messageFormStyles.textarea].join(' ')}
