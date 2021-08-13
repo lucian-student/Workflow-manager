@@ -7,12 +7,14 @@ import { TiMessages } from 'react-icons/ti';
 import { BsLink45Deg } from 'react-icons/bs';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { CardViewContext } from '../../context/cardView';
+import { DraggableProvided } from 'react-beautiful-dnd';
 
 interface Props {
     card: CardType
+    provided: DraggableProvided
 }
 
-function Card({ card }: Props): JSX.Element {
+function Card({ card, provided }: Props): JSX.Element {
 
     const { setOpen, setCard_id } = useContext(CardViewContext);
 
@@ -31,7 +33,10 @@ function Card({ card }: Props): JSX.Element {
 
 
     return (
-        <div className={cardStyles.card} onClick={() => { setCard_id(card.card_id); setOpen(true) }}>
+        <div className={cardStyles.card} onClick={() => { setCard_id(card.card_id); setOpen(true) }}
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}>
             <div className={cardStyles.edit_icon_wrapper}>
                 <AiOutlineEdit className={cardStyles.edit_icon} />
             </div>

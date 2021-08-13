@@ -11,6 +11,7 @@ import CardView from "./CardView";
 import { MenuContextProvider } from '../../context/menu';
 import { ManagerContextProvider } from '../../context/manager';
 import { Fragment } from "react";
+import { Droppable, DragDropContext } from 'react-beautiful-dnd';
 
 interface Props {
     lists: List[]
@@ -19,6 +20,10 @@ interface Props {
 }
 
 function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
+
+    function onDragEnd() {
+
+    }
 
     return (
         <ManagerContextProvider>
@@ -39,14 +44,23 @@ function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
                                         )
                                     }
                                 })()}
-                                <div className={listDisplayStyles.list_display_wrapper}>
-                                    {lists.map(list => (
-                                        <CloseMenuContextProvider key={list.list_id}>
-                                            <ListCard list={list} />
-                                        </CloseMenuContextProvider>
-                                    ))}
-                                    <ListForm project_id={project_id} team_id={team_id} />
-                                </div>
+                                <DragDropContext onDragEnd={onDragEnd}>
+                                    <Droppable direction={"horizontal"} droppableId={'lists'} type='list'>
+                                        {provided => (
+                                            <div className={listDisplayStyles.list_display_wrapper}
+                                                {...provided.droppableProps}
+                                                ref={provided.innerRef}>
+                                                {lists.map((list, index) => (
+                                                    <CloseMenuContextProvider key={list.list_id}>
+                                                        <ListCard list={list} index={index} />
+                                                    </CloseMenuContextProvider>
+                                                ))}
+                                                <ListForm project_id={project_id} team_id={team_id} />
+                                                {provided.placeholder}
+                                            </div>
+                                        )}
+                                    </Droppable>
+                                </DragDropContext>
                             </MenuContextProvider>
                         )}
                     </CardViewContextProvider>

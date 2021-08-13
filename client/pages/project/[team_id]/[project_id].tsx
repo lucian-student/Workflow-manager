@@ -27,6 +27,8 @@ function ProjectPage(): JSX.Element {
         fetchPolicy: 'network-only',
         nextFetchPolicy: 'cache-only'
     });
+    
+   
 
     if (loading) {
         return (
@@ -52,9 +54,9 @@ function ProjectPage(): JSX.Element {
                 <ProjectContextProvider role={data.getProject.role} project={data.getProject.project as Project}>
                     <div className={projectPageStyles.content_wrapper}>
                         <OptionBar project={data.getProject.project as Project} />
-                        <ListDisplay lists={data.getProject.project.lists as List[]}
-                            project_id={data.getProject.project.project_id}
-                            team_id={data.getProject.project.team_id} />
+                            <ListDisplay lists={data.getProject.project.lists as List[]}
+                                project_id={data.getProject.project.project_id}
+                                team_id={data.getProject.project.team_id} />
                     </div>
                 </ProjectContextProvider>
             )}

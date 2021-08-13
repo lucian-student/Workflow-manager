@@ -158,19 +158,33 @@ export type MessageResponse = {
   message: Message;
 };
 
+export type MoveCardResponse = {
+  __typename?: 'MoveCardResponse';
+  card_id: Scalars['ID'];
+  old_list_id: Scalars['ID'];
+  list_id: Scalars['ID'];
+  order_index: Scalars['Float'];
+};
+
+export type MoveListResponse = {
+  __typename?: 'MoveListResponse';
+  order_index: Scalars['Float'];
+  list_id: Scalars['ID'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createCard: Card;
   deleteCard: DeleteCardResponse;
   editCard: Card;
-  moveCard: Scalars['Boolean'];
+  moveCard: MoveCardResponse;
   createLink: LinkResponse;
   deleteLink: DeleteLinkResponse;
   editLink: LinkResponse;
   createList: List;
   deleteList: Scalars['ID'];
   editList: List;
-  moveList: Scalars['Boolean'];
+  moveList: MoveListResponse;
   createMessage: MessageResponse;
   deleteMessage: DeleteMessageResponse;
   editMessage: MessageResponse;
@@ -219,6 +233,7 @@ export type MutationMoveCardArgs = {
   card_id: Scalars['Float'];
   project_id: Scalars['Float'];
   end_index: Scalars['Float'];
+  list_id: Scalars['Float'];
 };
 
 
@@ -561,6 +576,23 @@ export type EditCardMutation = (
   ) }
 );
 
+export type MoveCardMutationVariables = Exact<{
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  end_index: Scalars['Float'];
+  card_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type MoveCardMutation = (
+  { __typename?: 'Mutation' }
+  & { moveCard: (
+    { __typename?: 'MoveCardResponse' }
+    & Pick<MoveCardResponse, 'list_id' | 'old_list_id' | 'card_id' | 'order_index'>
+  ) }
+);
+
 export type GetCardQueryVariables = Exact<{
   project_id: Scalars['Float'];
   card_id: Scalars['Float'];
@@ -695,6 +727,22 @@ export type EditListMutation = (
   & { editList: (
     { __typename?: 'List' }
     & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+  ) }
+);
+
+export type MoveListMutationVariables = Exact<{
+  list_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+  end_index: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type MoveListMutation = (
+  { __typename?: 'Mutation' }
+  & { moveList: (
+    { __typename?: 'MoveListResponse' }
+    & Pick<MoveListResponse, 'order_index' | 'list_id'>
   ) }
 );
 
@@ -1132,6 +1180,52 @@ export function useEditCardMutation(baseOptions?: Apollo.MutationHookOptions<Edi
 export type EditCardMutationHookResult = ReturnType<typeof useEditCardMutation>;
 export type EditCardMutationResult = Apollo.MutationResult<EditCardMutation>;
 export type EditCardMutationOptions = Apollo.BaseMutationOptions<EditCardMutation, EditCardMutationVariables>;
+export const MoveCardDocument = gql`
+    mutation MoveCard($list_id: Float!, $project_id: Float!, $end_index: Float!, $card_id: Float!, $team_id: Float) {
+  moveCard(
+    list_id: $list_id
+    project_id: $project_id
+    end_index: $end_index
+    card_id: $card_id
+    team_id: $team_id
+  ) {
+    list_id
+    old_list_id
+    card_id
+    order_index
+  }
+}
+    `;
+export type MoveCardMutationFn = Apollo.MutationFunction<MoveCardMutation, MoveCardMutationVariables>;
+
+/**
+ * __useMoveCardMutation__
+ *
+ * To run a mutation, you first call `useMoveCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveCardMutation, { data, loading, error }] = useMoveCardMutation({
+ *   variables: {
+ *      list_id: // value for 'list_id'
+ *      project_id: // value for 'project_id'
+ *      end_index: // value for 'end_index'
+ *      card_id: // value for 'card_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useMoveCardMutation(baseOptions?: Apollo.MutationHookOptions<MoveCardMutation, MoveCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MoveCardMutation, MoveCardMutationVariables>(MoveCardDocument, options);
+      }
+export type MoveCardMutationHookResult = ReturnType<typeof useMoveCardMutation>;
+export type MoveCardMutationResult = Apollo.MutationResult<MoveCardMutation>;
+export type MoveCardMutationOptions = Apollo.BaseMutationOptions<MoveCardMutation, MoveCardMutationVariables>;
 export const GetCardDocument = gql`
     query GetCard($project_id: Float!, $card_id: Float!, $team_id: Float) {
   getCard(project_id: $project_id, card_id: $card_id, team_id: $team_id) {
@@ -1476,6 +1570,48 @@ export function useEditListMutation(baseOptions?: Apollo.MutationHookOptions<Edi
 export type EditListMutationHookResult = ReturnType<typeof useEditListMutation>;
 export type EditListMutationResult = Apollo.MutationResult<EditListMutation>;
 export type EditListMutationOptions = Apollo.BaseMutationOptions<EditListMutation, EditListMutationVariables>;
+export const MoveListDocument = gql`
+    mutation MoveList($list_id: Float!, $project_id: Float!, $end_index: Float!, $team_id: Float) {
+  moveList(
+    list_id: $list_id
+    project_id: $project_id
+    end_index: $end_index
+    team_id: $team_id
+  ) {
+    order_index
+    list_id
+  }
+}
+    `;
+export type MoveListMutationFn = Apollo.MutationFunction<MoveListMutation, MoveListMutationVariables>;
+
+/**
+ * __useMoveListMutation__
+ *
+ * To run a mutation, you first call `useMoveListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveListMutation, { data, loading, error }] = useMoveListMutation({
+ *   variables: {
+ *      list_id: // value for 'list_id'
+ *      project_id: // value for 'project_id'
+ *      end_index: // value for 'end_index'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useMoveListMutation(baseOptions?: Apollo.MutationHookOptions<MoveListMutation, MoveListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MoveListMutation, MoveListMutationVariables>(MoveListDocument, options);
+      }
+export type MoveListMutationHookResult = ReturnType<typeof useMoveListMutation>;
+export type MoveListMutationResult = Apollo.MutationResult<MoveListMutation>;
+export type MoveListMutationOptions = Apollo.BaseMutationOptions<MoveListMutation, MoveListMutationVariables>;
 export const CreateMessageDocument = gql`
     mutation CreateMessage($data: MessageInput!, $project_id: Float!, $card_id: Float!, $team_id: Float) {
   createMessage(

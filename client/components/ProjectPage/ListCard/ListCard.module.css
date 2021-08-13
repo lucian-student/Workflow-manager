@@ -3,7 +3,7 @@
     margin-right: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
-    height: calc(100% - 20px);
+    flex-grow: 1;
 }
 
 .list_card {
@@ -12,7 +12,7 @@
     padding: 0.25em;
     background-color: #fff;
     width: 250px;
-    max-height: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -40,7 +40,6 @@
 
 .card_body {
     flex-grow: 1;
-    overflow-y: auto;
 }
 
 .icon_wrapper {
