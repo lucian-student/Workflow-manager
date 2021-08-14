@@ -45,6 +45,10 @@ function ListOptions({ list, open, setOpen }: Props): JSX.Element {
 
             proxy.writeQuery({
                 query: getProjectQuery,
+                variables: {
+                    project_id: Number(list.project_id),
+                    team_id: !team_id ? null : Number(team_id)
+                },
                 data: {
                     getProject: update(data.getProject, {
                         project: {

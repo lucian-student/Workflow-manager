@@ -109,7 +109,7 @@ function CardForm(): JSX.Element {
                             lists: {
                                 [project.lists.findIndex(l => Number(l.list_id) === Number(list_id))]: {
                                     cards: {
-                                        $unshift: [result.data.createCard]
+                                        $push: [result.data.createCard]
                                     }
                                 }
                             }

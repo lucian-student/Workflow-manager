@@ -55,7 +55,7 @@ export default class MoveListResolver {
                 .createQueryBuilder()
                 .select('count(distinct t2.list_id)', 'list_count')
                 .from(Project, 't1')
-                .leftJoin(List, 't2', 't1.project_id=t3.project_id')
+                .leftJoin(List, 't2', 't1.project_id=t2.project_id')
                 .groupBy('t1.project_id')
                 .where('t1.project_id= :project_id', { project_id })
                 .getRawOne();
@@ -80,7 +80,7 @@ export default class MoveListResolver {
 
             await transactionalEntityManager.update(List, { list_id }, { order_index: finish_index });
 
-            res.order_index = end_index;
+            res.order_index = finish_index;
             res.list_id = list_id;
         });
 

@@ -44,6 +44,16 @@ export default class MoveCard {
             }
         }
 
+        async function orderNewList(manager: EntityManager, order_index: number) {
+            await manager
+                .createQueryBuilder()
+                .update(Card)
+                .set({ order_index: () => 'order_index+1' })
+                .where('list_id= :list_id', { list_id })
+                .andWhere('order_index >=:order_index', { order_index })
+                .execute();
+        }
+
         async function fixList(manager: EntityManager, order_index: number, card: Card) {
             await manager
                 .createQueryBuilder()
@@ -85,8 +95,10 @@ export default class MoveCard {
 
             const order_index = card.order_index;
 
-            if (Number(card.list_id !== list_id)) {
+            console.log(Number(card.list_id) !== list_id);
 
+            if (Number(card.list_id) !== list_id) {
+                console.log('different list');
                 // check if list belongs to correct project
 
                 // check if endIndex is bigger than the biggest+1 or smaller
@@ -104,7 +116,7 @@ export default class MoveCard {
                 }
 
                 //move card between list
-                await orderList(transactionalEntityManager, order_index, finish_index);
+                await orderNewList(transactionalEntityManager, finish_index);
 
                 await fixList(transactionalEntityManager, order_index, card);
 
@@ -112,12 +124,12 @@ export default class MoveCard {
 
                 res.list_id = list_id;
                 res.old_list_id = card.list_id;
-                res.order_index = end_index;
+                res.order_index = finish_index;
                 res.card_id = card_id;
 
-
-
             } else {
+
+                console.log('same list');
 
                 const count = await getCardCount(transactionalEntityManager);
 
@@ -135,12 +147,13 @@ export default class MoveCard {
 
                 res.list_id = list_id;
                 res.old_list_id = list_id;
-                res.order_index = end_index;
+                res.order_index = finish_index;
                 res.card_id = card_id;
 
+                console.log(res);
 
                 // check if endIndex is bigger than the biggest
-                await transactionalEntityManager.update(Card, { card_id }, { order_index: end_index });
+                await transactionalEntityManager.update(Card, { card_id }, { order_index: finish_index });
             }
         });
 

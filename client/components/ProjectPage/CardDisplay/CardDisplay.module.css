@@ -3,3 +3,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+.dropzone {
+    height: 10px;
+}

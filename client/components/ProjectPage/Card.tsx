@@ -31,12 +31,11 @@ function Card({ card, provided }: Props): JSX.Element {
         return todo_done + '/' + todo_count;
     }
 
-
     return (
         <div className={cardStyles.card} onClick={() => { setCard_id(card.card_id); setOpen(true) }}
             {...provided.draggableProps}
             ref={provided.innerRef}
-            {...provided.dragHandleProps}>
+            {...provided.dragHandleProps} >
             <div className={cardStyles.edit_icon_wrapper}>
                 <AiOutlineEdit className={cardStyles.edit_icon} />
             </div>
@@ -62,7 +61,7 @@ function Card({ card, provided }: Props): JSX.Element {
                     {card.links.length}
                 </div>
             </div>
-        </div>
+        </ div>
     )
 }
 

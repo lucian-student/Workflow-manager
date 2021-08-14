@@ -11,7 +11,9 @@ import CardView from "./CardView";
 import { MenuContextProvider } from '../../context/menu';
 import { ManagerContextProvider } from '../../context/manager';
 import { Fragment } from "react";
-import { Droppable, DragDropContext } from 'react-beautiful-dnd';
+import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
+import useMoveListMutation from '../../graphqlHooks/list/useMoveListMutation';
+import useMoveCardMutation from '../../graphqlHooks/card/useMoveCardMutation';
 
 interface Props {
     lists: List[]
@@ -21,8 +23,78 @@ interface Props {
 
 function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
 
-    function onDragEnd() {
+    const { moveListMutation } = useMoveListMutation({
+        project_id,
+        team_id
+    });
 
+    const { moveCardMutation } = useMoveCardMutation({
+        project_id,
+        team_id
+    });
+
+    function onDragEnd(result: DropResult) {
+
+        const { draggableId, destination, source, type } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+
+        const end_index = destination.index;
+
+        if (type === 'list') {
+            const list_id = draggableId.split('list')[1];
+
+            moveListMutation({
+                variables: {
+                    list_id: Number(list_id),
+                    end_index,
+                    project_id: Number(project_id),
+                    team_id: Number(team_id)
+                },
+                optimisticResponse: {
+                    moveList: {
+                        __typename: 'MoveListResponse',
+                        list_id,
+                        order_index: end_index
+                    }
+                }
+            });
+        }
+
+        if (type === 'card') {
+            const card_id = draggableId.split('card')[1];
+            const list_id = destination.droppableId.split('cards')[1];
+            const old_list_id = source.droppableId.split('cards')[1];
+
+            moveCardMutation({
+                variables: {
+                    card_id: Number(card_id),
+                    list_id: Number(list_id),
+                    end_index,
+                    project_id: Number(project_id),
+                    team_id: Number(team_id)
+                },
+                optimisticResponse: {
+                    moveCard: {
+                        __typename: 'MoveCardResponse',
+                        list_id,
+                        card_id,
+                        old_list_id,
+                        order_index: end_index
+                    }
+                }
+            });
+
+        }
     }
 
     return (
@@ -55,8 +127,8 @@ function ListDisplay({ lists, project_id, team_id }: Props): JSX.Element {
                                                         <ListCard list={list} index={index} />
                                                     </CloseMenuContextProvider>
                                                 ))}
-                                                <ListForm project_id={project_id} team_id={team_id} />
                                                 {provided.placeholder}
+                                                <ListForm project_id={project_id} team_id={team_id} />
                                             </div>
                                         )}
                                     </Droppable>

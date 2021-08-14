@@ -28,6 +28,7 @@ export default class CreateCardResolver {
             const count = await transactionalEntityManager.
                 createQueryBuilder(Card, 't1')
                 .where("t1.project_id = :project_id", { project_id, list_id })
+                .where('t1.list_id= :list_id', { list_id })
                 .getCount();
 
             const cardResult = await transactionalEntityManager

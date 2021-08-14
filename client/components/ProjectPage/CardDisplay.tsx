@@ -8,22 +8,26 @@ interface Props {
     list_id: string
 }
 
-function CardDisplay({ cards,list_id }: Props): JSX.Element {
+function CardDisplay({ cards, list_id }: Props): JSX.Element {
 
     return (
         <Droppable droppableId={`cards${list_id}`} type={`card`}>
-            {provided => (
+            {(provided) => (
                 <div className={cardDisplayStyles.card_display}
                     {...provided.droppableProps}
                     ref={provided.innerRef}>
                     {cards.map((card, index) => (
                         <Draggable draggableId={`card${card.card_id}`} key={`card${card.card_id}`} index={index}>
-                            {props => (
+                            {(props) => (
                                 <CardCard card={card} provided={props} />
                             )}
                         </Draggable>
                     ))}
                     {provided.placeholder}
+                    {cards.length === 0 && (
+                        <div className={cardDisplayStyles.dropzone}>
+                        </div>
+                    )}
                 </div>
             )}
         </Droppable>

@@ -3,6 +3,7 @@ import isAuth from "../../middleware/isAuth";
 import List from "../../entity/List";
 import { getManager } from "typeorm";
 import isListAccessible from "../../middleware/isListAccessible";
+import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 
 interface RawItem {
     order_index: number
@@ -11,7 +12,7 @@ interface RawItem {
 @Resolver()
 export default class DeleteListResolver {
 
-    @UseMiddleware(isAuth, isListAccessible)
+    @UseMiddleware(isAuth, isListAccessible,checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteList(
         @Arg('project_id') project_id: number,
@@ -27,8 +28,6 @@ export default class DeleteListResolver {
                 .where('list_id = :list_id', { list_id })
                 .returning(['order_index'])
                 .execute();
-
-            console.log(result);
 
             if (!result.affected) {
                 throw Error('List doesnt exist!');
