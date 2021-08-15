@@ -36,5 +36,10 @@ export default class Team extends BaseEntity {
     })
     last_active: Date;
 
+    @Field({ nullable: true })
+    user_count: number
+
+    @Field({ nullable: true })
+    project_count: number
     //Many to one user
 }

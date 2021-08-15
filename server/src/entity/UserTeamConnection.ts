@@ -46,4 +46,6 @@ export default class UserTeamConnection extends BaseEntity {
     @JoinColumn({ name: 'team_id' })
     team: Team;
 
+    @Field({ nullable: true })
+    username: string
 }
