@@ -48,4 +48,7 @@ export default class UserTeamConnection extends BaseEntity {
 
     @Field({ nullable: true })
     username: string
+
+    @Field({ nullable: true })
+    teamname: string
 }

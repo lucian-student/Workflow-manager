@@ -94,6 +94,18 @@ export type GetProjectResponse = {
   role?: Maybe<Scalars['Float']>;
 };
 
+export type GetTeamsResponse = {
+  __typename?: 'GetTeamsResponse';
+  teams: Array<Team>;
+  user_id: Scalars['ID'];
+};
+
+export type GetUserTeamConnectionsResponse = {
+  __typename?: 'GetUserTeamConnectionsResponse';
+  user_id: Scalars['ID'];
+  cons: Array<UserTeamConnection>;
+};
+
 export type Link = {
   __typename?: 'Link';
   link_id: Scalars['ID'];
@@ -421,9 +433,12 @@ export type Query = {
   getCard?: Maybe<Card>;
   getProject: GetProjectResponse;
   getProjects: Array<Project>;
+  getTeam?: Maybe<Team>;
+  getTeams: GetTeamsResponse;
   hello: Scalars['String'];
   me?: Maybe<User>;
   getUserTeamConnection?: Maybe<UserTeamConnection>;
+  getUserTeamConnections: GetUserTeamConnectionsResponse;
 };
 
 
@@ -443,6 +458,11 @@ export type QueryGetProjectArgs = {
 export type QueryGetProjectsArgs = {
   search?: Maybe<Scalars['String']>;
   sort_option: Scalars['String'];
+};
+
+
+export type QueryGetTeamArgs = {
+  team_id: Scalars['Float'];
 };
 
 
@@ -471,6 +491,8 @@ export type Team = {
   cons: Array<UserTeamConnection>;
   description: Scalars['String'];
   last_active: Scalars['DateTime'];
+  user_count?: Maybe<Scalars['Float']>;
+  project_count?: Maybe<Scalars['Float']>;
 };
 
 export type TeamInput = {
@@ -517,6 +539,8 @@ export type UserTeamConnection = {
   user: User;
   team_id: Scalars['ID'];
   team: Team;
+  username?: Maybe<Scalars['String']>;
+  teamname?: Maybe<Scalars['String']>;
 };
 
 export type CreateCardMutationVariables = Exact<{
@@ -889,6 +913,20 @@ export type GetProjectsQuery = (
     { __typename?: 'Project' }
     & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated' | 'team_name'>
   )> }
+);
+
+export type GetTeamsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTeamsQuery = (
+  { __typename?: 'Query' }
+  & { getTeams: (
+    { __typename?: 'GetTeamsResponse' }
+    & { teams: Array<(
+      { __typename?: 'Team' }
+      & Pick<Team, 'team_id' | 'name' | 'description' | 'last_active' | 'user_count' | 'project_count'>
+    )> }
+  ) }
 );
 
 export type CreateTodoMutationVariables = Exact<{
@@ -1995,6 +2033,47 @@ export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
+export const GetTeamsDocument = gql`
+    query GetTeams {
+  getTeams {
+    teams {
+      team_id
+      name
+      description
+      last_active
+      user_count
+      project_count
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTeamsQuery__
+ *
+ * To run a query within a React component, call `useGetTeamsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTeamsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTeamsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTeamsQuery(baseOptions?: Apollo.QueryHookOptions<GetTeamsQuery, GetTeamsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTeamsQuery, GetTeamsQueryVariables>(GetTeamsDocument, options);
+      }
+export function useGetTeamsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTeamsQuery, GetTeamsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTeamsQuery, GetTeamsQueryVariables>(GetTeamsDocument, options);
+        }
+export type GetTeamsQueryHookResult = ReturnType<typeof useGetTeamsQuery>;
+export type GetTeamsLazyQueryHookResult = ReturnType<typeof useGetTeamsLazyQuery>;
+export type GetTeamsQueryResult = Apollo.QueryResult<GetTeamsQuery, GetTeamsQueryVariables>;
 export const CreateTodoDocument = gql`
     mutation CreateTodo($data: TodoInput!, $project_id: Float!, $card_id: Float!, $team_id: Float) {
   createTodo(

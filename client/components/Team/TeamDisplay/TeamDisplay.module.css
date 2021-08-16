@@ -1,0 +1,11 @@
+.team_display {
+    padding: 1em;
+    width: 80%;
+}
+
+
+@media screen and (max-width:550px) {
+    .team_display {
+        width: 95%;
+    }
+}

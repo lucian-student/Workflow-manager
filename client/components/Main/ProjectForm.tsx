@@ -153,7 +153,7 @@ function ProjectForm(): JSX.Element {
                         </div>
                         <button className={projectFormStyles.submit_button}
                             type='submit'>
-                            Submit</button>
+                            Create Project</button>
                     </form>
                 </div>
             </div>
