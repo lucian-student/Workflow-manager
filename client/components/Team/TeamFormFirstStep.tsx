@@ -1,16 +1,56 @@
 import React from 'react';
 import { MdSubtitles, MdDescription } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
-import { TeamInput } from '../../generated/apolloComponents';
+import { GetTeamsQuery, TeamInput } from '../../generated/apolloComponents';
 import teamFormFirstStepStyles from './TeamFormFirstStep/TeamFormFirstStep.module.css';
+import { useCreateTeamMutation } from '../../generated/apolloComponents';
+import { getTeamsMutation } from '../../graphql/team/query/getTeams';
+import update from 'immutability-helper';
+import { useEffect } from 'react';
 
-function TeamFormFirstStep(): JSX.Element {
+interface Props {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function TeamFormFirstStep({ setOpen }: Props): JSX.Element {
 
     const { handleSubmit, formState: { errors }, register } = useForm();
 
-    function saveTeamData(data: TeamInput) {
+    const [createTeamMutation, { data }] = useCreateTeamMutation({
+        onError(err) {
+            console.log(err.message);
+        },
+        update(proxy, result) {
+            const query: GetTeamsQuery = proxy.readQuery({
+                query: getTeamsMutation
+            });
 
+            proxy.writeQuery({
+                query: getTeamsMutation,
+                data: {
+                    getTeams: update(query.getTeams, {
+                        teams: {
+                            $unshift: [result.data.createTeam]
+                        }
+                    })
+                } as GetTeamsQuery
+            })
+        }
+    });
+
+    async function saveTeamData(data: TeamInput) {
+        await createTeamMutation({
+            variables: {
+                data
+            }
+        });
     }
+
+    useEffect(() => {
+        if (data) {
+            setOpen(false);
+        }
+    }, [data]);
 
     return (
         <form onSubmit={handleSubmit(saveTeamData)} className={teamFormFirstStepStyles.form}>

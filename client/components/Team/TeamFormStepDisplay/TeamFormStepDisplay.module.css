@@ -1,0 +1,45 @@
+.display_wrapper {
+    margin: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.step_wrapper {
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+}
+
+.icon_wrapper {
+    background-color: #184b44;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    flex-shrink: 0;
+}
+
+.active{
+    opacity: 1;
+}
+
+.text {
+    color: #184b44;
+}
+
+@media screen and (max-width:550px) {
+    .display_wrapper {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+    }
+}
+
+@media screen and (max-width:400px) {
+  .step_wrapper{
+      flex-direction: column;
+  }
+}
