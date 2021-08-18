@@ -12,7 +12,8 @@ export default class GetProjectsResolver {
     async getProjects(
         @Ctx() ctx: MyContext,
         @Arg('sort_option') sort_option: string,
-        @Arg('search', { nullable: true }) search?: string
+        @Arg('search', { nullable: true }) search?: string,
+        @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<Project[]> {
         const user_id = ctx.payload.user_id;
 
@@ -22,8 +23,11 @@ export default class GetProjectsResolver {
             search_string = '%' + search + '%';
         }
 
-        const projects = await getManager()
-            .query(`
+        let projects: Project[] = [];
+
+        if (!team_id) {
+            projects = await getManager()
+                .query(`
                 select projects.* from
                 ((SELECT *
                 FROM project
@@ -44,6 +48,22 @@ export default class GetProjectsResolver {
                 case when $3='deadline_asc' then deadline end ASC,
                 case when $3='deadline_desc' then deadline end DESC
         `, [user_id, search_string, sort_option]);
+        } else {
+            projects = await getManager()
+                .query(`
+                select * from project
+                where team_id=$1
+                and lower(project.name) like lower($2)
+                ORDER BY 
+                case when $3='last_viewed_asc' then last_updated end ASC ,
+                case when $3='last_viewed_desc' then last_updated end DESC,
+                case when $3='alphabetical_asc' then name end ASC,
+                case when $3='alphabetical_desc' then name end DESC,
+                case when $3='deadline_asc' then deadline end ASC,
+                case when $3='deadline_desc' then deadline end DESC
+            `, [team_id, search_string, sort_option])
+        }
+
 
         return projects;
     }

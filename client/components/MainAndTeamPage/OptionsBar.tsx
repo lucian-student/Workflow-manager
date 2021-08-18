@@ -4,8 +4,11 @@ import SortMenu from "./SortMenu";
 import SearchBar from "./SearchBar";
 import OptionsMenu from "./OptionsMenu";
 
+interface Props {
+    team: boolean
+}
 
-function OptionsBar(): JSX.Element {
+function OptionsBar({ team }: Props): JSX.Element {
 
     return (
         <Fragment>
@@ -17,7 +20,9 @@ function OptionsBar(): JSX.Element {
                     <SearchBar />
                 </div>
                 <div className={optionsBarStyles.bar_item_right}>
-                    <OptionsMenu />
+                    {!team && (
+                        <OptionsMenu />
+                    )}
                 </div>
             </div>
             <div className={optionsBarStyles.mobile_wrapper}>
@@ -26,9 +31,11 @@ function OptionsBar(): JSX.Element {
                         <div className={optionsBarStyles.bar_item}>
                             <SearchBar />
                         </div>
-                        <div className={optionsBarStyles.bar_item}>
-                            <OptionsMenu />
-                        </div>
+                        {!team && (
+                            <div className={optionsBarStyles.bar_item}>
+                                <OptionsMenu />
+                            </div>
+                        )}
                         <div className={optionsBarStyles.bar_item}>
                             <SortMenu />
                         </div>

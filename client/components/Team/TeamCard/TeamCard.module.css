@@ -42,6 +42,7 @@
 .text{
     color:#184b44;
     font-size: 1em;
+    word-break: break-all;
 }
 
 .icon {

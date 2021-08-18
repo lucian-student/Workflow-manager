@@ -10,7 +10,11 @@ import { ProjectSortContext } from '../../context/projectSort';
 import { GiProgression } from 'react-icons/gi';
 import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md'
 
-function ProjectForm(): JSX.Element {
+interface Props {
+    team_id: number | null
+}
+
+function ProjectForm({ team_id }: Props): JSX.Element {
 
     const { handleSubmit, register, formState: { errors }, reset } = useForm();
     const { menuRef, open, setOpen } = useDropDownMenu();
@@ -25,7 +29,8 @@ function ProjectForm(): JSX.Element {
             query: getProjectsQuery,
             variables: {
                 sort_option: sortOptions.order_param + sortOptions.order,
-                search: sortOptions.search
+                search: sortOptions.search,
+                team_id: team_id
             }
         }]
     });
@@ -43,7 +48,8 @@ function ProjectForm(): JSX.Element {
                 data: {
                     ...data,
                     name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
-                }
+                },
+                team_id: Number(team_id)
             }
         });
     }

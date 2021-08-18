@@ -17,6 +17,7 @@ query GetTeam(
         username
         team_id
         confirmed
+        role
       }
     }
 }

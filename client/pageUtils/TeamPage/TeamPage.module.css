@@ -2,3 +2,19 @@
     position: relative;
     width: 100%;
 }
+
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+    flex-direction: column;
+}
+
+.projects_wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 1em;
+}
+

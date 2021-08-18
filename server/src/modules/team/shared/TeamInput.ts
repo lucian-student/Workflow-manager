@@ -6,7 +6,7 @@ import StringLength from '../../../custom_validators/StringLength';
 export default class TeamInput {
 
     @Field()
-    @StringLength(3, 15, { message: "Name length has to be between 3 and 15 characters!" })
+    @StringLength(1, 20, { message: "Name length has to be between 1 and 20 characters!" })
     @IsNotEmpty()
     name: string;
 

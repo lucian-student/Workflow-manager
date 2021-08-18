@@ -36,15 +36,14 @@ export default class GetTeamsResolver {
                     .addSelect('t3.team_id')
                     .from(Team, 't3')
                     .leftJoin(Project, 't5', 't5.team_id=t3.team_id')
-                    .leftJoin(UserTeamConnection,'t6', 't6.team_id=t3.team_id')
+                    .leftJoin(UserTeamConnection, 't6', 't6.team_id=t3.team_id')
                     .where('t6.confirmed=true')
                     .groupBy('t3.team_id')
 
                 return subQuery;
             }, 't4', 't4.t3_team_id=t2.team_id')
+            .orderBy('t2.last_active', 'DESC')
             .getRawMany();
-
-        console.log(teams);
 
         const res = new GetTeamsResponse();
         res.user_id = user_id;

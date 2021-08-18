@@ -456,6 +456,7 @@ export type QueryGetProjectArgs = {
 
 
 export type QueryGetProjectsArgs = {
+  team_id?: Maybe<Scalars['Float']>;
   search?: Maybe<Scalars['String']>;
   sort_option: Scalars['String'];
 };
@@ -904,6 +905,7 @@ export type GetProjectQuery = (
 export type GetProjectsQueryVariables = Exact<{
   sort_option: Scalars['String'];
   search?: Maybe<Scalars['String']>;
+  team_id?: Maybe<Scalars['Float']>;
 }>;
 
 
@@ -940,7 +942,7 @@ export type GetTeamQuery = (
     & Pick<Team, 'team_id' | 'name' | 'description' | 'last_active'>
     & { cons: Array<(
       { __typename?: 'UserTeamConnection' }
-      & Pick<UserTeamConnection, 'con_id' | 'user_id' | 'username' | 'team_id' | 'confirmed'>
+      & Pick<UserTeamConnection, 'con_id' | 'user_id' | 'username' | 'team_id' | 'confirmed' | 'role'>
     )> }
   )> }
 );
@@ -2020,8 +2022,8 @@ export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
 export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
 export type GetProjectQueryResult = Apollo.QueryResult<GetProjectQuery, GetProjectQueryVariables>;
 export const GetProjectsDocument = gql`
-    query GetProjects($sort_option: String!, $search: String) {
-  getProjects(sort_option: $sort_option, search: $search) {
+    query GetProjects($sort_option: String!, $search: String, $team_id: Float) {
+  getProjects(sort_option: $sort_option, search: $search, team_id: $team_id) {
     project_id
     name
     deadline
@@ -2049,6 +2051,7 @@ export const GetProjectsDocument = gql`
  *   variables: {
  *      sort_option: // value for 'sort_option'
  *      search: // value for 'search'
+ *      team_id: // value for 'team_id'
  *   },
  * });
  */
@@ -2114,6 +2117,7 @@ export const GetTeamDocument = gql`
       username
       team_id
       confirmed
+      role
     }
   }
 }

@@ -5,8 +5,11 @@ import projectDisplayStyle from './ProjectDisplay/ProjectDisplay.module.css';
 import ProjectCard from './ProjectCard';
 import { ProjectSortContext } from '../../context/projectSort';
 
+interface Props{
+    team_id:number|null
+}
 
-function ProjectDisplay(): JSX.Element {
+function ProjectDisplay({team_id}:Props): JSX.Element {
 
     const { sortOptions } = useContext(ProjectSortContext);
 
@@ -16,7 +19,8 @@ function ProjectDisplay(): JSX.Element {
         fetchPolicy: 'network-only',
         variables: {
             sort_option: sortOptions.order_param + sortOptions.order,
-            search: sortOptions.search
+            search: sortOptions.search,
+            team_id: team_id
         },
         onError(err) {
             console.log(err);
