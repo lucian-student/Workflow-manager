@@ -6,15 +6,16 @@ import OptionsMenu from "./OptionsMenu";
 
 interface Props {
     team: boolean
+    type: 'project' | 'member'
 }
 
-function OptionsBar({ team }: Props): JSX.Element {
+function OptionsBar({ team, type }: Props): JSX.Element {
 
     return (
         <Fragment>
             <div className={optionsBarStyles.options_bar_pc}>
                 <div className={optionsBarStyles.bar_item_left}>
-                    <SortMenu />
+                    <SortMenu type={type}/>
                 </div>
                 <div className={optionsBarStyles.bar_item_center}>
                     <SearchBar />
@@ -37,7 +38,7 @@ function OptionsBar({ team }: Props): JSX.Element {
                             </div>
                         )}
                         <div className={optionsBarStyles.bar_item}>
-                            <SortMenu />
+                            <SortMenu type={type}/>
                         </div>
                     </div>
                 </div>

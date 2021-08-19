@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useDropDownMenu } from "../../hooks/useDropdownMenu";
 import { CreateProjectInput, useCreateProjectMutation } from '../../generated/apolloComponents';
 import { getProjectsQuery } from '../../graphql/project/query/getProjects';
-import { ProjectSortContext } from '../../context/projectSort';
+import { SortContext } from '../../context/sort';
 import { GiProgression } from 'react-icons/gi';
 import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md'
 
@@ -19,7 +19,7 @@ function ProjectForm({ team_id }: Props): JSX.Element {
     const { handleSubmit, register, formState: { errors }, reset } = useForm();
     const { menuRef, open, setOpen } = useDropDownMenu();
 
-    const { sortOptions } = useContext(ProjectSortContext);
+    const { sortOptions } = useContext(SortContext);
 
     const [createProjectMutation, { data }] = useCreateProjectMutation({
         onError(err) {

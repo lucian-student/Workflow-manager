@@ -3,20 +3,21 @@ import { Fragment } from 'react';
 import { useGetProjectsLazyQuery } from '../../generated/apolloComponents';
 import projectDisplayStyle from './ProjectDisplay/ProjectDisplay.module.css';
 import ProjectCard from './ProjectCard';
-import { ProjectSortContext } from '../../context/projectSort';
+import { SortContext } from '../../context/sort';
 
-interface Props{
-    team_id:number|null
+interface Props {
+    team_id: number | null
 }
 
-function ProjectDisplay({team_id}:Props): JSX.Element {
+function ProjectDisplay({ team_id }: Props): JSX.Element {
 
-    const { sortOptions } = useContext(ProjectSortContext);
+    const { sortOptions } = useContext(SortContext);
 
     const [projects, setProjects] = useState([]);
 
     const [getProjects, { data }] = useGetProjectsLazyQuery({
         fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-only',
         variables: {
             sort_option: sortOptions.order_param + sortOptions.order,
             search: sortOptions.search,

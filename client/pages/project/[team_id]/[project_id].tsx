@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import withAuthProject from '../../../components/hoc/withAuthProject';
 import { List, Project, useGetProjectQuery } from '../../../generated/apolloComponents';
@@ -7,6 +7,7 @@ import projectPageStyles from '../../../pageUtils/ProjectPage/ProjectPage.module
 import ListDisplay from '../../../components/ProjectPage/ListDisplay';
 import OptionBar from '../../../components/ProjectPage/OptionBar';
 import { ProjectContextProvider } from '../../../context/project';
+import { useLastViewedProjectMutation } from '../../../generated/apolloComponents';
 
 interface Props {
     project_id?: string,
@@ -29,6 +30,19 @@ function ProjectPage(): JSX.Element {
     });
 
 
+    const [lastViewedProjectMutation] = useLastViewedProjectMutation({
+        variables: {
+            project_id: Number(project_id),
+            team_id: Number(team_id)
+        },
+        onError(err) {
+            console.log(err.message);
+        }
+    });
+
+    useEffect(() => {
+        lastViewedProjectMutation();
+    }, [])
 
     if (loading) {
         return (

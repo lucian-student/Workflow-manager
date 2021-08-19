@@ -13,28 +13,33 @@ interface ISortContext {
     }>>
 }
 
-export const ProjectSortContext = createContext<ISortContext>({
+export const SortContext = createContext<ISortContext>({
     sortOptions: {
-        order_param: 'last_viewed',
-        order: '_desc',
+        order_param: '',
+        order: '',
         search: ''
     },
     setSortOptions: null
 });
 
-export const ProjectSortContextProvider = ({ children }) => {
+interface Props {
+    type: 'project' | 'member',
+    children: any
+}
+
+export const SortContextProvider = ({ children, type }: Props) => {
     const [sortOptions, setSortOptions] = useState({
-        order_param: 'last_viewed',
+        order_param: type==='project'?'last_viewed':type==='member'&&'role',
         order: '_desc',
-        search:''
+        search: ''
     });
 
     return (
-        <ProjectSortContext.Provider value={{
+        <SortContext.Provider value={{
             sortOptions,
             setSortOptions
         }}>
             {children}
-        </ProjectSortContext.Provider>
+        </SortContext.Provider>
     )
 }

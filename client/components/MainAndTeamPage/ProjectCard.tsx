@@ -37,7 +37,7 @@ function ProjectCard({ project }: ProjectProps): JSX.Element {
                     </div>
                     <div className={projectCardStyles.card_body}>
                         <div className={projectCardStyles.card_text}>
-                            {`Last updated: ${dayjs(project.last_updated).fromNow()}`}
+                            {`Last viewed: ${dayjs(project.last_updated).fromNow()}`}
                         </div>
                         <div className={projectCardStyles.card_text}>
                             {`Deadline: ${dayjs(project.deadline).format('DD/MM/YYYY')}`}

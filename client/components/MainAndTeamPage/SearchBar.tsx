@@ -3,7 +3,7 @@ import SearchBarStyles from './SearchBar/SearchBar.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { ImCancelCircle } from 'react-icons/im';
 import { useForm } from 'react-hook-form';
-import { ProjectSortContext } from '../../context/projectSort';
+import { SortContext } from '../../context/sort';
 
 interface SearchInput {
     search: string
@@ -13,7 +13,7 @@ function SearchBar(): JSX.Element {
 
     const { register, watch, setValue } = useForm<SearchInput>();
 
-    const { setSortOptions } = useContext(ProjectSortContext);
+    const { setSortOptions } = useContext(SortContext);
 
     const search = watch('search');
 

@@ -5,21 +5,21 @@ import mainStyles from '../pageUtils/Main/Main.module.css';
 import OptionsBar from "../components/MainAndTeamPage/OptionsBar";
 import ProjectDisplay from "../components/MainAndTeamPage/ProjectDisplay";
 import ProjectForm from "../components/MainAndTeamPage/ProjectForm";
-import { ProjectSortContextProvider } from '../context/projectSort';
+import { SortContextProvider } from '../context/sort';
 
 function Main() {
     return (
         <div className={mainStyles.main_wrapper}>
             <Background />
-            <ProjectSortContextProvider>
+            <SortContextProvider type='project'>
                 <div className={mainStyles.content}>
-                    <OptionsBar team={false}/>
+                    <OptionsBar team={false} type='project'/>
                     <div className={mainStyles.projects_wrapper}>
                         <ProjectForm team_id={null}/>
                         <ProjectDisplay team_id={null}/>
                     </div>
                 </div>
-            </ProjectSortContextProvider>
+            </SortContextProvider>
         </div>
     )
 }

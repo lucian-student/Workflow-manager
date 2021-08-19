@@ -203,8 +203,10 @@ export type Mutation = {
   createProject: Project;
   deleteProject: Scalars['ID'];
   editProject: Project;
+  lastViewedProject: Scalars['Boolean'];
   createTeam: Team;
   deleteTeam: Scalars['ID'];
+  lastActiveTeam: Scalars['Boolean'];
   leaveTeam: Scalars['ID'];
   createTodo: TodoResponse;
   deleteTodo: DeleteTodoResponse;
@@ -344,12 +346,23 @@ export type MutationEditProjectArgs = {
 };
 
 
+export type MutationLastViewedProjectArgs = {
+  team_id?: Maybe<Scalars['Float']>;
+  project_id: Scalars['Float'];
+};
+
+
 export type MutationCreateTeamArgs = {
   data: TeamInput;
 };
 
 
 export type MutationDeleteTeamArgs = {
+  team_id: Scalars['Float'];
+};
+
+
+export type MutationLastActiveTeamArgs = {
   team_id: Scalars['Float'];
 };
 
@@ -866,6 +879,17 @@ export type EditProjectMutation = (
   ) }
 );
 
+export type LastViewedProjectMutationVariables = Exact<{
+  project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type LastViewedProjectMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'lastViewedProject'>
+);
+
 export type GetProjectQueryVariables = Exact<{
   project_id: Scalars['Float'];
   team_id?: Maybe<Scalars['Float']>;
@@ -928,6 +952,16 @@ export type CreateTeamMutation = (
     { __typename?: 'Team' }
     & Pick<Team, 'team_id' | 'name' | 'description' | 'last_active' | 'user_count' | 'project_count'>
   ) }
+);
+
+export type LastActiveTeamMutationVariables = Exact<{
+  team_id: Scalars['Float'];
+}>;
+
+
+export type LastActiveTeamMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'lastActiveTeam'>
 );
 
 export type GetTeamQueryVariables = Exact<{
@@ -1938,6 +1972,38 @@ export function useEditProjectMutation(baseOptions?: Apollo.MutationHookOptions<
 export type EditProjectMutationHookResult = ReturnType<typeof useEditProjectMutation>;
 export type EditProjectMutationResult = Apollo.MutationResult<EditProjectMutation>;
 export type EditProjectMutationOptions = Apollo.BaseMutationOptions<EditProjectMutation, EditProjectMutationVariables>;
+export const LastViewedProjectDocument = gql`
+    mutation LastViewedProject($project_id: Float!, $team_id: Float) {
+  lastViewedProject(project_id: $project_id, team_id: $team_id)
+}
+    `;
+export type LastViewedProjectMutationFn = Apollo.MutationFunction<LastViewedProjectMutation, LastViewedProjectMutationVariables>;
+
+/**
+ * __useLastViewedProjectMutation__
+ *
+ * To run a mutation, you first call `useLastViewedProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLastViewedProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [lastViewedProjectMutation, { data, loading, error }] = useLastViewedProjectMutation({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useLastViewedProjectMutation(baseOptions?: Apollo.MutationHookOptions<LastViewedProjectMutation, LastViewedProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LastViewedProjectMutation, LastViewedProjectMutationVariables>(LastViewedProjectDocument, options);
+      }
+export type LastViewedProjectMutationHookResult = ReturnType<typeof useLastViewedProjectMutation>;
+export type LastViewedProjectMutationResult = Apollo.MutationResult<LastViewedProjectMutation>;
+export type LastViewedProjectMutationOptions = Apollo.BaseMutationOptions<LastViewedProjectMutation, LastViewedProjectMutationVariables>;
 export const GetProjectDocument = gql`
     query GetProject($project_id: Float!, $team_id: Float) {
   getProject(project_id: $project_id, team_id: $team_id) {
@@ -2104,6 +2170,37 @@ export function useCreateTeamMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTeamMutationHookResult = ReturnType<typeof useCreateTeamMutation>;
 export type CreateTeamMutationResult = Apollo.MutationResult<CreateTeamMutation>;
 export type CreateTeamMutationOptions = Apollo.BaseMutationOptions<CreateTeamMutation, CreateTeamMutationVariables>;
+export const LastActiveTeamDocument = gql`
+    mutation LastActiveTeam($team_id: Float!) {
+  lastActiveTeam(team_id: $team_id)
+}
+    `;
+export type LastActiveTeamMutationFn = Apollo.MutationFunction<LastActiveTeamMutation, LastActiveTeamMutationVariables>;
+
+/**
+ * __useLastActiveTeamMutation__
+ *
+ * To run a mutation, you first call `useLastActiveTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLastActiveTeamMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [lastActiveTeamMutation, { data, loading, error }] = useLastActiveTeamMutation({
+ *   variables: {
+ *      team_id: // value for 'team_id'
+ *   },
+ * });
+ */
+export function useLastActiveTeamMutation(baseOptions?: Apollo.MutationHookOptions<LastActiveTeamMutation, LastActiveTeamMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LastActiveTeamMutation, LastActiveTeamMutationVariables>(LastActiveTeamDocument, options);
+      }
+export type LastActiveTeamMutationHookResult = ReturnType<typeof useLastActiveTeamMutation>;
+export type LastActiveTeamMutationResult = Apollo.MutationResult<LastActiveTeamMutation>;
+export type LastActiveTeamMutationOptions = Apollo.BaseMutationOptions<LastActiveTeamMutation, LastActiveTeamMutationVariables>;
 export const GetTeamDocument = gql`
     query GetTeam($team_id: Float!) {
   getTeam(team_id: $team_id) {

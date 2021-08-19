@@ -1,15 +1,17 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import withAuth from '../../components/hoc/withAuth';
 import teamPageStyles from '../../pageUtils/TeamPage/TeamPage.module.css';
 import Background from '../../components/Layout/Background';
-import { Team, useGetTeamQuery } from '../../generated/apolloComponents';
+import { Team, useGetTeamQuery, useLastActiveTeamMutation } from '../../generated/apolloComponents';
 import TeamOptionBar from '../../components/TeamPage/TeamOptionBar';
 import { TeamContextProvider } from '../../context/team';
-import { ProjectSortContextProvider } from '../../context/projectSort';
+import { SortContextProvider } from '../../context/sort';
 import OptionsBar from '../../components/MainAndTeamPage/OptionsBar';
 import ProjectForm from '../../components/MainAndTeamPage/ProjectForm';
 import ProjectDisplay from '../../components/MainAndTeamPage/ProjectDisplay';
+import MemberDisplay from '../../components/TeamPage/MemberDisplay';
+import InveitForm from '../../components/TeamPage/InveitForm';
 
 interface RouterProps {
     team_id?: string
@@ -28,6 +30,18 @@ function TeamPage(): JSX.Element {
         nextFetchPolicy: 'cache-only'
     });
 
+    const [lastActiveTeam] = useLastActiveTeamMutation({
+        variables: {
+            team_id: Number(team_id)
+        },
+        onError(err) {
+            console.log(err);
+        }
+    });
+
+    useEffect(() => {
+        lastActiveTeam();
+    }, []);
 
     if (loading) {
         return (
@@ -55,21 +69,27 @@ function TeamPage(): JSX.Element {
                             {(displaying) => (
                                 <Fragment>
                                     <TeamOptionBar team={data.getTeam as Team} />
-                                    {displaying === 'projects' ? (
-                                        <Fragment>
-                                            <ProjectSortContextProvider>
-                                                <div className={teamPageStyles.content}>
-                                                    <OptionsBar team={true} />
-                                                    <div className={teamPageStyles.projects_wrapper}>
-                                                        <ProjectForm team_id={Number(data.getTeam.team_id)}/>
-                                                        <ProjectDisplay team_id={Number(data.getTeam.team_id)}/>
-                                                    </div>
+                                    {displaying === 'projects' && (
+                                        <SortContextProvider type='project'>
+                                            <div className={teamPageStyles.content}>
+                                                <OptionsBar team={true} type='project' />
+                                                <div className={teamPageStyles.projects_wrapper}>
+                                                    <ProjectForm team_id={Number(data.getTeam.team_id)} />
+                                                    <ProjectDisplay team_id={Number(data.getTeam.team_id)} />
                                                 </div>
-                                            </ProjectSortContextProvider>
-                                        </Fragment>
-                                    ) : displaying === 'members' && (
-                                        <Fragment>
-                                        </Fragment>
+                                            </div>
+                                        </SortContextProvider>
+                                    )}
+                                    {displaying === 'members' && (
+                                        <SortContextProvider type='member'>
+                                            <div className={teamPageStyles.content}>
+                                                <OptionsBar team={true} type='member' />
+                                                <div className={teamPageStyles.projects_wrapper}>
+                                                    <InveitForm />
+                                                    <MemberDisplay />
+                                                </div>
+                                            </div>
+                                        </SortContextProvider>
                                     )}
                                 </Fragment>
                             )}
