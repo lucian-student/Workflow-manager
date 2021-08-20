@@ -1,0 +1,57 @@
+.card {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    background-color: white;
+    padding: 0.5em;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.pc_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.icon_wrapper{
+    flex-basis: 0;
+    flex-grow: 0.5;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.message_icon {
+    background-color: #184b44;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    width: 36px;
+    flex-shrink: 0;
+}
+
+.wrapper{
+    flex-basis: 0;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.options_wrapper{
+    flex-basis: 0;
+    flex-grow: 0.5;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.text{
+    color:#184b44;
+    font-size: 1em;
+    word-break: break-all;
+}

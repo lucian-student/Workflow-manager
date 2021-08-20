@@ -1,5 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { Fragment } from 'react';
+import React, { useEffect, useContext, useState, Fragment } from 'react';
 import { useGetProjectsLazyQuery } from '../../generated/apolloComponents';
 import projectDisplayStyle from './ProjectDisplay/ProjectDisplay.module.css';
 import ProjectCard from './ProjectCard';

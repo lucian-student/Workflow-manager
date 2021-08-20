@@ -1,0 +1,11 @@
+.member_display {
+    padding: 1em;
+    width: 80%;
+}
+
+
+@media screen and (max-width:550px) {
+    .member_display {
+        width: 95%;
+    }
+}

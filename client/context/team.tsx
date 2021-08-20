@@ -5,18 +5,20 @@ import { AuthContext } from '../context/auth';
 interface ITeamContext {
     getRole: () => number,
     displaying: 'projects' | 'members',
-    setDisplaying: React.Dispatch<React.SetStateAction<'projects' | 'members'>>
+    setDisplaying: React.Dispatch<React.SetStateAction<'projects' | 'members'>>,
+    roles: Map<number, string>
 }
 
 export const TeamContext = createContext<ITeamContext>({
     getRole: () => { return null },
     displaying: 'projects',
-    setDisplaying: null
+    setDisplaying: null,
+    roles: new Map<number, string>()
 });
 
 interface Props {
     team: Team,
-    children: (displaying:'projects' | 'members')=>any
+    children: (displaying: 'projects' | 'members') => any
 }
 
 export const TeamContextProvider = ({ children, team }: Props) => {
@@ -36,11 +38,14 @@ export const TeamContextProvider = ({ children, team }: Props) => {
         return role;
     }, [team.cons, currentUser]);
 
+    const roles = new Map<number, string>([[1, 'Owner'], [2, "Admin"], [3, "member"]]);
+
     return (
         <TeamContext.Provider value={{
             getRole,
             displaying,
-            setDisplaying
+            setDisplaying,
+            roles
         }}>
             {children(displaying)}
         </TeamContext.Provider>
