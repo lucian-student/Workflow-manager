@@ -27,11 +27,11 @@ function TeamOptions(): JSX.Element {
                         </button>
                         <div className={teamOptionsStyles.display_select}>
                             <button className={teamOptionsStyles.menu_item}
-                                onClick={() => { setDisplaying('projects') }}>
+                                onClick={() => { setDisplaying('projects'); setOpen(false); }}>
                                 View projects
                             </button>
                             <button className={teamOptionsStyles.menu_item}
-                                onClick={() => { setDisplaying('members') }}>
+                                onClick={() => { setDisplaying('members'); setOpen(false); }}>
                                 View members
                             </button>
                         </div>

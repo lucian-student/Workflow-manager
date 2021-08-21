@@ -195,7 +195,7 @@ function CardView(): JSX.Element {
                                             onClick={() => setEditing(old => !old)}>
                                             <AiOutlineEdit className={cardViewStyles.icon} />
                                         </button>
-                                        <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                        <button className={cardViewStyles.toggle_button}
                                             onClick={deleteCard}>
                                             <AiFillDelete className={cardViewStyles.icon} />
                                         </button>
@@ -208,7 +208,7 @@ function CardView(): JSX.Element {
                                                     onClick={() => setEditing(old => !old)}>
                                                     <AiOutlineEdit className={cardViewStyles.icon} />
                                                 </button>
-                                                <button ref={editForm.toggleButtonRef} className={cardViewStyles.toggle_button}
+                                                <button className={cardViewStyles.toggle_button}
                                                     onClick={deleteCard}>
                                                     <AiFillDelete className={cardViewStyles.icon} />
                                                 </button>

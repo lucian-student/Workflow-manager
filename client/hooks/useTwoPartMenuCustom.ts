@@ -21,9 +21,7 @@ export function useTwoPartMenuCustom({ setOpen }: Props): DropdownProps {
                 if (!toggleButtonRef.current) return;
                 if (
                     !menuRef.current.contains(event.target) &&
-                    !toggleButtonRef.current.contains(event.target
-                    )) {
-                    //console.log('closing');
+                    !toggleButtonRef.current.contains(event.target)) {
                     setOpen(false);
                 }
             }
