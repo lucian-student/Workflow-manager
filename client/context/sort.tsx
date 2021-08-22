@@ -29,8 +29,8 @@ interface Props {
 
 export const SortContextProvider = ({ children, type }: Props) => {
     const [sortOptions, setSortOptions] = useState({
-        order_param: type==='project'?'last_viewed':type==='member'&&'role',
-        order: '_desc',
+        order_param: type === 'project' ? 'last_viewed' : type === 'member' && 'role',
+        order: type === 'project' ? '_desc' : type === 'member' && '_asc',
         search: ''
     });
 

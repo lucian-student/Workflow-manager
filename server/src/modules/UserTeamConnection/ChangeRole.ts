@@ -6,6 +6,7 @@ import ChangeRoleResponse from './changeRoleResponse/ChangeRoleResponse';
 import UserTeamConnection from '../../entity/UserTeamConnection';
 import { getManager } from 'typeorm';
 import MyContext from '../../types/MyContext';
+import ChangeRoleInput from './changeRole/ChangeRoleInput';
 
 @Resolver()
 export default class ChangeRoleResolver {
@@ -14,7 +15,7 @@ export default class ChangeRoleResolver {
     @Mutation(() => ChangeRoleResponse)
     async changeRole(
         @Arg('team_id') team_id: number,
-        @Arg('role') role: number,
+        @Arg('data') data: ChangeRoleInput,
         @Arg('con_id') con_id: number,
         @Ctx() ctx: MyContext
     ): Promise<ChangeRoleResponse> {
@@ -25,10 +26,8 @@ export default class ChangeRoleResolver {
 
             const index = cons.findIndex(con => con_id === Number(con.con_id));
 
-            console.log(cons);
-
             if (cons[index].role === 1 && Number(cons[index].user_id) !== ctx.payload.user_id) {
-                throw Error('Access denied! You dont have permission to perform this action!');
+                throw Error('You cannot change role of other owners!');
             }
 
             let ownerCount = 0;
@@ -40,15 +39,15 @@ export default class ChangeRoleResolver {
             });
 
             if (ownerCount === 1 && cons[index].role === 1) {
-                throw Error('Access denied! You dont have permission to perform this action!');
+                throw Error('There always has to be one owner in the team!');
             }
 
-            await transactionalEntityManager.update(UserTeamConnection, { con_id }, { role });
+            await transactionalEntityManager.update(UserTeamConnection, { con_id }, { role: data.role });
 
         });
 
         return {
-            role,
+            role: data.role,
             con_id
         }
     }

@@ -4,6 +4,7 @@ import memberCardStyles from './MemberCard/MemberCard.module.css';
 import { TeamContext } from '../../context/team';
 import { AuthContext } from '../../context/auth';
 import MemberOptions from './MemberOptions';
+import RoleForm from './RoleForm';
 
 interface Props {
     member: {
@@ -46,6 +47,9 @@ function MemberCard({ member }: Props) {
 
     return (
         <div className={memberCardStyles.card}>
+            {openRoleForm && (
+                <RoleForm />
+            )}
             <div className={memberCardStyles.pc_wrapper}>
                 <div className={memberCardStyles.icon_wrapper}>
                     <div className={memberCardStyles.message_icon}>
