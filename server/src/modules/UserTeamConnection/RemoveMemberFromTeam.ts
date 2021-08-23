@@ -11,7 +11,8 @@ export default class RemoveMemberFromTeamResolver {
     @UseMiddleware(isAuth, getTeamRole, checkIfTeamOwner)
     @Mutation(() => ID)
     async removeMemberFromTeam(
-        @Arg('con_id') con_id: number
+        @Arg('con_id') con_id: number,
+        @Arg('team_id') team_id: number
     ): Promise<number> {
 
         await getManager().transaction('REPEATABLE READ', async (transactionalEntityManager) => {

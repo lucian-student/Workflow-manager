@@ -12,6 +12,7 @@ import ProjectForm from '../../components/MainAndTeamPage/ProjectForm';
 import ProjectDisplay from '../../components/MainAndTeamPage/ProjectDisplay';
 import MemberDisplay from '../../components/TeamPage/MemberDisplay';
 import InveitForm from '../../components/TeamPage/InveitForm';
+import { MenuContextProvider } from '../../context/menu';
 
 interface RouterProps {
     team_id?: string
@@ -66,7 +67,7 @@ function TeamPage(): JSX.Element {
                 <Fragment>
                     {data.getTeam && (
                         <TeamContextProvider team={data.getTeam as Team}>
-                            {(displaying) => (
+                            {(displaying, getRole) => (
                                 <Fragment>
                                     <TeamOptionBar team={data.getTeam as Team} />
                                     {displaying === 'projects' && (
@@ -74,7 +75,9 @@ function TeamPage(): JSX.Element {
                                             <div className={teamPageStyles.content}>
                                                 <OptionsBar team={true} type='project' />
                                                 <div className={teamPageStyles.projects_wrapper}>
-                                                    <ProjectForm team_id={Number(data.getTeam.team_id)} />
+                                                    {getRole() === 1 && (
+                                                        <ProjectForm team_id={Number(data.getTeam.team_id)} />
+                                                    )}
                                                     <ProjectDisplay team_id={Number(data.getTeam.team_id)} />
                                                 </div>
                                             </div>
@@ -85,7 +88,11 @@ function TeamPage(): JSX.Element {
                                             <div className={teamPageStyles.content}>
                                                 <OptionsBar team={true} type='member' />
                                                 <div className={teamPageStyles.projects_wrapper}>
-                                                    <InveitForm />
+                                                    {getRole() === 1 && (
+                                                        <MenuContextProvider>
+                                                            <InveitForm />
+                                                        </MenuContextProvider>
+                                                    )}
                                                     <MemberDisplay />
                                                 </div>
                                             </div>

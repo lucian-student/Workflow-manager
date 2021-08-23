@@ -5,6 +5,7 @@ import { TeamContext } from '../../context/team';
 import { AuthContext } from '../../context/auth';
 import MemberOptions from './MemberOptions';
 import RoleForm from './RoleForm';
+import { MenuContextProvider } from '../../context/menu';
 
 interface Props {
     member: {
@@ -46,9 +47,11 @@ function MemberCard({ member }: Props) {
     }
 
     return (
-        <div className={memberCardStyles.card}>
+        <div className={[memberCardStyles.card, openRoleForm ? memberCardStyles.card_form_open : ''].join(' ')}>
             {openRoleForm && (
-                <RoleForm />
+                <MenuContextProvider>
+                    <RoleForm setOpen={setOpenRoleForm} role={member.role} team_id={member.team_id} con_id={member.con_id} />
+                </MenuContextProvider>
             )}
             <div className={memberCardStyles.pc_wrapper}>
                 <div className={memberCardStyles.icon_wrapper}>
@@ -68,7 +71,7 @@ function MemberCard({ member }: Props) {
                 </div>
                 <div className={memberCardStyles.options_wrapper}>
                     {showOptions() && (
-                        <MemberOptions you={you} />
+                        <MemberOptions you={you} setOpenForm={setOpenRoleForm} team_id={member.team_id} con_id={member.con_id} />
                     )}
                 </div>
             </div>
@@ -86,7 +89,7 @@ function MemberCard({ member }: Props) {
                         {roles.get(member.role)}
                     </div>
                 </div>
-                <MemberOptions you={you} />
+                <MemberOptions you={you} setOpenForm={setOpenRoleForm} team_id={member.team_id} con_id={member.con_id} />
             </div>
         </div>
     )

@@ -18,7 +18,7 @@ export const TeamContext = createContext<ITeamContext>({
 
 interface Props {
     team: Team,
-    children: (displaying: 'projects' | 'members') => any
+    children: (displaying: 'projects' | 'members', getRole: () => number) => any
 }
 
 export const TeamContextProvider = ({ children, team }: Props) => {
@@ -47,7 +47,7 @@ export const TeamContextProvider = ({ children, team }: Props) => {
             setDisplaying,
             roles
         }}>
-            {children(displaying)}
+            {children(displaying, getRole)}
         </TeamContext.Provider>
     )
 }
