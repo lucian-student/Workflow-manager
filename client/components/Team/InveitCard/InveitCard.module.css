@@ -9,8 +9,8 @@
 
 .pc_wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: flex-start;
     width: 100%;
 }
 
@@ -19,12 +19,6 @@
     display: none;
     align-items: center;
     justify-content: space-between;
-}
-
-.data_wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
 }
 
 .message_icon {
@@ -39,10 +33,17 @@
     flex-shrink: 0;
 }
 
-.text{
-    color:#184b44;
+.text {
+    color: #184b44;
     font-size: 1em;
     word-break: break-all;
+}
+
+.actions {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .icon {
@@ -52,6 +53,7 @@
 }
 
 .toggle_button {
+    appearance: none;
     background-color: transparent;
     border: none;
     font-size: 1em;
@@ -70,42 +72,15 @@
 .toggle_button:focus {
     background-color: #184b44;
     color: #fff;
-    outline: none;
 }
 
-.wrapper{
-    flex-basis: 0;
-    flex-grow: 1;
+.data_wrapper {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.wrapper_last_active{
-    flex-basis: 0;
-    flex-grow: 1.2;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-.wrapper_link{
-    flex-basis: 0;
-    flex-grow: 0.5;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.icon_wrapper{
-    flex-basis: 0;
-    flex-grow: 0.5;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-@media screen and (max-width:1000px) {
+@media screen and (max-width:700px) {
     .mobile_wrapper {
         display: flex;
     }

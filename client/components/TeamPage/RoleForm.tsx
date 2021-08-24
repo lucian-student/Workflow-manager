@@ -12,6 +12,7 @@ import { getTeamQuery } from '../../graphql/team/query/getTeam';
 import { getTeamMembersQuery } from '../../graphql/userTeamConnections/query/getTeamMembers';
 import { SortContext } from '../../context/sort';
 import update from 'immutability-helper';
+import RoleSelect from './RoleSelect';
 
 interface Props {
     con_id: string
@@ -160,49 +161,7 @@ function RoleForm({ setOpen, role, team_id, con_id }: Props): JSX.Element {
     return (
         <div className={roleFormStyles.form_wrapper} ref={menuRef}>
             <form onSubmit={handleSubmit(changeRole)} className={roleFormStyles.form}>
-                <div className={roleFormStyles.sort_menu_wrapper} ref={select.menuRef}>
-                    <button
-                        type='button'
-                        className={roleFormStyles.toggle_button}
-                        onClick={() => { setOpenSelect(old => !old) }}>
-                        <div className={roleFormStyles.toggle_text}>
-                            <div>
-                                {currRole}
-                            </div>
-                            <div className={openSelect ? roleFormStyles.toggle_icon : ''}>
-                                <IoMdArrowDropdown />
-                            </div>
-                        </div>
-                    </button>
-                    {openSelect && (
-                        <div className={roleFormStyles.menu}>
-                            <button type='button'
-                                className={roleFormStyles.menu_item}
-                                onClick={() => { setCurrRole('Owner') }}>
-                                <AiOutlineCheck className={currRole === 'Owner'
-                                    ? roleFormStyles.active_icon
-                                    : roleFormStyles.disabled_icon} />
-                                Owner
-                            </button>
-                            <button type='button'
-                                className={roleFormStyles.menu_item}
-                                onClick={() => { setCurrRole('Admin') }}>
-                                <AiOutlineCheck className={currRole === 'Admin'
-                                    ? roleFormStyles.active_icon
-                                    : roleFormStyles.disabled_icon} />
-                                Admin
-                            </button>
-                            <button type='button'
-                                className={roleFormStyles.menu_item}
-                                onClick={() => { setCurrRole('Member') }}>
-                                <AiOutlineCheck className={currRole === 'Member'
-                                    ? roleFormStyles.active_icon
-                                    : roleFormStyles.disabled_icon} />
-                                Member
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <RoleSelect setCurrRole={setCurrRole} currRole={currRole} setOpenSelect={setOpenSelect} openSelect={openSelect} />
                 <div className={roleFormStyles.form_actions}>
                     <button type='submit' className={roleFormStyles.submit_button}>
                         Save

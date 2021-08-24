@@ -19,10 +19,8 @@ function TeamCard({ team }: Props): JSX.Element {
     return (
         <div className={teamCardStyles.card}>
             <div className={teamCardStyles.pc_wrapper}>
-                <div className={teamCardStyles.icon_wrapper}>
-                    <div className={teamCardStyles.message_icon}>
-                        {team.name.charAt(0)}
-                    </div>
+                <div className={teamCardStyles.message_icon}>
+                    {team.name.charAt(0)}
                 </div>
                 <div className={teamCardStyles.wrapper}>
                     <div className={teamCardStyles.text}>

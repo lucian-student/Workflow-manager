@@ -12,7 +12,7 @@ export default class SendUserTeamConnectionResolver {
 
     @UseMiddleware(isAuth, getTeamRole, checkIfTeamOwner)
     @Mutation(() => Boolean)
-    async sendUserTeamConnnection(
+    async sendUserTeamConnection(
         @Arg('team_id') team_id: number,
         @Arg('data') data: UserTeamConnectionInput
     ): Promise<boolean> {

@@ -1,0 +1,47 @@
+.options_bar_pc {
+    width: calc(100% - 0.5em);
+    background-color: #fff;
+    /*  margin: 0.25em;*/
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25em;
+}
+
+.toggle_button {
+    opacity: 0.5;
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    padding: 0.5em;
+    margin: 0;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease-in-out 0s;
+    border-radius: 3px;
+    color: #184b44;
+}
+
+.toggle_button:hover,
+.toggle_button:focus {
+    background-color: #184b44;
+    color: #fff;
+    outline: none;
+}
+
+.left_menu_item_wrapper {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.active{
+    opacity: 1;
+}

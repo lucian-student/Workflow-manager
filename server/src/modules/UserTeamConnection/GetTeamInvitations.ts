@@ -20,7 +20,7 @@ export default class GetTeamInvitationsResolver {
         const cons = await getManager()
             .createQueryBuilder()
             .select('t1.*')
-            .select('t2.name', 'teamname')
+            .addSelect('t2.name', 'teamname')
             .from(UserTeamConnection, 't1')
             .where('t1.user_id= :user_id', { user_id })
             .andWhere('t1.confirmed=false')

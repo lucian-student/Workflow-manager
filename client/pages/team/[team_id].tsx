@@ -11,7 +11,7 @@ import OptionsBar from '../../components/MainAndTeamPage/OptionsBar';
 import ProjectForm from '../../components/MainAndTeamPage/ProjectForm';
 import ProjectDisplay from '../../components/MainAndTeamPage/ProjectDisplay';
 import MemberDisplay from '../../components/TeamPage/MemberDisplay';
-import InveitForm from '../../components/TeamPage/InveitForm';
+import InveitFormWrapper from '../../components/TeamPage/InveitFormWrapper';
 import { MenuContextProvider } from '../../context/menu';
 
 interface RouterProps {
@@ -90,7 +90,7 @@ function TeamPage(): JSX.Element {
                                                 <div className={teamPageStyles.projects_wrapper}>
                                                     {getRole() === 1 && (
                                                         <MenuContextProvider>
-                                                            <InveitForm />
+                                                            <InveitFormWrapper team_id={Number(data.getTeam.team_id)}/>
                                                         </MenuContextProvider>
                                                     )}
                                                     <MemberDisplay />

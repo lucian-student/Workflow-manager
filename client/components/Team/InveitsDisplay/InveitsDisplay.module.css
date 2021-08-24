@@ -1,0 +1,11 @@
+.inveits_display {
+    padding: 1em;
+    width: 80%;
+}
+
+
+@media screen and (max-width:550px) {
+    .inveits_display {
+        width: 95%;
+    }
+}

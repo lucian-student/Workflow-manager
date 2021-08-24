@@ -236,7 +236,7 @@ export type Mutation = {
   changeRole: ChangeRoleResponse;
   rejectUserTeamConnection: Scalars['ID'];
   removeMemberFromTeam: Scalars['ID'];
-  sendUserTeamConnnection: Scalars['Boolean'];
+  sendUserTeamConnection: Scalars['Boolean'];
 };
 
 
@@ -463,7 +463,7 @@ export type MutationRemoveMemberFromTeamArgs = {
 };
 
 
-export type MutationSendUserTeamConnnectionArgs = {
+export type MutationSendUserTeamConnectionArgs = {
   data: UserTeamConnectionInput;
   team_id: Scalars['Float'];
 };
@@ -1195,6 +1195,16 @@ export type MeQuery = (
   )> }
 );
 
+export type AcceptUserTeamConnectionMutationVariables = Exact<{
+  con_id: Scalars['Float'];
+}>;
+
+
+export type AcceptUserTeamConnectionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'acceptUserTeamConnection'>
+);
+
 export type ChangeRoleMutationVariables = Exact<{
   team_id: Scalars['Float'];
   con_id: Scalars['Float'];
@@ -1210,6 +1220,16 @@ export type ChangeRoleMutation = (
   ) }
 );
 
+export type RejectUserTeamConnectionMutationVariables = Exact<{
+  con_id: Scalars['Float'];
+}>;
+
+
+export type RejectUserTeamConnectionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'rejectUserTeamConnection'>
+);
+
 export type RemoveMemberFromTeamMutationVariables = Exact<{
   con_id: Scalars['Float'];
   team_id: Scalars['Float'];
@@ -1219,6 +1239,17 @@ export type RemoveMemberFromTeamMutationVariables = Exact<{
 export type RemoveMemberFromTeamMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'removeMemberFromTeam'>
+);
+
+export type SendUserTeamConnectionMutationVariables = Exact<{
+  team_id: Scalars['Float'];
+  data: UserTeamConnectionInput;
+}>;
+
+
+export type SendUserTeamConnectionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendUserTeamConnection'>
 );
 
 export type GetTeamInvitationsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -2767,6 +2798,37 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const AcceptUserTeamConnectionDocument = gql`
+    mutation AcceptUserTeamConnection($con_id: Float!) {
+  acceptUserTeamConnection(con_id: $con_id)
+}
+    `;
+export type AcceptUserTeamConnectionMutationFn = Apollo.MutationFunction<AcceptUserTeamConnectionMutation, AcceptUserTeamConnectionMutationVariables>;
+
+/**
+ * __useAcceptUserTeamConnectionMutation__
+ *
+ * To run a mutation, you first call `useAcceptUserTeamConnectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptUserTeamConnectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptUserTeamConnectionMutation, { data, loading, error }] = useAcceptUserTeamConnectionMutation({
+ *   variables: {
+ *      con_id: // value for 'con_id'
+ *   },
+ * });
+ */
+export function useAcceptUserTeamConnectionMutation(baseOptions?: Apollo.MutationHookOptions<AcceptUserTeamConnectionMutation, AcceptUserTeamConnectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptUserTeamConnectionMutation, AcceptUserTeamConnectionMutationVariables>(AcceptUserTeamConnectionDocument, options);
+      }
+export type AcceptUserTeamConnectionMutationHookResult = ReturnType<typeof useAcceptUserTeamConnectionMutation>;
+export type AcceptUserTeamConnectionMutationResult = Apollo.MutationResult<AcceptUserTeamConnectionMutation>;
+export type AcceptUserTeamConnectionMutationOptions = Apollo.BaseMutationOptions<AcceptUserTeamConnectionMutation, AcceptUserTeamConnectionMutationVariables>;
 export const ChangeRoleDocument = gql`
     mutation ChangeRole($team_id: Float!, $con_id: Float!, $data: ChangeRoleInput!) {
   changeRole(team_id: $team_id, con_id: $con_id, data: $data) {
@@ -2803,6 +2865,37 @@ export function useChangeRoleMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type ChangeRoleMutationHookResult = ReturnType<typeof useChangeRoleMutation>;
 export type ChangeRoleMutationResult = Apollo.MutationResult<ChangeRoleMutation>;
 export type ChangeRoleMutationOptions = Apollo.BaseMutationOptions<ChangeRoleMutation, ChangeRoleMutationVariables>;
+export const RejectUserTeamConnectionDocument = gql`
+    mutation RejectUserTeamConnection($con_id: Float!) {
+  rejectUserTeamConnection(con_id: $con_id)
+}
+    `;
+export type RejectUserTeamConnectionMutationFn = Apollo.MutationFunction<RejectUserTeamConnectionMutation, RejectUserTeamConnectionMutationVariables>;
+
+/**
+ * __useRejectUserTeamConnectionMutation__
+ *
+ * To run a mutation, you first call `useRejectUserTeamConnectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectUserTeamConnectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectUserTeamConnectionMutation, { data, loading, error }] = useRejectUserTeamConnectionMutation({
+ *   variables: {
+ *      con_id: // value for 'con_id'
+ *   },
+ * });
+ */
+export function useRejectUserTeamConnectionMutation(baseOptions?: Apollo.MutationHookOptions<RejectUserTeamConnectionMutation, RejectUserTeamConnectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RejectUserTeamConnectionMutation, RejectUserTeamConnectionMutationVariables>(RejectUserTeamConnectionDocument, options);
+      }
+export type RejectUserTeamConnectionMutationHookResult = ReturnType<typeof useRejectUserTeamConnectionMutation>;
+export type RejectUserTeamConnectionMutationResult = Apollo.MutationResult<RejectUserTeamConnectionMutation>;
+export type RejectUserTeamConnectionMutationOptions = Apollo.BaseMutationOptions<RejectUserTeamConnectionMutation, RejectUserTeamConnectionMutationVariables>;
 export const RemoveMemberFromTeamDocument = gql`
     mutation RemoveMemberFromTeam($con_id: Float!, $team_id: Float!) {
   removeMemberFromTeam(con_id: $con_id, team_id: $team_id)
@@ -2835,6 +2928,38 @@ export function useRemoveMemberFromTeamMutation(baseOptions?: Apollo.MutationHoo
 export type RemoveMemberFromTeamMutationHookResult = ReturnType<typeof useRemoveMemberFromTeamMutation>;
 export type RemoveMemberFromTeamMutationResult = Apollo.MutationResult<RemoveMemberFromTeamMutation>;
 export type RemoveMemberFromTeamMutationOptions = Apollo.BaseMutationOptions<RemoveMemberFromTeamMutation, RemoveMemberFromTeamMutationVariables>;
+export const SendUserTeamConnectionDocument = gql`
+    mutation SendUserTeamConnection($team_id: Float!, $data: UserTeamConnectionInput!) {
+  sendUserTeamConnection(team_id: $team_id, data: $data)
+}
+    `;
+export type SendUserTeamConnectionMutationFn = Apollo.MutationFunction<SendUserTeamConnectionMutation, SendUserTeamConnectionMutationVariables>;
+
+/**
+ * __useSendUserTeamConnectionMutation__
+ *
+ * To run a mutation, you first call `useSendUserTeamConnectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendUserTeamConnectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendUserTeamConnectionMutation, { data, loading, error }] = useSendUserTeamConnectionMutation({
+ *   variables: {
+ *      team_id: // value for 'team_id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSendUserTeamConnectionMutation(baseOptions?: Apollo.MutationHookOptions<SendUserTeamConnectionMutation, SendUserTeamConnectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendUserTeamConnectionMutation, SendUserTeamConnectionMutationVariables>(SendUserTeamConnectionDocument, options);
+      }
+export type SendUserTeamConnectionMutationHookResult = ReturnType<typeof useSendUserTeamConnectionMutation>;
+export type SendUserTeamConnectionMutationResult = Apollo.MutationResult<SendUserTeamConnectionMutation>;
+export type SendUserTeamConnectionMutationOptions = Apollo.BaseMutationOptions<SendUserTeamConnectionMutation, SendUserTeamConnectionMutationVariables>;
 export const GetTeamInvitationsDocument = gql`
     query GetTeamInvitations {
   getTeamInvitations {
