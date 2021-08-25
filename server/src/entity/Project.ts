@@ -41,7 +41,7 @@ export default class Project extends BaseEntity {
 
 
     @Field(() => Team, { nullable: true })
-    @ManyToOne(() => Team, team => team.projects, { nullable: true })
+    @ManyToOne(() => Team, team => team.projects, { nullable: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'team_id' })
     team: Team | null;
 

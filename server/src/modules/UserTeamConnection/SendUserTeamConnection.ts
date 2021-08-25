@@ -28,7 +28,7 @@ export default class SendUserTeamConnectionResolver {
                 throw Error('User doesnt exist!')
             }
 
-            const check = await transactionalEntityManager.findOne(UserTeamConnection, { where: { user_id: inveitedUser.user_id } });
+            const check = await transactionalEntityManager.findOne(UserTeamConnection, { where: { user_id: inveitedUser.user_id, team_id } });
 
             if (check) {
                 throw Error('You have already inveited that user!')

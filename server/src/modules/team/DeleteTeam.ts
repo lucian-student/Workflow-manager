@@ -12,8 +12,7 @@ export default class DeleteTeamResolver {
     @UseMiddleware(isAuth, getTeamRole, checkIfTeamOwner)
     @Mutation(() => ID)
     async deleteTeam(
-        @Arg('team_id') team_id: number,
-        @Ctx() ctx: MyContext
+        @Arg('team_id') team_id: number
     ): Promise<number> {
 
         const result = await getManager()

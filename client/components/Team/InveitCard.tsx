@@ -1,8 +1,11 @@
-import React from 'react';
-import { UserTeamConnection } from '../../generated/apolloComponents';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { GetTeamInvitationsQuery, UserTeamConnection } from '../../generated/apolloComponents';
 import inveitCardStyles from './InveitCard/InveitCard.module.css';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 import { useRejectUserTeamConnectionMutation, useAcceptUserTeamConnectionMutation } from '../../generated/apolloComponents';
+import { getTeamInvitationsQuery } from '../../graphql/userTeamConnections/query/getTeamInvitations';
+import update from 'immutability-helper';
 
 interface Props {
     invitation: {
@@ -12,12 +15,60 @@ interface Props {
 
 function InveitCard({ invitation }: Props): JSX.Element {
 
-    function AcceptInvitation() {
+    const router = useRouter();
 
+    const [acceptUserTeamConnectionMutation, { data }] = useAcceptUserTeamConnectionMutation({
+        onError(err) {
+            console.log(err.message);
+        }
+    });
+
+    function AcceptInvitation() {
+        acceptUserTeamConnectionMutation({
+            variables: {
+                con_id: Number(invitation.con_id)
+            }
+        });
     }
 
-    function RejectInvitation() {
+    useEffect(() => {
+        if (data) {
+            router.push(`/team/${invitation.team_id}`);
+        }
+    }, [data]);
 
+    const [rejectUserTeamConnectionMutation] = useRejectUserTeamConnectionMutation({
+        onError(err) {
+            console.log(err.message);
+        },
+        update(proxy, result) {
+            const query = proxy.readQuery({
+                query: getTeamInvitationsQuery
+            }) as GetTeamInvitationsQuery;
+
+            console.log(query);
+
+            const conIndex = query.getTeamInvitations.cons.findIndex(con => Number(con.con_id) === Number(result.data.rejectUserTeamConnection));
+
+            proxy.writeQuery({
+                query: getTeamInvitationsQuery,
+                data: update(query, {
+                    getTeamInvitations: {
+                        cons: {
+                            $splice: [[conIndex, 1]]
+                        }
+                    }
+                })
+            })
+        }
+    });
+
+    function RejectInvitation() {
+        rejectUserTeamConnectionMutation({
+            variables: {
+                con_id: Number(invitation.con_id)
+            }
+        });
     }
 
     return (

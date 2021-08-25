@@ -7,13 +7,15 @@ interface ITeamContext {
     displaying: 'projects' | 'members',
     setDisplaying: React.Dispatch<React.SetStateAction<'projects' | 'members'>>,
     roles: Map<number, string>
+    team: Team
 }
 
 export const TeamContext = createContext<ITeamContext>({
     getRole: () => { return null },
     displaying: 'projects',
     setDisplaying: null,
-    roles: new Map<number, string>()
+    roles: new Map<number, string>(),
+    team: null
 });
 
 interface Props {
@@ -45,7 +47,8 @@ export const TeamContextProvider = ({ children, team }: Props) => {
             getRole,
             displaying,
             setDisplaying,
-            roles
+            roles,
+            team
         }}>
             {children(displaying, getRole)}
         </TeamContext.Provider>

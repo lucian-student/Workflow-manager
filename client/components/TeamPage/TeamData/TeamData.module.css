@@ -1,4 +1,4 @@
-.card_data_wrapper {
+.data_wrapper {
     display: flex;
     flex-direction: column;
 }
@@ -10,16 +10,6 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     width: 100%;
-}
-
-.cancel_icon {
-    font-size: 1.5em;
-    color: #184b44;
-}
-
-.form_actions {
-    display: flex;
-    align-items: center;
 }
 
 .text {
@@ -34,6 +24,8 @@
     color: #184b44;
     white-space: pre-line;
     word-wrap: break-word;
+    margin: 0;
+    padding: 2px;
 }
 
 .display_icon {

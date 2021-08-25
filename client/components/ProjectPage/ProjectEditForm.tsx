@@ -4,7 +4,7 @@ import projectEditFormStyles from './ProjectEditForm/ProjectEditForm.module.css'
 import { ProjectContext } from '../../context/project';
 import TextareaAutosize from 'react-textarea-autosize';
 import { GiProgression } from 'react-icons/gi';
-import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md'
+import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md';
 import dayjs from 'dayjs';
 import { EditProjectInput, useEditProjectMutation } from '../../generated/apolloComponents';
 import update from 'immutability-helper';

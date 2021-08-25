@@ -23,7 +23,7 @@ function MemberCard({ member }: Props) {
 
     function showOptions(): boolean {
 
-        if (currentUser !== false && currentUser !== true) {
+       /* if (currentUser !== false && currentUser !== true) {
             if (Number(currentUser.user_id) === Number(member.user_id)) {
                 return true;
             }
@@ -31,9 +31,9 @@ function MemberCard({ member }: Props) {
 
         if (getRole() === 1 && Number(member.user_id) !== 1) {
             return true;
-        }
+        }*/
 
-        return false;
+        return getRole()===1;
     }
 
     function you(): boolean {
@@ -89,7 +89,9 @@ function MemberCard({ member }: Props) {
                         {roles.get(member.role)}
                     </div>
                 </div>
-                <MemberOptions you={you} setOpenForm={setOpenRoleForm} team_id={member.team_id} con_id={member.con_id} />
+                {showOptions() && (
+                    <MemberOptions you={you} setOpenForm={setOpenRoleForm} team_id={member.team_id} con_id={member.con_id} />
+                )}
             </div>
         </div>
     )

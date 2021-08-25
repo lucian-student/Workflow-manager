@@ -4,11 +4,12 @@ import Team from "../../entity/Team";
 import MyContext from "../../types/MyContext";
 import { getManager } from "typeorm";
 import UserTeamConnection from "../../entity/UserTeamConnection";
+import getTeamRole from "../../middleware/getTeamRole";
 
 @Resolver()
 export default class LeaveTeamResolver {
 
-    @UseMiddleware(isAuth)
+    @UseMiddleware(isAuth,getTeamRole)
     @Mutation(() => ID)
     async leaveTeam(
         @Ctx() ctx: MyContext,
@@ -29,7 +30,7 @@ export default class LeaveTeamResolver {
                 .innerJoinAndSelect(UserTeamConnection, 't2', 't2.team_id=t1.team_id')
                 .getRawMany();
 
-            console.log(checkTeamMembers);
+            //console.log(checkTeamMembers);
 
             if (checkTeamMembers.length === 0) {
                 throw Error('Team is corrupted or team doesnt exist!');
