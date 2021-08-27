@@ -1,10 +1,13 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from 'type-graphql'
+import { Arg, Ctx, Mutation, PubSub, Resolver, UseMiddleware } from 'type-graphql'
 import Project from '../../entity/Project';
 import isAuth from '../../middleware/isAuth';
 import isProjectAccessible from '../../middleware/isProjectAccessible';
 import EditProjectInput from './editProject/EditProjectInput';
 import { getManager } from 'typeorm';
 import checkIfTeamAdmin from '../../middleware/checkIfTeamAdmin';
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { EDIT_PROJECT } from './ProjectListener';
+import MyContext from '../../types/MyContext';
 
 @Resolver()
 export default class EditProjectResolver {
@@ -12,6 +15,8 @@ export default class EditProjectResolver {
     @UseMiddleware(isAuth, isProjectAccessible, checkIfTeamAdmin)
     @Mutation(() => Project)
     async editProject(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('data') data: EditProjectInput,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
@@ -21,7 +26,7 @@ export default class EditProjectResolver {
             .update(Project)
             .set({
                 ...data,
-                name:data.name.trimStart().trimEnd().replace(/\s+/g, " ")
+                name: data.name.trimStart().trimEnd().replace(/\s+/g, " ")
             })
             .where('project_id= :project_id', { project_id })
             .returning('*')
@@ -31,6 +36,11 @@ export default class EditProjectResolver {
         }
 
         const project = result.raw[0] as Project;
+
+        await pubsub.publish(EDIT_PROJECT, {
+            project_id,
+            user_id:ctx.payload.user_id
+        });
 
         return project;
     }

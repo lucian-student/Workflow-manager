@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 import { Project } from "../generated/apolloComponents";
-
+import { useProjectListenerSubscription } from '../generated/apolloComponents';
 
 interface IProjectContext {
     role?: number,
@@ -19,6 +19,13 @@ interface Props {
 }
 
 export const ProjectContextProvider = ({ children, role, project }: Props) => {
+
+    useProjectListenerSubscription({
+        variables: {
+            project_id: Number(project.project_id)
+        }
+    });
+
     return (
         <ProjectContext.Provider value={{
             role,

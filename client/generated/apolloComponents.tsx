@@ -562,6 +562,16 @@ export type RegisterResponse = {
   access_token: Scalars['String'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  projectListener: Scalars['String'];
+};
+
+
+export type SubscriptionProjectListenerArgs = {
+  project_id: Scalars['Float'];
+};
+
 export type Team = {
   __typename?: 'Team';
   team_id: Scalars['ID'];
@@ -1009,6 +1019,16 @@ export type GetProjectsQuery = (
     { __typename?: 'Project' }
     & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id' | 'last_updated' | 'team_name'>
   )> }
+);
+
+export type ProjectListenerSubscriptionVariables = Exact<{
+  project_id: Scalars['Float'];
+}>;
+
+
+export type ProjectListenerSubscription = (
+  { __typename?: 'Subscription' }
+  & Pick<Subscription, 'projectListener'>
 );
 
 export type CreateTeamMutationVariables = Exact<{
@@ -2327,6 +2347,34 @@ export function useGetProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
+export const ProjectListenerDocument = gql`
+    subscription ProjectListener($project_id: Float!) {
+  projectListener(project_id: $project_id)
+}
+    `;
+
+/**
+ * __useProjectListenerSubscription__
+ *
+ * To run a query within a React component, call `useProjectListenerSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useProjectListenerSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectListenerSubscription({
+ *   variables: {
+ *      project_id: // value for 'project_id'
+ *   },
+ * });
+ */
+export function useProjectListenerSubscription(baseOptions: Apollo.SubscriptionHookOptions<ProjectListenerSubscription, ProjectListenerSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<ProjectListenerSubscription, ProjectListenerSubscriptionVariables>(ProjectListenerDocument, options);
+      }
+export type ProjectListenerSubscriptionHookResult = ReturnType<typeof useProjectListenerSubscription>;
+export type ProjectListenerSubscriptionResult = Apollo.SubscriptionResult<ProjectListenerSubscription>;
 export const CreateTeamDocument = gql`
     mutation CreateTeam($data: TeamInput!) {
   createTeam(data: $data) {

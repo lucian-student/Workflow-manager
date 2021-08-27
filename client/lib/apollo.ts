@@ -1,10 +1,14 @@
 import {
     ApolloClient,
+    ApolloLink,
     InMemoryCache,
-    NormalizedCacheObject
+    NormalizedCacheObject,
+    split
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { createHttpLink } from "@apollo/client/link/http";
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from "@apollo/client/utilities";
 //import { onError } from '@apollo/client/link/error';
 import fetch from "isomorphic-unfetch";
 import { isBrowser } from "./isBrowser";
@@ -29,16 +33,41 @@ interface AccessToken {
     exp: number;
 }
 
-function create(initialState: any, { getAccessToken }: Options) {
+interface Definintion {
+    kind: string;
+    operation?: string;
+};
 
+function createLink(getAccessToken: () => string): ApolloLink {
     const httpLink = createHttpLink({
         uri: "http://localhost:5000/graphql",
         credentials: "include"
     });
 
+    const wsLink = process.browser ? new WebSocketLink({ // if you instantiate in the server, the error will be thrown
+        uri: `ws://localhost:5000/graphql`,
+        options: {
+            reconnect: true,
+            connectionParams: {
+                accessToken: getAccessToken()
+            }
+        }
+    }) : null;
+
+    const link = isBrowser ? split( //only create the split in the browser
+        // split based on operation type
+        ({ query }) => {
+            const { kind, operation }: Definintion = getMainDefinition(query);
+            return kind === 'OperationDefinition' && operation === 'subscription';
+        },
+        wsLink,
+        httpLink,
+    ) : httpLink;
+
     const authLink = setContext(async (_, { headers }) => {
         let token = getAccessToken();
 
+        // console.log(token);
 
         if (token) {
             const { exp }: AccessToken = jwtDecode(token);
@@ -68,11 +97,17 @@ function create(initialState: any, { getAccessToken }: Options) {
         };
     });
 
+
+    return authLink.concat(link);
+}
+
+function create(initialState: any, { getAccessToken }: Options) {
+
     // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
     return new ApolloClient({
         connectToDevTools: isBrowser,
         ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
-        link: authLink.concat(httpLink),
+        link: createLink(getAccessToken),
         cache: new InMemoryCache().restore(initialState || {})
     });
 }
@@ -81,12 +116,22 @@ export default function initApollo(initialState: any, options: Options) {
     // Make sure to create a new client for every server-side request so that data
     // isn't shared between connections (which would be bad)
     if (!isBrowser) {
+        const client = create(initialState, options);
+
+        client.onResetStore(async () => {
+            client.setLink(createLink(options.getAccessToken));
+        });
+
         return create(initialState, options);
     }
 
     // Reuse client on the client-side
     if (!apolloClient) {
         apolloClient = create(initialState, options);
+
+        apolloClient.onResetStore(async () => {
+            apolloClient.setLink(createLink(options.getAccessToken));
+        });
     }
 
     return apolloClient;

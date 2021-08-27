@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, Fragment,  } from "react";
+import React, { createContext, useState, useEffect, Fragment, } from "react";
 import User from '../interfaces/User';
 import { useMeQuery } from '../generated/apolloComponents';
+import { useApolloClient } from '@apollo/client';
 
 interface IAuthContext {
     currentUser: User | null | boolean,
@@ -20,11 +21,23 @@ interface AuxProps {
 export const AuthContextProvider = ({ children }: AuxProps) => {
     const [currentUser, setCurrentUser] = useState<User | null | boolean>(false);
 
+    const apolloClient = useApolloClient();
+
     const { data, error } = useMeQuery({
         onError(err) {
             console.log(err.message);
-        }
+        },
+        fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-only'
     });
+
+    useEffect(() => {
+        if (currentUser) {
+            if (currentUser !== true) {
+                apolloClient.resetStore();
+            }
+        }
+    }, [currentUser]);
 
     useEffect(() => {
         if (data) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
-import { ApolloProvider } from "@apollo/client";
+import { ApolloClient, ApolloProvider, NormalizedCacheObject } from "@apollo/client";
 import { withApollo, WithApolloProps } from "next-with-apollo";
 import initApollo from "../lib/apollo";
 import { getAccessToken, setAccessToken } from '../utils/accessToken';
@@ -33,8 +33,8 @@ function MyApp({ pageProps, Component, apollo }: WithApolloProps<any> & AppProps
             }
         }
         checkAuth();
-
     }, []);
+
 
     return (
         <ApolloProvider client={apollo}>

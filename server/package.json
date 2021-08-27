@@ -16,10 +16,15 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "graphql": "^15.5.1",
+    "graphql-redis-subscriptions": "^2.4.0",
+    "graphql-subscriptions": "^1.2.1",
+    "graphql-ws": "^5.4.1",
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
+    "subscriptions-transport-ws": "^0.9.19",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.34"
+    "typeorm": "^0.2.34",
+    "ws": "^8.2.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -29,6 +34,7 @@
     "@types/graphql": "^14.5.0",
     "@types/jsonwebtoken": "^8.5.2",
     "@types/node": "^15.12.5",
+    "@types/ws": "^7.4.7",
     "dotenv": "^10.0.0",
     "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.7",
