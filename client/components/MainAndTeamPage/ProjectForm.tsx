@@ -29,7 +29,7 @@ function ProjectForm({ team_id }: Props): JSX.Element {
             query: getProjectsQuery,
             variables: {
                 sort_option: sortOptions.order_param + sortOptions.order,
-                search: sortOptions.search,
+                search: (sortOptions.search === false || sortOptions.search === true) ? '' : sortOptions.search,
                 team_id: team_id
             }
         }]

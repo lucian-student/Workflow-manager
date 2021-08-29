@@ -25,7 +25,7 @@ function MemberDisplay(): JSX.Element {
         nextFetchPolicy: 'cache-only',
         variables: {
             sort_option: sortOptions.order_param + sortOptions.order,
-            search: sortOptions.search,
+            search: (sortOptions.search === false || sortOptions.search === true) ? '' : sortOptions.search,
             team_id: Number(team_id)
         },
         onError(err) {
@@ -34,7 +34,9 @@ function MemberDisplay(): JSX.Element {
     });
 
     useEffect(() => {
-        getTeamMembers();
+        if (sortOptions.search !== false) {
+            getTeamMembers();
+        }
     }, [sortOptions]);
 
     useEffect(() => {

@@ -19,7 +19,7 @@ function ProjectDisplay({ team_id }: Props): JSX.Element {
         nextFetchPolicy: 'cache-only',
         variables: {
             sort_option: sortOptions.order_param + sortOptions.order,
-            search: sortOptions.search,
+            search: (sortOptions.search === false || sortOptions.search === true) ? '' : sortOptions.search,
             team_id: team_id
         },
         onError(err) {
@@ -28,7 +28,9 @@ function ProjectDisplay({ team_id }: Props): JSX.Element {
     });
 
     useEffect(() => {
-        getProjects();
+        if (sortOptions.search !== false) {
+            getProjects();
+        }
     }, [sortOptions]);
 
     useEffect(() => {

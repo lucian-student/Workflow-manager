@@ -6,6 +6,7 @@ import { useLoginMutation, LoginMutationVariables } from '../generated/apolloCom
 import { AuthContext } from '../context/auth';
 import { setAccessToken } from "../utils/accessToken";
 import withoutAuth from "../components/hoc/withoutAuth";
+import { useApolloClient } from '@apollo/client';
 
 function Login() {
 
@@ -14,6 +15,8 @@ function Login() {
     const { setCurrentUser } = useContext(AuthContext);
 
     const [loginMutation, { data }] = useLoginMutation();
+
+    const apolloClient = useApolloClient();
 
     async function handleLogin(data: LoginMutationVariables) {
         await loginMutation({ variables: data }).catch((err) => { console.log(err.message) });
@@ -30,8 +33,12 @@ function Login() {
 
                 return;
             } else {
-                setCurrentUser(data.login.user);
-                setAccessToken(data.login.access_token);
+                const manageUser = async () => {
+                    await apolloClient.resetStore();
+                    setCurrentUser(data.login.user);
+                    setAccessToken(data.login.access_token);
+                }
+                manageUser();
             }
         }
     }, [data]);

@@ -23,6 +23,9 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
     useProjectListenerSubscription({
         variables: {
             project_id: Number(project.project_id)
+        },
+        onSubscriptionData() {
+            console.log('recived data');
         }
     });
 

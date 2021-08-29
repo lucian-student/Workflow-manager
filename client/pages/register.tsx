@@ -6,8 +6,11 @@ import { RegisterInput, useRegisterMutation } from '../generated/apolloComponent
 import { AuthContext } from '../context/auth';
 import { setAccessToken } from '../utils/accessToken';
 import withoutAuth from '../components/hoc/withoutAuth';
+import { useApolloClient } from '@apollo/client';
 
 function Register() {
+
+    const apolloClient = useApolloClient();
 
     const { register, handleSubmit, formState: { errors }, watch, setError } = useForm<RegisterInput>();
 
@@ -33,8 +36,12 @@ function Register() {
 
     useEffect(() => {
         if (data) {
-            setCurrentUser(data.register.user);
-            setAccessToken(data.register.access_token);
+            const manageUser = async () => {
+                await apolloClient.resetStore();
+                setCurrentUser(data.register.user);
+                setAccessToken(data.register.access_token);
+            }
+            manageUser();
         }
     }, [data]);
 

@@ -10,7 +10,7 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { Secret } from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 const PORT = 5000 || process.env.PORT
 
@@ -25,7 +25,20 @@ async function main() {
     const schema = await createSchema();
     const apollo = new ApolloServer({
         schema,
-        context: ({ req, res }) => ({ req, res }),
+        context: ({ req, res, connection }) => {
+            if (connection) {
+                return {
+                    req,
+                    res,
+                    user_id: connection.context.user_id
+                }
+            } else {
+                return {
+                    req,
+                    res
+                }
+            }
+        },
         /* subscriptions: '/subscriptions',*/
     });
 
@@ -53,7 +66,23 @@ async function main() {
             subscribe,
             schema: schema,
             onConnect: (connectionParams: { accessToken: string }) => {
-                console.log(connectionParams);
+                if (connectionParams.accessToken) {
+                    try {
+                        const payload = jwt.verify(connectionParams.accessToken, process.env.SECRET1!);
+                        return {
+                            user_id: Number((payload as jwt.JwtPayload).user)
+                        }
+                    } catch (err) {
+                        console.log(err.message);
+                        return {
+                            user_id: null
+                        }
+                    }
+                } else {
+                    return {
+                        user_id: null
+                    }
+                }
             }
         }, {
             server: httpServer,

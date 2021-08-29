@@ -5,8 +5,10 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import { AuthContext } from '../../context/auth';
 import { useLogoutMutation } from '../../generated/apolloComponents';
 import { setAccessToken } from '../../utils/accessToken';
+import { useApolloClient } from '@apollo/client';
 
 function Menu(): JSX.Element {
+    const apolloClient = useApolloClient();
 
     const { currentUser, setCurrentUser } = useContext(AuthContext);
 
@@ -32,8 +34,12 @@ function Menu(): JSX.Element {
 
     useEffect(() => {
         if (data) {
-            setCurrentUser(null);
-            setAccessToken('');
+            const manageUser = async () => {
+                await apolloClient.resetStore();
+                setCurrentUser(null);
+                setAccessToken('');
+            }
+            manageUser();
         }
     }, [data]);
 

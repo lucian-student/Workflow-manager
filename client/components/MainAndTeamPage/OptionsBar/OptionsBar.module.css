@@ -74,7 +74,7 @@
     margin-left: 0.25em;
     margin-right: 0.25em;
     border-radius: 7px;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
@@ -85,14 +85,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-@media screen and (max-width:550px) {
-    .options_bar_mobile {
-        display: flex;
-    }
-
-    .options_bar_pc {
-        display: none;
-    }
 }

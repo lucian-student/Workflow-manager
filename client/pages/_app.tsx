@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
-import { ApolloClient, ApolloProvider, NormalizedCacheObject } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { withApollo, WithApolloProps } from "next-with-apollo";
 import initApollo from "../lib/apollo";
 import { getAccessToken, setAccessToken } from '../utils/accessToken';
@@ -9,10 +9,9 @@ import axios from 'axios';
 import '../css/global.css';
 
 
-
-
 function MyApp({ pageProps, Component, apollo }: WithApolloProps<any> & AppProps) {
     const [loading, setLoading] = useState<boolean>(true);
+
     useEffect(() => {
         const checkAuth = async () => {
             try {

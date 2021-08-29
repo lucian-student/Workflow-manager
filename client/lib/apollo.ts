@@ -14,7 +14,7 @@ import fetch from "isomorphic-unfetch";
 import { isBrowser } from "./isBrowser";
 import jwtDecode, { } from 'jwt-decode';
 import { setAccessToken } from "../utils/accessToken";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 //import Router from 'next/router';
 
 export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
@@ -48,9 +48,18 @@ function createLink(getAccessToken: () => string): ApolloLink {
         uri: `ws://localhost:5000/graphql`,
         options: {
             reconnect: true,
-            connectionParams: {
-                accessToken: getAccessToken()
-            }
+            connectionParams: async () => {
+                const response = await axios({
+                    method: 'POST',
+                    withCredentials: true,
+                    url: 'http://localhost:5000/refresh_token'
+                }).catch((err) => {
+                    console.log(err);
+                    return { accessToken: '' }
+                });
+
+                return { accessToken:(response as AxiosResponse).data.accessToken}
+            },
         }
     }) : null;
 
@@ -66,7 +75,6 @@ function createLink(getAccessToken: () => string): ApolloLink {
 
     const authLink = setContext(async (_, { headers }) => {
         let token = getAccessToken();
-
         // console.log(token);
 
         if (token) {
@@ -120,9 +128,9 @@ export default function initApollo(initialState: any, options: Options) {
 
         client.onResetStore(async () => {
             client.setLink(createLink(options.getAccessToken));
-        });
+        })
 
-        return create(initialState, options);
+        return client;
     }
 
     // Reuse client on the client-side

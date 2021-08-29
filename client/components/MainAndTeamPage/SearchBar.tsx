@@ -1,52 +1,27 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import SearchBarStyles from './SearchBar/SearchBar.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { ImCancelCircle } from 'react-icons/im';
-import { useForm } from 'react-hook-form';
-import { SortContext } from '../../context/sort';
-
-interface SearchInput {
-    search: string
-}
+import { SearchBarContext } from '../../context/searchBar';
 
 function SearchBar(): JSX.Element {
 
-    const { register, watch, setValue } = useForm<SearchInput>();
+    // const { register } = useForm<SearchInput>();
+    const { watchSearch, setWatchSearch } = useContext(SearchBarContext);
 
-    const { setSortOptions } = useContext(SortContext);
-
-    const search = watch('search');
-
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-                setSortOptions(old => {
-                    return {
-                        order_param: old.order_param,
-                        order: old.order,
-                        search: search
-                    }
-                });
-        }, 500);
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [search]);
+    function handleChange(event) {
+        setWatchSearch(event.target.value);
+    }
 
     return (
         <div className={SearchBarStyles.search_bar_wrapper}>
             <form>
                 <div className={SearchBarStyles.input_group}>
                     <AiOutlineSearch className={SearchBarStyles.search_icon} />
-                    {search && (
+                    {watchSearch && (
                         <ImCancelCircle className={SearchBarStyles.cancel_icon}
                             onClick={() => {
-                                setValue('search', '')
-                                setSortOptions(old => {
-                                    return {
-                                        order_param: old.order_param,
-                                        order: old.order,
-                                        search: ''
-                                    }
-                                });
+                                setWatchSearch('')
                             }} />
                     )}
                     <input className={SearchBarStyles.input}
@@ -54,7 +29,9 @@ function SearchBar(): JSX.Element {
                         placeholder='Search'
                         type='text'
                         autoComplete='on'
-                        {...register('search')} />
+                        value={watchSearch}
+                        onChange={handleChange}
+                        /*{...register('search')}*/ />
                 </div>
             </form>
         </div>

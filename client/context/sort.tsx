@@ -4,12 +4,12 @@ interface ISortContext {
     sortOptions: {
         order_param: string;
         order: string;
-        search: string;
+        search: string | boolean;
     },
     setSortOptions: React.Dispatch<React.SetStateAction<{
         order_param: string;
         order: string;
-        search: string;
+        search: string | boolean;
     }>>
 }
 
@@ -31,7 +31,7 @@ export const SortContextProvider = ({ children, type }: Props) => {
     const [sortOptions, setSortOptions] = useState({
         order_param: type === 'project' ? 'last_viewed' : type === 'member' && 'role',
         order: type === 'project' ? '_desc' : type === 'member' && '_asc',
-        search: ''
+        search: false
     });
 
     return (

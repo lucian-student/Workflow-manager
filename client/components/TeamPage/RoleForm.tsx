@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import roleFormStyles from './RoleForm/RoleForm.module.css';
 import { useForm } from 'react-hook-form';
-import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
-import { IoMdArrowDropdown } from 'react-icons/io';
-import { AiOutlineCheck } from 'react-icons/ai';
 import { ImCancelCircle } from 'react-icons/im';
 import { MenuContext } from '../../context/menu';
 import { useStackingMenuCustom } from '../../hooks/useStackingMenuCustom';
@@ -39,8 +36,6 @@ function RoleForm({ setOpen, role, team_id, con_id }: Props): JSX.Element {
     });
 
     const [openSelect, setOpenSelect] = useState<boolean>(false);
-
-    const select = useDropdownCustom({ setOpen: setOpenSelect });
 
     const block = useContext(MenuContext);
 
