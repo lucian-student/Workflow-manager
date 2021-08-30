@@ -49,8 +49,15 @@ async function main() {
         credentials: true
     }
     app.use(cors(corsOptions));
-    app.post("/refresh_token", async (req: RequestData, res) => {
+    // add route for token for subscribtions¨ /refresh_token/subscribtion
+    // subscribtion token expiration 7days
+    //change refresh_token route to /refresh_token/api
+    app.post("/refresh_token/api", async (req: RequestData, res) => {
         await refreshTokens(req, res);
+    });
+
+    app.post("/refresh_token/subscribtion", async (req: RequestData, res) => {
+
     });
 
     //apollo.installSubscriptionHandlers(httpServer)

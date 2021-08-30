@@ -18,7 +18,7 @@ function MyApp({ pageProps, Component, apollo }: WithApolloProps<any> & AppProps
                 const response = await axios({
                     method: 'POST',
                     withCredentials: true,
-                    url: 'http://localhost:5000/refresh_token'
+                    url: 'http://localhost:5000/refresh_token/api'
                 });
 
                 if (response.data.ok) {

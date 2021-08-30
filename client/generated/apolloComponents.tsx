@@ -569,6 +569,7 @@ export type Subscription = {
 
 
 export type SubscriptionProjectListenerArgs = {
+  team_id?: Maybe<Scalars['Float']>;
   project_id: Scalars['Float'];
 };
 
@@ -1023,6 +1024,7 @@ export type GetProjectsQuery = (
 
 export type ProjectListenerSubscriptionVariables = Exact<{
   project_id: Scalars['Float'];
+  team_id?: Maybe<Scalars['Float']>;
 }>;
 
 
@@ -2348,8 +2350,8 @@ export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
 export const ProjectListenerDocument = gql`
-    subscription ProjectListener($project_id: Float!) {
-  projectListener(project_id: $project_id)
+    subscription ProjectListener($project_id: Float!, $team_id: Float) {
+  projectListener(project_id: $project_id, team_id: $team_id)
 }
     `;
 
@@ -2366,6 +2368,7 @@ export const ProjectListenerDocument = gql`
  * const { data, loading, error } = useProjectListenerSubscription({
  *   variables: {
  *      project_id: // value for 'project_id'
+ *      team_id: // value for 'team_id'
  *   },
  * });
  */

@@ -52,7 +52,7 @@ function createLink(getAccessToken: () => string): ApolloLink {
                 const response = await axios({
                     method: 'POST',
                     withCredentials: true,
-                    url: 'http://localhost:5000/refresh_token'
+                    url: 'http://localhost:5000/refresh_token/api'
                 }).catch((err) => {
                     console.log(err);
                     return { accessToken: '' }
