@@ -52,13 +52,13 @@ function createLink(getAccessToken: () => string): ApolloLink {
                 const response = await axios({
                     method: 'POST',
                     withCredentials: true,
-                    url: 'http://localhost:5000/refresh_token/api'
+                    url: 'http://localhost:5000/refresh_token/subscribtion'
                 }).catch((err) => {
                     console.log(err);
-                    return { accessToken: '' }
+                    return { subscribtionToken: '' }
                 });
 
-                return { accessToken:(response as AxiosResponse).data.accessToken}
+                return { subscribtionToken:(response as AxiosResponse).data.subscribtionToken}
             },
         }
     }) : null;

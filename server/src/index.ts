@@ -11,6 +11,7 @@ import cors from 'cors';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import jwt from 'jsonwebtoken';
+import subscribtionToken from "./utils/subscribtionToken";
 
 const PORT = 5000 || process.env.PORT
 
@@ -57,7 +58,7 @@ async function main() {
     });
 
     app.post("/refresh_token/subscribtion", async (req: RequestData, res) => {
-
+        await subscribtionToken(req, res);
     });
 
     //apollo.installSubscriptionHandlers(httpServer)
@@ -72,22 +73,23 @@ async function main() {
             execute,
             subscribe,
             schema: schema,
-            onConnect: (connectionParams: { accessToken: string }) => {
-                if (connectionParams.accessToken) {
+            onConnect: (connectionParams: { subscribtionToken: string }) => {
+                console.log(connectionParams);
+                if (connectionParams.subscribtionToken) {
                     try {
-                        const payload = jwt.verify(connectionParams.accessToken, process.env.SECRET1!);
+                        jwt.verify(connectionParams.subscribtionToken, process.env.SECRET3!);
                         return {
-                            user_id: Number((payload as jwt.JwtPayload).user)
+                            subscribtionToken: connectionParams.subscribtionToken
                         }
                     } catch (err) {
                         console.log(err.message);
                         return {
-                            user_id: null
+                            subscribtionToken: null
                         }
                     }
                 } else {
                     return {
-                        user_id: null
+                        subscribtionToken: null,
                     }
                 }
             }

@@ -16,6 +16,7 @@ export default async function refreshTokens(req: RequestData, res: Response) {
 
         const token = req.cookies['token'];
         if (!token) {
+            // console.log('no token');
             return res.send({ ok: false, accessToken: "" });
         }
 
@@ -28,12 +29,15 @@ export default async function refreshTokens(req: RequestData, res: Response) {
         }
 
         const user = await User.findOne({ where: { user_id: Number(payload.user) } });
+        console.log(user);
 
         if (!user) {
+            // console.log('no user');
             return res.send({ ok: false, accessToken: "" });
         }
 
         if (user.tokenVersion !== payload.tokenVersion) {
+            //console.log('wrong version');
             return res.send({ ok: false, accessToken: "" });
         }
 
