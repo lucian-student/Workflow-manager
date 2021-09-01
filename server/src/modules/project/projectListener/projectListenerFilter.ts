@@ -4,9 +4,10 @@ import Team from "../../../entity/Team";
 import UserTeamConnection from "../../../entity/UserTeamConnection";
 import jwt from 'jsonwebtoken';
 import User from '../../../entity/User';
+import ProjectListenerResponse from './ProjectListenerResponse';
 import { Arguments, Context } from '../ProjectListener';
 
-export default async function projectListenerFilter({ args, payload, context }: { args: Arguments, context: Context, payload: any }): Promise<boolean> {
+export default async function projectListenerFilter({ args, payload, context }: { args: Arguments, context: Context, payload: ProjectListenerResponse }): Promise<boolean> {
     if (context.subscribtionToken === null) {
         return false;
     }
@@ -24,6 +25,11 @@ export default async function projectListenerFilter({ args, payload, context }: 
         console.log(err.message);
         return false;
     }
+
+    //check wheter it is user who send it
+    /*if (payload.user_id !== Number(userData.user)) {
+        return false;
+    }*/
 
     //console.log(userData);
     // check if tokenVersion correct
@@ -61,5 +67,5 @@ export default async function projectListenerFilter({ args, payload, context }: 
         access = false;
     }
 
-    return (access) /*&& payload.user_id !== Number(userData.user_id);*/
+    return (access);
 }

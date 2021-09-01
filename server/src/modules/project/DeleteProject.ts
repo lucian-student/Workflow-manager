@@ -1,12 +1,13 @@
-import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Ctx, PubSub, Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Project from "../../entity/Project";
-import checkTypeOfProject from "../../middleware/checkTypeOfProject";
 import isAuth from "../../middleware/isAuth";
 import isProjectAccessible from "../../middleware/isProjectAccessible";
-import isTeamOwner from "../../middleware/isTeamOwner";
 import { getManager } from "typeorm";
 import checkIfTeamOwner from "../../middleware/checkIfTeamOwner";
-
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { DELETE_PROJECT } from './ProjectListener';
+import ProjectListenerResponse from "./projectListener/ProjectListenerResponse";
+import MyContext from "../../types/MyContext";
 
 @Resolver()
 export default class DeleteProjectResolver {
@@ -14,6 +15,8 @@ export default class DeleteProjectResolver {
     @UseMiddleware(isAuth, isProjectAccessible, checkIfTeamOwner)
     @Mutation(() => ID)
     async deleteProject(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<number> {
@@ -32,6 +35,12 @@ export default class DeleteProjectResolver {
         if (result.affected === 0) {
             throw Error('Project doesnt exist!');
         }
+
+        pubsub.publish(DELETE_PROJECT, {
+            topic: DELETE_PROJECT,
+            project_id,
+            user_id: ctx.payload.user_id
+        } as ProjectListenerResponse);
 
         return project_id;
     }

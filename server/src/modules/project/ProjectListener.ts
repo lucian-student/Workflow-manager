@@ -1,6 +1,7 @@
-import { Arg, Ctx, Resolver, Subscription, UseMiddleware } from 'type-graphql';
+import { Root, Arg, Ctx, Resolver, Subscription } from 'type-graphql';
 import MyContext from '../../types/MyContext';
 import projectListenerFilter from './projectListener/projectListenerFilter';
+import ProjectListenerResponse from './projectListener/ProjectListenerResponse';
 
 // project consts
 export const EDIT_PROJECT = 'EDIT_PROJECT';
@@ -41,7 +42,7 @@ export interface Context {
 @Resolver()
 export default class ProjectListenerResolver {
 
-    @Subscription(() => String, {
+    @Subscription(() => ProjectListenerResponse, {
         topics: [EDIT_PROJECT],
         filter: async (filterData: { args: Arguments, context: Context, payload: any }) => {
             return await projectListenerFilter(filterData);
@@ -50,10 +51,11 @@ export default class ProjectListenerResolver {
     projectListener(
         @Arg('project_id') project_id: number,
         @Ctx() ctx: MyContext,
+        @Root() data: ProjectListenerResponse,
         @Arg('team_id', { nullable: true }) team_id?: number
-    ): string {
+    ): ProjectListenerResponse {
 
-        return 'hello';
+        return data;
     }
 
 }

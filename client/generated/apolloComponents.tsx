@@ -498,6 +498,14 @@ export type ProjectInput = {
   description: Scalars['String'];
 };
 
+export type ProjectListenerResponse = {
+  __typename?: 'ProjectListenerResponse';
+  project_id: Scalars['Float'];
+  user_id: Scalars['Float'];
+  topic: Scalars['String'];
+  editProject: Project;
+};
+
 export type Query = {
   __typename?: 'Query';
   getCard?: Maybe<Card>;
@@ -564,7 +572,7 @@ export type RegisterResponse = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  projectListener: Scalars['String'];
+  projectListener: ProjectListenerResponse;
 };
 
 
@@ -1030,7 +1038,14 @@ export type ProjectListenerSubscriptionVariables = Exact<{
 
 export type ProjectListenerSubscription = (
   { __typename?: 'Subscription' }
-  & Pick<Subscription, 'projectListener'>
+  & { projectListener: (
+    { __typename?: 'ProjectListenerResponse' }
+    & Pick<ProjectListenerResponse, 'project_id' | 'user_id' | 'topic'>
+    & { editProject: (
+      { __typename?: 'Project' }
+      & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
+    ) }
+  ) }
 );
 
 export type CreateTeamMutationVariables = Exact<{
@@ -2351,7 +2366,20 @@ export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLaz
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
 export const ProjectListenerDocument = gql`
     subscription ProjectListener($project_id: Float!, $team_id: Float) {
-  projectListener(project_id: $project_id, team_id: $team_id)
+  projectListener(project_id: $project_id, team_id: $team_id) {
+    project_id
+    user_id
+    topic
+    editProject {
+      project_id
+      name
+      deadline
+      status
+      description
+      user_id
+      team_id
+    }
+  }
 }
     `;
 

@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 import { Project } from "../generated/apolloComponents";
 import { useProjectListenerSubscription } from '../generated/apolloComponents';
+import editProjectUpdate from '../subscriptionUpdates/editProjectUpdate';
 
 interface IProjectContext {
     role?: number,
@@ -25,8 +26,19 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
             project_id: Number(project.project_id),
             team_id: Number(project.team_id)
         },
-        onSubscriptionData() {
-            console.log('recived data');
+        onSubscriptionData: ({ client, subscriptionData }) => {
+            if (!subscriptionData.data) {
+                return;
+            }
+
+            const result = subscriptionData.data.projectListener;
+
+            switch (result.topic) {
+                case 'EDIT_PROJECT':
+                    editProjectUpdate({ ...result, editProject: result.editProject as Project }, project, client);
+                    break;
+            }
+
         },
         skip: !Number(project.team_id)
     });

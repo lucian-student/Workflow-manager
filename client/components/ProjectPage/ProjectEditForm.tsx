@@ -23,33 +23,6 @@ function ProjectEditForm({ setEditing }): JSX.Element {
     const [editProjectMutation, { data }] = useEditProjectMutation({
         onError(err) {
             console.log(err.message);
-        },
-        update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                }
-            }) as any;
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                },
-                data: {
-                    getProject: update(data.getProject, {
-                        project: {
-                            name: { $set: result.data.editProject.name },
-                            status: { $set: result.data.editProject.status },
-                            deadline: { $set: result.data.editProject.deadline },
-                            description: { $set: result.data.editProject.description }
-                        }
-                    })
-                }
-            });
         }
     });
 

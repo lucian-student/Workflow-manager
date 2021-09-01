@@ -8,6 +8,19 @@ subscription ProjectListener(
     projectListener(
         project_id:$project_id
         team_id:$team_id
-    )
+    ){
+        project_id
+        user_id
+        topic 
+        editProject{
+            project_id
+            name
+            deadline
+            status
+            description
+            user_id
+            team_id
+        }
+    }
 }
 `;
