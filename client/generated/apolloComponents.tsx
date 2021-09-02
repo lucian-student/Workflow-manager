@@ -503,7 +503,7 @@ export type ProjectListenerResponse = {
   project_id: Scalars['Float'];
   user_id: Scalars['Float'];
   topic: Scalars['String'];
-  editProject: Project;
+  editProject?: Maybe<Project>;
 };
 
 export type Query = {
@@ -1041,10 +1041,10 @@ export type ProjectListenerSubscription = (
   & { projectListener: (
     { __typename?: 'ProjectListenerResponse' }
     & Pick<ProjectListenerResponse, 'project_id' | 'user_id' | 'topic'>
-    & { editProject: (
+    & { editProject?: Maybe<(
       { __typename?: 'Project' }
       & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
-    ) }
+    )> }
   ) }
 );
 

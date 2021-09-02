@@ -36,10 +36,11 @@ export default class DeleteProjectResolver {
             throw Error('Project doesnt exist!');
         }
 
-        pubsub.publish(DELETE_PROJECT, {
-            topic: DELETE_PROJECT,
+        await pubsub.publish(DELETE_PROJECT, {
             project_id,
-            user_id: ctx.payload.user_id
+            user_id: ctx.payload.user_id,
+            editProject: undefined,
+            topic: DELETE_PROJECT
         } as ProjectListenerResponse);
 
         return project_id;

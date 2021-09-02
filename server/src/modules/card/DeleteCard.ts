@@ -1,10 +1,14 @@
-import { Arg, ID, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Arg, Mutation, Resolver, UseMiddleware, Ctx } from "type-graphql";
 import Card from "../../entity/Card";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
 import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import DeleteCardResponse from "./deleteCard/deleteCardResponse";
+import ProjectListenerResponse from "../project/projectListener/ProjectListenerResponse";
+import { DELETE_CARD } from '../project/ProjectListener';
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
 
 interface RawItem {
     order_index: number,
@@ -17,6 +21,8 @@ export default class DeleteCardResolver {
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => DeleteCardResponse)
     async deleteCard(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
@@ -44,6 +50,7 @@ export default class DeleteCardResolver {
             if (result.affected === 0) {
                 throw Error('Card doesnt exist!');
             }
+
             const rawRes: RawItem = result.raw[0];
             const order_index = rawRes.order_index;
             const list_id = rawRes.list_id;
@@ -57,6 +64,13 @@ export default class DeleteCardResolver {
 
             res.list_id = list_id;
         });
+
+        await pubsub.publish(DELETE_CARD, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            editProject: undefined,
+            topic: DELETE_CARD
+        } as ProjectListenerResponse);
 
         return res;
     }

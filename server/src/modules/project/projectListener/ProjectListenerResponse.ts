@@ -13,6 +13,6 @@ export default class ProjectListenerResponse {
     @Field()
     topic: string
 
-    @Field(() => Project)
+    @Field(() => Project, { nullable: true })
     editProject?: Project
 }

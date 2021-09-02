@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { createContext } from "react";
 import { Project } from "../generated/apolloComponents";
 import { useProjectListenerSubscription } from '../generated/apolloComponents';
@@ -21,12 +22,15 @@ interface Props {
 
 export const ProjectContextProvider = ({ children, role, project }: Props) => {
 
+    const router = useRouter();
+
     useProjectListenerSubscription({
         variables: {
             project_id: Number(project.project_id),
             team_id: Number(project.team_id)
         },
         onSubscriptionData: ({ client, subscriptionData }) => {
+
             if (!subscriptionData.data) {
                 return;
             }
@@ -36,6 +40,9 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
             switch (result.topic) {
                 case 'EDIT_PROJECT':
                     editProjectUpdate({ ...result, editProject: result.editProject as Project }, project, client);
+                    break;
+                case 'DELETE_PROJECT':
+                    router.replace(`/team/${result.editProject.team_id}`);
                     break;
             }
 

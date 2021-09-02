@@ -43,8 +43,9 @@ export interface Context {
 export default class ProjectListenerResolver {
 
     @Subscription(() => ProjectListenerResponse, {
-        topics: [EDIT_PROJECT],
-        filter: async (filterData: { args: Arguments, context: Context, payload: any }) => {
+        topics: [DELETE_PROJECT, EDIT_PROJECT, DELETE_CARD],
+        filter: async (filterData: { args: Arguments, context: Context, payload: ProjectListenerResponse }) => {
+            console.log(filterData.payload.topic)
             return await projectListenerFilter(filterData);
         }
     })
@@ -55,6 +56,7 @@ export default class ProjectListenerResolver {
         @Arg('team_id', { nullable: true }) team_id?: number
     ): ProjectListenerResponse {
 
+        console.log(data);
         return data;
     }
 

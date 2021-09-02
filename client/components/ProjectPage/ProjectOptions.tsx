@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { BsThreeDots } from 'react-icons/bs';
 import projectOptionsStyles from './ProjectOptions/ProjectOptions.module.css';
 import { useDropDownMenu } from "../../hooks/useDropdownMenu";
@@ -12,7 +12,7 @@ function ProjectOptions(): JSX.Element {
 
     const { open, setOpen, menuRef } = useDropDownMenu();
 
-    const Router = useRouter();
+    const router = useRouter();
 
     const modal = useDropDownMenu();
 
@@ -25,20 +25,19 @@ function ProjectOptions(): JSX.Element {
         },
         onError(err) {
             console.log(err.message);
-        },
-        update(proxy, result) {
-           // add modification of cache
         }
     });
 
     useEffect(() => {
         if (data) {
-            router.replace('/main');
+            if (!project.team_id) {
+                router.replace('/main');
+            }
         }
-    }, [data]);
+    }, [data, project.team_id]);
 
-    async function handleDelete() {
-        await deleteProjectMutation();
+    function handleDelete() {
+        deleteProjectMutation();
     }
 
     return (
