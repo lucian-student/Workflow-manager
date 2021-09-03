@@ -5,7 +5,7 @@ import isCardAccessible from "../../middleware/isCardAccessible";
 import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import DeleteCardResponse from "./deleteCard/deleteCardResponse";
-import ProjectListenerResponse from "../project/projectListener/ProjectListenerResponse";
+import ListenerResponse from "../shared/ListenerResponse";
 import { DELETE_CARD } from '../project/ProjectListener';
 import { PubSub as PubSubType } from 'graphql-subscriptions';
 import MyContext from "../../types/MyContext";
@@ -69,8 +69,9 @@ export default class DeleteCardResolver {
             project_id,
             user_id: ctx.payload.user_id,
             editProject: undefined,
-            topic: DELETE_CARD
-        } as ProjectListenerResponse);
+            topic: DELETE_CARD,
+            deleteCard: res
+        } as ListenerResponse);
 
         return res;
     }

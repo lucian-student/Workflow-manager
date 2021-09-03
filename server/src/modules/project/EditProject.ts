@@ -8,7 +8,7 @@ import checkIfTeamAdmin from '../../middleware/checkIfTeamAdmin';
 import { PubSub as PubSubType } from 'graphql-subscriptions';
 import { EDIT_PROJECT } from './ProjectListener';
 import MyContext from '../../types/MyContext';
-import ProjectListenerResponse from './projectListener/ProjectListenerResponse';
+import ListenerResponse from '../shared/ListenerResponse';
 
 @Resolver()
 export default class EditProjectResolver {
@@ -43,7 +43,7 @@ export default class EditProjectResolver {
             user_id: ctx.payload.user_id,
             editProject: project,
             topic: EDIT_PROJECT
-        } as ProjectListenerResponse);
+        } as ListenerResponse);
 
         return project;
     }

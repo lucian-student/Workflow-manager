@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
 import React, { createContext } from "react";
 import { Project } from "../generated/apolloComponents";
-import { useProjectListenerSubscription } from '../generated/apolloComponents';
-import editProjectUpdate from '../subscriptionUpdates/editProjectUpdate';
+import { useProjectListenerSubscription, Card } from '../generated/apolloComponents';
+import editProjectUpdate from '../subscriptionUpdates/project/editProjectUpdate';
+import deleteCardUpdate from '../subscriptionUpdates/card/deleteCardUpdate';
+import editCardUpdateProject from '../subscriptionUpdates/card/editCardUpdateProject';
 
 interface IProjectContext {
     role?: number,
@@ -39,15 +41,20 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
 
             switch (result.topic) {
                 case 'EDIT_PROJECT':
-                    editProjectUpdate({ ...result, editProject: result.editProject as Project }, project, client);
+                    editProjectUpdate(result.editProject as Project, result.project_id, client, project.team_id);
                     break;
                 case 'DELETE_PROJECT':
                     router.replace(`/team/${result.editProject.team_id}`);
                     break;
+                case 'DELETE_CARD':
+                    deleteCardUpdate(result.project_id, result.deleteCard, client, project.team_id);
+                    break;
+                case 'EDIT_CARD':
+                    editCardUpdateProject(result.editCard as Card, project.project_id, client, project.team_id);
+                    break;
             }
-
         },
-        skip: !Number(project.team_id)
+        skip: !project.team_id
     });
 
     return (

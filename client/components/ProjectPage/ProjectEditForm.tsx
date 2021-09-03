@@ -6,15 +6,16 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { GiProgression } from 'react-icons/gi';
 import { MdDateRange, MdSubtitles, MdDescription } from 'react-icons/md';
 import dayjs from 'dayjs';
-import { EditProjectInput, useEditProjectMutation } from '../../generated/apolloComponents';
+import { EditProjectInput, Project, useEditProjectMutation } from '../../generated/apolloComponents';
 import update from 'immutability-helper';
 import { getProjectQuery } from '../../graphql/project/query/getProject';
+import editProjectUpdate from '../../subscriptionUpdates/project/editProjectUpdate';
 
 interface Props {
     setEditing: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function ProjectEditForm({ setEditing }:Props): JSX.Element {
+function ProjectEditForm({ setEditing }: Props): JSX.Element {
 
     const { project } = useContext(ProjectContext);
 
@@ -29,32 +30,7 @@ function ProjectEditForm({ setEditing }:Props): JSX.Element {
                 console.log('team_project');
                 return;
             }
-
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                }
-            }) as any;
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                },
-                data: {
-                    getProject: update(data.getProject, {
-                        project: {
-                            name: { $set: result.data.editProject.name },
-                            status: { $set: result.data.editProject.status },
-                            deadline: { $set: result.data.editProject.deadline },
-                            description: { $set: result.data.editProject.description }
-                        }
-                    })
-                }
-            });
+            editProjectUpdate(result.data.editProject as Project, result.data.editProject.project_id, proxy, result.data.editProject.team_id);
         }
     });
 

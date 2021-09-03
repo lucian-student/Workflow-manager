@@ -157,6 +157,15 @@ export type ListInput = {
   name: Scalars['String'];
 };
 
+export type ListenerResponse = {
+  __typename?: 'ListenerResponse';
+  project_id: Scalars['ID'];
+  topic: Scalars['String'];
+  editProject?: Maybe<Project>;
+  deleteCard?: Maybe<DeleteCardResponse>;
+  editCard?: Maybe<Card>;
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user: User;
@@ -498,14 +507,6 @@ export type ProjectInput = {
   description: Scalars['String'];
 };
 
-export type ProjectListenerResponse = {
-  __typename?: 'ProjectListenerResponse';
-  project_id: Scalars['Float'];
-  user_id: Scalars['Float'];
-  topic: Scalars['String'];
-  editProject?: Maybe<Project>;
-};
-
 export type Query = {
   __typename?: 'Query';
   getCard?: Maybe<Card>;
@@ -572,13 +573,21 @@ export type RegisterResponse = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  projectListener: ProjectListenerResponse;
+  projectListener: ListenerResponse;
+  cardListener: ListenerResponse;
 };
 
 
 export type SubscriptionProjectListenerArgs = {
-  team_id?: Maybe<Scalars['Float']>;
+  team_id: Scalars['Float'];
   project_id: Scalars['Float'];
+};
+
+
+export type SubscriptionCardListenerArgs = {
+  project_id: Scalars['Float'];
+  team_id: Scalars['Float'];
+  card_id: Scalars['Float'];
 };
 
 export type Team = {
@@ -743,6 +752,28 @@ export type GetCardQuery = (
       & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
     )> }
   )> }
+);
+
+export type CardListenerSubscriptionVariables = Exact<{
+  card_id: Scalars['Float'];
+  team_id: Scalars['Float'];
+  project_id: Scalars['Float'];
+}>;
+
+
+export type CardListenerSubscription = (
+  { __typename?: 'Subscription' }
+  & { cardListener: (
+    { __typename?: 'ListenerResponse' }
+    & Pick<ListenerResponse, 'project_id' | 'topic'>
+    & { deleteCard?: Maybe<(
+      { __typename?: 'DeleteCardResponse' }
+      & Pick<DeleteCardResponse, 'card_id' | 'list_id'>
+    )>, editCard?: Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'project_id' | 'card_id' | 'list_id' | 'name' | 'description' | 'deadline'>
+    )> }
+  ) }
 );
 
 export type CreateLinkMutationVariables = Exact<{
@@ -1032,18 +1063,24 @@ export type GetProjectsQuery = (
 
 export type ProjectListenerSubscriptionVariables = Exact<{
   project_id: Scalars['Float'];
-  team_id?: Maybe<Scalars['Float']>;
+  team_id: Scalars['Float'];
 }>;
 
 
 export type ProjectListenerSubscription = (
   { __typename?: 'Subscription' }
   & { projectListener: (
-    { __typename?: 'ProjectListenerResponse' }
-    & Pick<ProjectListenerResponse, 'project_id' | 'user_id' | 'topic'>
+    { __typename?: 'ListenerResponse' }
+    & Pick<ListenerResponse, 'project_id' | 'topic'>
     & { editProject?: Maybe<(
       { __typename?: 'Project' }
       & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
+    )>, deleteCard?: Maybe<(
+      { __typename?: 'DeleteCardResponse' }
+      & Pick<DeleteCardResponse, 'card_id' | 'list_id'>
+    )>, editCard?: Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'project_id' | 'card_id' | 'list_id' | 'name' | 'description' | 'deadline'>
     )> }
   ) }
 );
@@ -1627,6 +1664,51 @@ export function useGetCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetCardQueryHookResult = ReturnType<typeof useGetCardQuery>;
 export type GetCardLazyQueryHookResult = ReturnType<typeof useGetCardLazyQuery>;
 export type GetCardQueryResult = Apollo.QueryResult<GetCardQuery, GetCardQueryVariables>;
+export const CardListenerDocument = gql`
+    subscription CardListener($card_id: Float!, $team_id: Float!, $project_id: Float!) {
+  cardListener(card_id: $card_id, team_id: $team_id, project_id: $project_id) {
+    project_id
+    topic
+    deleteCard {
+      card_id
+      list_id
+    }
+    editCard {
+      project_id
+      card_id
+      list_id
+      name
+      description
+      deadline
+    }
+  }
+}
+    `;
+
+/**
+ * __useCardListenerSubscription__
+ *
+ * To run a query within a React component, call `useCardListenerSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCardListenerSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCardListenerSubscription({
+ *   variables: {
+ *      card_id: // value for 'card_id'
+ *      team_id: // value for 'team_id'
+ *      project_id: // value for 'project_id'
+ *   },
+ * });
+ */
+export function useCardListenerSubscription(baseOptions: Apollo.SubscriptionHookOptions<CardListenerSubscription, CardListenerSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<CardListenerSubscription, CardListenerSubscriptionVariables>(CardListenerDocument, options);
+      }
+export type CardListenerSubscriptionHookResult = ReturnType<typeof useCardListenerSubscription>;
+export type CardListenerSubscriptionResult = Apollo.SubscriptionResult<CardListenerSubscription>;
 export const CreateLinkDocument = gql`
     mutation CreateLink($data: LinkInput!, $card_id: Float!, $project_id: Float!, $team_id: Float) {
   createLink(
@@ -2365,10 +2447,9 @@ export type GetProjectsQueryHookResult = ReturnType<typeof useGetProjectsQuery>;
 export type GetProjectsLazyQueryHookResult = ReturnType<typeof useGetProjectsLazyQuery>;
 export type GetProjectsQueryResult = Apollo.QueryResult<GetProjectsQuery, GetProjectsQueryVariables>;
 export const ProjectListenerDocument = gql`
-    subscription ProjectListener($project_id: Float!, $team_id: Float) {
+    subscription ProjectListener($project_id: Float!, $team_id: Float!) {
   projectListener(project_id: $project_id, team_id: $team_id) {
     project_id
-    user_id
     topic
     editProject {
       project_id
@@ -2378,6 +2459,18 @@ export const ProjectListenerDocument = gql`
       description
       user_id
       team_id
+    }
+    deleteCard {
+      card_id
+      list_id
+    }
+    editCard {
+      project_id
+      card_id
+      list_id
+      name
+      description
+      deadline
     }
   }
 }

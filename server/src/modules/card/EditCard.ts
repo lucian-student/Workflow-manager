@@ -1,17 +1,23 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Mutation, PubSub, Resolver, UseMiddleware } from "type-graphql";
 import Card from "../../entity/Card";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
 import CardInput from "./shared/CardInput";
 import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { EDIT_CARD } from '../project/ProjectListener';
+import ListenerResponse from "../shared/ListenerResponse";
+import MyContext from "../../types/MyContext";
 
 @Resolver()
 export default class EditCardResolver {
 
-    @UseMiddleware(isAuth, isCardAccessible,checkIfTeamAdmin)
+    @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => Card)
     async editCard(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('data') data: CardInput,
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
@@ -23,16 +29,24 @@ export default class EditCardResolver {
             .update(Card)
             .set({
                 ...data,
-                name:data.name.trimEnd().trimStart().replace(/\s+/g, " ")
+                name: data.name.trimEnd().trimStart().replace(/\s+/g, " ")
             })
             .where('card_id= :card_id', { card_id })
             .returning('*')
             .execute();
+
         if (!result.raw) {
-           throw Error('Card doesnt exist!');
+            throw Error('Card doesnt exist!');
         }
 
         const card = result.raw[0] as Card;
+
+        pubsub.publish(EDIT_CARD, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: EDIT_CARD,
+            editCard: card
+        } as ListenerResponse);
 
         return card;
     }

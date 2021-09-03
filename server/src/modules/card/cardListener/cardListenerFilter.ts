@@ -5,8 +5,9 @@ import UserTeamConnection from "../../../entity/UserTeamConnection";
 import jwt from 'jsonwebtoken';
 import User from '../../../entity/User';
 import ListenerResponse from '../../shared/ListenerResponse';
-import { Arguments, Context, DELETE_PROJECT } from '../ProjectListener';
-
+import { Context, DELETE_CARD } from '../../project/ProjectListener';
+import { Arguments } from '../CardListener';
+import Card from '../../../entity/Card';
 
 export default async function projectListenerFilter({ args, payload, context }: { args: Arguments, context: Context, payload: ListenerResponse }): Promise<boolean> {
     if (context.subscribtionToken === null) {
@@ -53,29 +54,30 @@ export default async function projectListenerFilter({ args, payload, context }: 
 
     let access: boolean = true;
     // check access to subscribtion
-    if (args.team_id && payload.topic !== DELETE_PROJECT) {
+    if (args.team_id && payload.topic !== DELETE_CARD) {
         const result = await getManager()
             .createQueryBuilder()
-            .select('t1.project_id', 'project_id')
-            .addSelect('t3.role', 'role')
-            .from(Project, 't1')
-            .innerJoin(Team, 't2', 't2.team_id=t1.team_id')
-            .innerJoin(UserTeamConnection, 't3', 't3.team_id=t2.team_id')
-            .where('t3.user_id= :user_id', { user_id: Number(userData.user) })
-            .andWhere('t1.project_id= :project_id', { project_id: payload.project_id })
-            .andWhere('t3.confirmed=true')
+            .select('t2.project_id', 'project_id')
+            .select('t4.role', 'role')
+            .from(Card, 't1')
+            .innerJoin(Project, 't2', 't2.project_id=t1.project_id')
+            .innerJoin(Team, 't3', 't2.team_id=t3.team_id')
+            .innerJoin(UserTeamConnection, 't4', 't3.team_id=t4.team_id')
+            .where('t1.card_id= :card_id', { card_id: args.card_id })
+            .andWhere('t4.user_id= :user_id', { user_id: Number(userData.user) })
+            .andWhere('t2.project_id= :project_id', { project_id: args.project_id })
+            .andWhere('t4.confirmed=true')
             .getRawOne();
-
         if (!result) {
             console.log('check 6')
             access = false;
         }
-    } else if (payload.topic !== DELETE_PROJECT) {
+    } else if (payload.topic !== DELETE_CARD) {
         console.log('check 7')
         access = false;
     }
 
-    if (payload.topic === DELETE_PROJECT) {
+    if (payload.topic === DELETE_CARD) {
         const connection = await UserTeamConnection.findOne({ where: { user_id: payload.user_id, team_id: args.team_id, confirmed: true } });
 
         if (!connection) {

@@ -1,7 +1,7 @@
 import { Root, Arg, Ctx, Resolver, Subscription } from 'type-graphql';
 import MyContext from '../../types/MyContext';
 import projectListenerFilter from './projectListener/projectListenerFilter';
-import ProjectListenerResponse from './projectListener/ProjectListenerResponse';
+import ListenerResponse from '../shared/ListenerResponse';
 
 // project consts
 export const EDIT_PROJECT = 'EDIT_PROJECT';
@@ -31,7 +31,7 @@ export const EDIT_TODO = 'EDIT_TODO';
 export const DONE_TODO = 'DONE_TODO';
 
 export interface Arguments {
-    team_id?: number,
+    team_id: number,
     project_id: number
 }
 
@@ -42,9 +42,9 @@ export interface Context {
 @Resolver()
 export default class ProjectListenerResolver {
 
-    @Subscription(() => ProjectListenerResponse, {
-        topics: [DELETE_PROJECT, EDIT_PROJECT, DELETE_CARD],
-        filter: async (filterData: { args: Arguments, context: Context, payload: ProjectListenerResponse }) => {
+    @Subscription(() => ListenerResponse, {
+        topics: [DELETE_PROJECT, EDIT_PROJECT, DELETE_CARD, EDIT_CARD, CREATE_CARD, MOVE_CARD],
+        filter: async (filterData: { args: Arguments, context: Context, payload: ListenerResponse }) => {
             console.log(filterData.payload.topic)
             return await projectListenerFilter(filterData);
         }
@@ -52,9 +52,9 @@ export default class ProjectListenerResolver {
     projectListener(
         @Arg('project_id') project_id: number,
         @Ctx() ctx: MyContext,
-        @Root() data: ProjectListenerResponse,
-        @Arg('team_id', { nullable: true }) team_id?: number
-    ): ProjectListenerResponse {
+        @Root() data: ListenerResponse,
+        @Arg('team_id') team_id: number
+    ): ListenerResponse {
 
         console.log(data);
         return data;

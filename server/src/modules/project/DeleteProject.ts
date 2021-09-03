@@ -6,7 +6,7 @@ import { getManager } from "typeorm";
 import checkIfTeamOwner from "../../middleware/checkIfTeamOwner";
 import { PubSub as PubSubType } from 'graphql-subscriptions';
 import { DELETE_PROJECT } from './ProjectListener';
-import ProjectListenerResponse from "./projectListener/ProjectListenerResponse";
+import ListenerResponse from "../shared/ListenerResponse";
 import MyContext from "../../types/MyContext";
 
 @Resolver()
@@ -41,7 +41,7 @@ export default class DeleteProjectResolver {
             user_id: ctx.payload.user_id,
             editProject: undefined,
             topic: DELETE_PROJECT
-        } as ProjectListenerResponse);
+        } as ListenerResponse);
 
         return project_id;
     }
