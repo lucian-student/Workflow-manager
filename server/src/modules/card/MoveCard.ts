@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Mutation, PubSub, Resolver, UseMiddleware } from "type-graphql";
 import { getManager, EntityManager } from "typeorm";
 import Card from "../../entity/Card";
 import List from "../../entity/List";
@@ -7,6 +7,10 @@ import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
 import isCardAccessible from "../../middleware/isCardAccessible";
 import MoveCardResponse from "./moveCard/MoveCardResponse";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
+import { MOVE_CARD } from '../project/ProjectListener';
+import ListenerResponse from "../shared/ListenerResponse";
 
 @Resolver()
 export default class MoveCard {
@@ -14,6 +18,8 @@ export default class MoveCard {
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => MoveCardResponse)
     async moveCard(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('list_id') list_id: number,
         @Arg('end_index') end_index: number,
         @Arg('project_id') project_id: number,
@@ -156,6 +162,13 @@ export default class MoveCard {
                 await transactionalEntityManager.update(Card, { card_id }, { order_index: finish_index });
             }
         });
+
+        pubsub.publish(MOVE_CARD, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: MOVE_CARD,
+            moveCard: res
+        } as ListenerResponse);
 
         return res;
     }

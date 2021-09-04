@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Mutation, PubSub, Resolver, UseMiddleware } from "type-graphql";
 import Card from "../../entity/Card";
 import isAuth from "../../middleware/isAuth";
 import CreateCardInput from "./createCard/CreateCardInput";
@@ -7,6 +7,10 @@ import Todo from "../../entity/Todo";
 import Link from "../../entity/Link";
 import isListAccessible from "../../middleware/isListAccessible";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
+import { CREATE_CARD } from '../project/ProjectListener';
+import ListenerResponse from "../shared/ListenerResponse";
 
 @Resolver()
 export default class CreateCardResolver {
@@ -14,6 +18,8 @@ export default class CreateCardResolver {
     @UseMiddleware(isAuth, isListAccessible, checkIfTeamAdmin)
     @Mutation(() => Card)
     async createCard(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('data') data: CreateCardInput,
         @Arg('project_id') project_id: number,
         @Arg('list_id') list_id: number,
@@ -88,6 +94,13 @@ export default class CreateCardResolver {
         });
 
         card.messages = [];
+
+        pubsub.publish(CREATE_CARD, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: CREATE_CARD,
+            createCard: card
+        } as ListenerResponse);
 
         return card;
     }

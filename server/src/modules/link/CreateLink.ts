@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Arg, Mutation, Resolver, UseMiddleware, Ctx } from "type-graphql";
 import Card from "../../entity/Card";
 import Link from "../../entity/Link";
 import Project from "../../entity/Project";
@@ -8,6 +8,10 @@ import isCardAccessible from "../../middleware/isCardAccessible";
 import LinkInput from "./shared/LinkInput";
 import { getManager } from 'typeorm';
 import LinkResponse from "./shared/LinkResponse";
+import { PubSub as PubSubType } from "graphql-subscriptions";
+import MyContext from "../../types/MyContext";
+import ListenerResponse from "../shared/ListenerResponse";
+import { CREATE_LINK } from '../project/ProjectListener';
 
 @Resolver()
 export default class CreateLinkResolver {
@@ -15,6 +19,8 @@ export default class CreateLinkResolver {
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => LinkResponse)
     async createLink(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('data') data: LinkInput,
         @Arg('card_id') card_id: number,
         @Arg('project_id') project_id: number,
@@ -29,7 +35,7 @@ export default class CreateLinkResolver {
         link.project = { project_id } as Project;
 
         const linkResponse = new LinkResponse();
-        
+
         await getManager().transaction("REPEATABLE READ", async (transactionalEntityManager) => {
             link = await transactionalEntityManager.save(link);
 
@@ -48,6 +54,13 @@ export default class CreateLinkResolver {
 
             linkResponse.list_id = list.list_id;
         });
+
+        pubsub.publish(CREATE_LINK, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: CREATE_LINK,
+            createLink: linkResponse
+        } as ListenerResponse);
 
         return linkResponse;
     }

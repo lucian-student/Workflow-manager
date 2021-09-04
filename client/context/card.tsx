@@ -33,6 +33,7 @@ export const CardContextProvider = ({ children, card }: Props) => {
         },
         skip: !project.team_id,
         onSubscriptionData: ({ client, subscriptionData }) => {
+            
             if (!subscriptionData.data) {
                 return;
             }

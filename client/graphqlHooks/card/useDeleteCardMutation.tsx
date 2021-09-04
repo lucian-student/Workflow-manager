@@ -17,7 +17,7 @@ export function useDeleteCardMutation({ project_id, team_id }: Props) {
             console.log(err)
         },
         update(proxy, result) {
-            if (!team_id) {
+            if (team_id) {
                 return;
             }
             deleteCardUpdate(project_id, result.data.deleteCard, proxy, team_id);

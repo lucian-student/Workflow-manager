@@ -164,6 +164,9 @@ export type ListenerResponse = {
   editProject?: Maybe<Project>;
   deleteCard?: Maybe<DeleteCardResponse>;
   editCard?: Maybe<Card>;
+  moveCard?: Maybe<MoveCardResponse>;
+  createCard?: Maybe<Card>;
+  createLink?: Maybe<LinkResponse>;
 };
 
 export type LoginResponse = {
@@ -772,6 +775,13 @@ export type CardListenerSubscription = (
     )>, editCard?: Maybe<(
       { __typename?: 'Card' }
       & Pick<Card, 'project_id' | 'card_id' | 'list_id' | 'name' | 'description' | 'deadline'>
+    )>, createLink?: Maybe<(
+      { __typename?: 'LinkResponse' }
+      & Pick<LinkResponse, 'list_id'>
+      & { link: (
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      ) }
     )> }
   ) }
 );
@@ -1081,6 +1091,29 @@ export type ProjectListenerSubscription = (
     )>, editCard?: Maybe<(
       { __typename?: 'Card' }
       & Pick<Card, 'project_id' | 'card_id' | 'list_id' | 'name' | 'description' | 'deadline'>
+    )>, moveCard?: Maybe<(
+      { __typename?: 'MoveCardResponse' }
+      & Pick<MoveCardResponse, 'list_id' | 'old_list_id' | 'card_id' | 'order_index'>
+    )>, createCard?: Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+      & { links: Array<(
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      )>, messages: Array<(
+        { __typename?: 'Message' }
+        & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+      )>, todos: Array<(
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      )> }
+    )>, createLink?: Maybe<(
+      { __typename?: 'LinkResponse' }
+      & Pick<LinkResponse, 'list_id'>
+      & { link: (
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      ) }
     )> }
   ) }
 );
@@ -1680,6 +1713,16 @@ export const CardListenerDocument = gql`
       name
       description
       deadline
+    }
+    createLink {
+      link {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      list_id
     }
   }
 }
@@ -2471,6 +2514,53 @@ export const ProjectListenerDocument = gql`
       name
       description
       deadline
+    }
+    moveCard {
+      list_id
+      old_list_id
+      card_id
+      order_index
+    }
+    createCard {
+      card_id
+      name
+      deadline
+      project_id
+      list_id
+      order_index
+      links {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      messages {
+        message_id
+        content
+        user_id
+        card_id
+        project_id
+        data_of_creation
+        username
+      }
+      todos {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+    }
+    createLink {
+      link {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      list_id
     }
   }
 }

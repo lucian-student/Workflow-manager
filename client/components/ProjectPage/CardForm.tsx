@@ -10,12 +10,11 @@ import { VscAdd } from 'react-icons/vsc';
 import TodoInputDisplay from './TodoInputDisplay';
 import LinkInputDisplay from './LinkInputDisplay';
 import { MenuContext } from '../../context/menu';
-import { TodoInput, LinkInput, CardInput } from '../../generated/apolloComponents';
+import { TodoInput, LinkInput, CardInput, Card } from '../../generated/apolloComponents';
 import { useCreateCardMutation } from '../../generated/apolloComponents';
 import { ProjectContext } from '../../context/project';
-import update from 'immutability-helper';
-import { getProjectQuery } from '../../graphql/project/query/getProject';
 import CardDataForm from './CardDataForm';
+import createCardUpdate from '../../subscriptionUpdates/card/createCardUpdate';
 
 function CardForm(): JSX.Element {
 
@@ -88,35 +87,12 @@ function CardForm(): JSX.Element {
             console.log(err)
         },
         update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project_id),
-                    team_id: !Number(project.team_id) ? null : Number(project.team_id)
-                }
-            }) as any;
+            if (project.team_id) {
+                console.log('team_project');
+                return;
+            }
 
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project_id),
-                    team_id: !Number(project.team_id) ? null : Number(project.team_id)
-                },
-                data: {
-                    getProject: update(data.getProject, {
-                        project: {
-                            lists: {
-                                [project.lists.findIndex(l => Number(l.list_id) === Number(list_id))]: {
-                                    cards: {
-                                        $push: [result.data.createCard]
-                                    }
-                                }
-                            }
-                        }
-                    })
-                }
-            });
+            createCardUpdate(result.data.createCard as Card, project.project_id, proxy, project.team_id);
         }
     });
 

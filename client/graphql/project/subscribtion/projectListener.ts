@@ -32,6 +32,53 @@ subscription ProjectListener(
             description
             deadline
         }
+        moveCard{
+            list_id
+            old_list_id
+            card_id
+            order_index
+        }
+        createCard{
+            card_id
+            name
+            deadline
+            project_id
+            list_id
+            order_index
+            links {
+                link_id
+                name
+                url
+                card_id
+                project_id
+            }
+            messages {
+                message_id
+                content
+                user_id
+                card_id
+                project_id
+                data_of_creation
+                username
+            }
+            todos {
+                todo_id
+                name
+                done
+                card_id
+                project_id
+            }
+        }
+        createLink{
+            link{
+                link_id
+                name
+                url
+                card_id
+                project_id
+            }
+            list_id
+        }
     }
 }
 `;

@@ -2,6 +2,8 @@ import { ObjectType, Field, ID } from 'type-graphql';
 import Card from '../../entity/Card';
 import Project from "../../entity/Project";
 import DeleteCardResponse from '../card/deleteCard/deleteCardResponse';
+import MoveCardResponse from '../card/moveCard/MoveCardResponse';
+import LinkResponse from '../link/shared/LinkResponse';
 
 @ObjectType()
 export default class ListenerResponse {
@@ -22,4 +24,14 @@ export default class ListenerResponse {
 
     @Field(() => Card, { nullable: true })
     editCard?: Card
+
+    @Field(() => MoveCardResponse, { nullable: true })
+    moveCard?: MoveCardResponse
+
+    @Field(() => Card, { nullable: true })
+    createCard?: Card
+
+    @Field(() => LinkResponse, { nullable: true })
+    createLink?: LinkResponse
+    
 }

@@ -25,6 +25,16 @@ subscription CardListener(
             description
             deadline
         }
+        createLink{
+            link{
+                link_id
+                name
+                url
+                card_id
+                project_id
+            }
+            list_id
+        }
     }
 }
 `;

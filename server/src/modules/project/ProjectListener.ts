@@ -43,7 +43,7 @@ export interface Context {
 export default class ProjectListenerResolver {
 
     @Subscription(() => ListenerResponse, {
-        topics: [DELETE_PROJECT, EDIT_PROJECT, DELETE_CARD, EDIT_CARD, CREATE_CARD, MOVE_CARD],
+        topics: [DELETE_PROJECT, EDIT_PROJECT, DELETE_CARD, EDIT_CARD, CREATE_CARD, MOVE_CARD, CREATE_LINK, DELETE_LINK],
         filter: async (filterData: { args: Arguments, context: Context, payload: ListenerResponse }) => {
             console.log(filterData.payload.topic)
             return await projectListenerFilter(filterData);

@@ -5,6 +5,8 @@ import { useProjectListenerSubscription, Card } from '../generated/apolloCompone
 import editProjectUpdate from '../subscriptionUpdates/project/editProjectUpdate';
 import deleteCardUpdate from '../subscriptionUpdates/card/deleteCardUpdate';
 import editCardUpdateProject from '../subscriptionUpdates/card/editCardUpdateProject';
+import moveCardUpdate from '../subscriptionUpdates/card/moveCardUpdate';
+import createCardUpdate from '../subscriptionUpdates/card/createCardUpdate';
 
 interface IProjectContext {
     role?: number,
@@ -51,6 +53,12 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
                     break;
                 case 'EDIT_CARD':
                     editCardUpdateProject(result.editCard as Card, project.project_id, client, project.team_id);
+                    break;
+                case 'MOVE_CARD':
+                    moveCardUpdate(result.moveCard, project.project_id, client, true, project.team_id)
+                    break;
+                case 'CREATE_CARD':
+                    createCardUpdate(result.createCard as Card, project.project_id, client, project.team_id);
                     break;
             }
         },

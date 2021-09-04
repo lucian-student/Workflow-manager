@@ -13,8 +13,7 @@ interface Props {
 export function useEditCardMutation({
     project_id,
     team_id,
-    setEditing,
-    project
+    setEditing
 }: Props) {
 
     const [editCardMutation, editCard] = useMutation({
