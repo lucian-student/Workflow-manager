@@ -79,6 +79,21 @@ subscription ProjectListener(
             }
             list_id
         }
+        deleteLink{
+            list_id
+            link_id
+            card_id
+        }
+        editLink{
+            link{
+                link_id
+                name
+                url
+                card_id
+                project_id
+            }
+            list_id
+        }
     }
 }
 `;

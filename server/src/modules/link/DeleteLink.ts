@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Link from "../../entity/Link";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
@@ -6,6 +6,10 @@ import isLinkAccessible from "../../middleware/isLinkAccessible";
 import { getManager } from 'typeorm';
 import DeleteLinkResponse from "./deleteLink/DeleteLinkResponse";
 import Card from "../../entity/Card";
+import { PubSub as PubSubTypes } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
+import ListenerResponse from "../shared/ListenerResponse";
+import { DELETE_LINK } from '../project/ProjectListener';
 
 @Resolver()
 export default class DeleteLinkResolver {
@@ -13,6 +17,8 @@ export default class DeleteLinkResolver {
     @UseMiddleware(isAuth, isLinkAccessible, checkIfTeamAdmin)
     @Mutation(() => DeleteLinkResponse)
     async deleteLink(
+        @PubSub() pubsub: PubSubTypes,
+        @Ctx() ctx: MyContext,
         @Arg('link_id') link_id: number,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
@@ -59,6 +65,13 @@ export default class DeleteLinkResolver {
 
             res.card_id = result.raw[0].card_id
         });
+
+        pubsub.publish(DELETE_LINK, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: DELETE_LINK,
+            deleteLink: res
+        } as ListenerResponse);
 
         return res;
     }

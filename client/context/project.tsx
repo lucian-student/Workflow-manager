@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 import React, { createContext } from "react";
-import { Project } from "../generated/apolloComponents";
+import { DeleteLinkResponse, LinkResponse, Project } from "../generated/apolloComponents";
 import { useProjectListenerSubscription, Card } from '../generated/apolloComponents';
 import editProjectUpdate from '../subscriptionUpdates/project/editProjectUpdate';
 import deleteCardUpdate from '../subscriptionUpdates/card/deleteCardUpdate';
 import editCardUpdateProject from '../subscriptionUpdates/card/editCardUpdateProject';
 import moveCardUpdate from '../subscriptionUpdates/card/moveCardUpdate';
 import createCardUpdate from '../subscriptionUpdates/card/createCardUpdate';
+import createLinkUpdateProject from '../subscriptionUpdates/link/createLinkUpdateProject';
+import deleteLinkUpdateProject from '../subscriptionUpdates/link/deleteLinkUpdateProject';
 
 interface IProjectContext {
     role?: number,
@@ -59,6 +61,12 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
                     break;
                 case 'CREATE_CARD':
                     createCardUpdate(result.createCard as Card, project.project_id, client, project.team_id);
+                    break;
+                case 'CREATE_LINK':
+                    createLinkUpdateProject(result.createLink as LinkResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'DELETE_LINK':
+                    deleteLinkUpdateProject(result.deleteLink as DeleteLinkResponse, project.project_id, client, project.team_id);
                     break;
             }
         },

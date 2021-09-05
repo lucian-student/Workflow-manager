@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import { Card } from '../generated/apolloComponents';
 import { CardViewContext } from '../context/cardView';
 import { ProjectContext } from '../context/project';
-import { useCardListenerSubscription } from '../generated/apolloComponents';
+import { useCardListenerSubscription, LinkResponse, Card, DeleteLinkResponse } from '../generated/apolloComponents';
 import editCardUpdateCard from '../subscriptionUpdates/card/editCardUpdateCard';
+import createLinkUpdateCard from '../subscriptionUpdates/link/createLinkUpdateCard';
+import deleteLinkUpdateCard from '../subscriptionUpdates/link/deleteLinkUpdateCard';
+import editLinkUpdate from '../subscriptionUpdates/link/editLinkUpdate';
 
 interface ICardContext {
     card: Card
@@ -33,7 +35,7 @@ export const CardContextProvider = ({ children, card }: Props) => {
         },
         skip: !project.team_id,
         onSubscriptionData: ({ client, subscriptionData }) => {
-            
+
             if (!subscriptionData.data) {
                 return;
             }
@@ -43,6 +45,15 @@ export const CardContextProvider = ({ children, card }: Props) => {
             switch (result.topic) {
                 case 'EDIT_CARD':
                     editCardUpdateCard(result.editCard as Card, project.project_id, client, project.team_id);
+                    break;
+                case 'CREATE_LINK':
+                    createLinkUpdateCard(result.createLink as LinkResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'DELETE_LINK':
+                    deleteLinkUpdateCard(result.deleteLink as DeleteLinkResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'EDIT_LINK':
+                    editLinkUpdate(result.editLink as LinkResponse, project.project_id, client, project.team_id);
                     break;
             }
         }

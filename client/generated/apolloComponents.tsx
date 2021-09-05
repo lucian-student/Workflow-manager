@@ -167,6 +167,8 @@ export type ListenerResponse = {
   moveCard?: Maybe<MoveCardResponse>;
   createCard?: Maybe<Card>;
   createLink?: Maybe<LinkResponse>;
+  deleteLink?: Maybe<DeleteLinkResponse>;
+  editLink?: Maybe<LinkResponse>;
 };
 
 export type LoginResponse = {
@@ -782,6 +784,16 @@ export type CardListenerSubscription = (
         { __typename?: 'Link' }
         & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
       ) }
+    )>, deleteLink?: Maybe<(
+      { __typename?: 'DeleteLinkResponse' }
+      & Pick<DeleteLinkResponse, 'list_id' | 'link_id' | 'card_id'>
+    )>, editLink?: Maybe<(
+      { __typename?: 'LinkResponse' }
+      & Pick<LinkResponse, 'list_id'>
+      & { link: (
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      ) }
     )> }
   ) }
 );
@@ -1108,6 +1120,16 @@ export type ProjectListenerSubscription = (
         & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
       )> }
     )>, createLink?: Maybe<(
+      { __typename?: 'LinkResponse' }
+      & Pick<LinkResponse, 'list_id'>
+      & { link: (
+        { __typename?: 'Link' }
+        & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+      ) }
+    )>, deleteLink?: Maybe<(
+      { __typename?: 'DeleteLinkResponse' }
+      & Pick<DeleteLinkResponse, 'list_id' | 'link_id' | 'card_id'>
+    )>, editLink?: Maybe<(
       { __typename?: 'LinkResponse' }
       & Pick<LinkResponse, 'list_id'>
       & { link: (
@@ -1715,6 +1737,21 @@ export const CardListenerDocument = gql`
       deadline
     }
     createLink {
+      link {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      list_id
+    }
+    deleteLink {
+      list_id
+      link_id
+      card_id
+    }
+    editLink {
       link {
         link_id
         name
@@ -2553,6 +2590,21 @@ export const ProjectListenerDocument = gql`
       }
     }
     createLink {
+      link {
+        link_id
+        name
+        url
+        card_id
+        project_id
+      }
+      list_id
+    }
+    deleteLink {
+      list_id
+      link_id
+      card_id
+    }
+    editLink {
       link {
         link_id
         name

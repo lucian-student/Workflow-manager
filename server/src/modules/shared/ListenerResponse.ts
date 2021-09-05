@@ -3,6 +3,7 @@ import Card from '../../entity/Card';
 import Project from "../../entity/Project";
 import DeleteCardResponse from '../card/deleteCard/deleteCardResponse';
 import MoveCardResponse from '../card/moveCard/MoveCardResponse';
+import DeleteLinkResponse from '../link/deleteLink/DeleteLinkResponse';
 import LinkResponse from '../link/shared/LinkResponse';
 
 @ObjectType()
@@ -33,5 +34,10 @@ export default class ListenerResponse {
 
     @Field(() => LinkResponse, { nullable: true })
     createLink?: LinkResponse
-    
+
+    @Field(() => DeleteLinkResponse, { nullable: true })
+    deleteLink?: DeleteCardResponse
+
+    @Field(() => LinkResponse, { nullable: true })
+    editLink?: LinkResponse
 }

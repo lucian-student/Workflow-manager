@@ -1,10 +1,9 @@
 import { ApolloCache, ApolloClient } from "@apollo/client";
-import { GetProjectResponse, LinkResponse, CreateLinkMutation } from "../../generated/apolloComponents";
+import { DeleteLinkMutation, DeleteLinkResponse, GetProjectResponse } from "../../generated/apolloComponents";
 import update from 'immutability-helper';
 import { getProjectQuery } from '../../graphql/project/query/getProject';
 
-
-export default function createLinkUpdateProject(createLink: LinkResponse, project_id: string, client: ApolloClient<Object> | ApolloCache<CreateLinkMutation>, team_id?: string): void {
+export default function deleteLinkUpdateProject(deleteLink: DeleteLinkResponse, project_id: string, client: ApolloClient<Object> | ApolloCache<DeleteLinkMutation>, team_id?: string): void {
     const query2 = client.readQuery({
         query: getProjectQuery,
         variables: {
@@ -13,8 +12,11 @@ export default function createLinkUpdateProject(createLink: LinkResponse, projec
         }
     }) as { getProject: GetProjectResponse };
 
-    const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(createLink.list_id));
-    const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(createLink.link.card_id));
+    const listIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(deleteLink.list_id));
+    const cardIndex = query2.getProject.project.lists[listIndex].cards.findIndex(c => Number(c.card_id) === Number(deleteLink.card_id));
+
+    const linkIndex = query2.getProject.project.lists[listIndex].cards[cardIndex].links
+        .findIndex(l => Number(l.link_id) === Number(deleteLink.link_id));
 
     client.writeQuery({
         query: getProjectQuery,
@@ -30,7 +32,7 @@ export default function createLinkUpdateProject(createLink: LinkResponse, projec
                             cards: {
                                 [cardIndex]: {
                                     links: {
-                                        $unshift: [createLink.link]
+                                        $splice: [[linkIndex, 1]]
                                     }
                                 }
                             }
