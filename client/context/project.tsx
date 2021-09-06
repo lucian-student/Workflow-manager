@@ -1,14 +1,17 @@
 import { useRouter } from "next/router";
 import React, { createContext } from "react";
-import { DeleteLinkResponse, LinkResponse, Project } from "../generated/apolloComponents";
-import { useProjectListenerSubscription, Card } from '../generated/apolloComponents';
+import { DeleteLinkResponse, LinkResponse, Project, useProjectListenerSubscription, Card, List } from "../generated/apolloComponents";
 import editProjectUpdate from '../subscriptionUpdates/project/editProjectUpdate';
 import deleteCardUpdate from '../subscriptionUpdates/card/deleteCardUpdate';
 import editCardUpdateProject from '../subscriptionUpdates/card/editCardUpdateProject';
-import moveCardUpdate from '../subscriptionUpdates/card/moveCardUpdate';
+import moveCardUpdateProject from '../subscriptionUpdates/card/moveCardUpdateProject';
 import createCardUpdate from '../subscriptionUpdates/card/createCardUpdate';
 import createLinkUpdateProject from '../subscriptionUpdates/link/createLinkUpdateProject';
 import deleteLinkUpdateProject from '../subscriptionUpdates/link/deleteLinkUpdateProject';
+import createListUpdate from '../subscriptionUpdates/list/createListUpdate';
+import deleteListUpdate from '../subscriptionUpdates/list/deleteListUpdate';
+import moveListUpdate from '../subscriptionUpdates/list/moveListUpdate';
+import editListUpdate from '../subscriptionUpdates/list/editListUpdate';
 
 interface IProjectContext {
     role?: number,
@@ -57,7 +60,7 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
                     editCardUpdateProject(result.editCard as Card, project.project_id, client, project.team_id);
                     break;
                 case 'MOVE_CARD':
-                    moveCardUpdate(result.moveCard, project.project_id, client, true, project.team_id)
+                    moveCardUpdateProject(result.moveCard, project.project_id, client, true, project.team_id)
                     break;
                 case 'CREATE_CARD':
                     createCardUpdate(result.createCard as Card, project.project_id, client, project.team_id);
@@ -67,6 +70,18 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
                     break;
                 case 'DELETE_LINK':
                     deleteLinkUpdateProject(result.deleteLink as DeleteLinkResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'CREATE_LIST':
+                    createListUpdate(result.createList as List, project.project_id, client, project.team_id);
+                    break;
+                case 'DELETE_LIST':
+                    deleteListUpdate(result.deleteList, project.project_id, client, project.team_id);
+                    break;
+                case 'MOVE_LIST':
+                    moveListUpdate(result.moveList, project.project_id, client, true, project.team_id);
+                    break;
+                case 'EDIT_LIST':
+                    editListUpdate(result.editList as List, project.project_id, client, project.team_id);
                     break;
             }
         },

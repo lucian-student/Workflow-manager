@@ -169,6 +169,10 @@ export type ListenerResponse = {
   createLink?: Maybe<LinkResponse>;
   deleteLink?: Maybe<DeleteLinkResponse>;
   editLink?: Maybe<LinkResponse>;
+  createList?: Maybe<List>;
+  deleteList?: Maybe<Scalars['ID']>;
+  moveList?: Maybe<MoveListResponse>;
+  editList?: Maybe<List>;
 };
 
 export type LoginResponse = {
@@ -770,13 +774,16 @@ export type CardListenerSubscription = (
   { __typename?: 'Subscription' }
   & { cardListener: (
     { __typename?: 'ListenerResponse' }
-    & Pick<ListenerResponse, 'project_id' | 'topic'>
+    & Pick<ListenerResponse, 'project_id' | 'topic' | 'deleteList'>
     & { deleteCard?: Maybe<(
       { __typename?: 'DeleteCardResponse' }
       & Pick<DeleteCardResponse, 'card_id' | 'list_id'>
     )>, editCard?: Maybe<(
       { __typename?: 'Card' }
       & Pick<Card, 'project_id' | 'card_id' | 'list_id' | 'name' | 'description' | 'deadline'>
+    )>, moveCard?: Maybe<(
+      { __typename?: 'MoveCardResponse' }
+      & Pick<MoveCardResponse, 'list_id' | 'old_list_id' | 'card_id' | 'order_index'>
     )>, createLink?: Maybe<(
       { __typename?: 'LinkResponse' }
       & Pick<LinkResponse, 'list_id'>
@@ -1093,7 +1100,7 @@ export type ProjectListenerSubscription = (
   { __typename?: 'Subscription' }
   & { projectListener: (
     { __typename?: 'ListenerResponse' }
-    & Pick<ListenerResponse, 'project_id' | 'topic'>
+    & Pick<ListenerResponse, 'project_id' | 'topic' | 'deleteList'>
     & { editProject?: Maybe<(
       { __typename?: 'Project' }
       & Pick<Project, 'project_id' | 'name' | 'deadline' | 'status' | 'description' | 'user_id' | 'team_id'>
@@ -1136,6 +1143,29 @@ export type ProjectListenerSubscription = (
         { __typename?: 'Link' }
         & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
       ) }
+    )>, createList?: Maybe<(
+      { __typename?: 'List' }
+      & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+      & { cards: Array<(
+        { __typename?: 'Card' }
+        & Pick<Card, 'card_id' | 'name' | 'deadline' | 'project_id' | 'list_id' | 'order_index'>
+        & { links: Array<(
+          { __typename?: 'Link' }
+          & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
+        )>, messages: Array<(
+          { __typename?: 'Message' }
+          & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+        )>, todos: Array<(
+          { __typename?: 'Todo' }
+          & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+        )> }
+      )> }
+    )>, moveList?: Maybe<(
+      { __typename?: 'MoveListResponse' }
+      & Pick<MoveListResponse, 'order_index' | 'list_id'>
+    )>, editList?: Maybe<(
+      { __typename?: 'List' }
+      & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
     )> }
   ) }
 );
@@ -1736,6 +1766,12 @@ export const CardListenerDocument = gql`
       description
       deadline
     }
+    moveCard {
+      list_id
+      old_list_id
+      card_id
+      order_index
+    }
     createLink {
       link {
         link_id
@@ -1761,6 +1797,7 @@ export const CardListenerDocument = gql`
       }
       list_id
     }
+    deleteList
   }
 }
     `;
@@ -2613,6 +2650,54 @@ export const ProjectListenerDocument = gql`
         project_id
       }
       list_id
+    }
+    createList {
+      project_id
+      list_id
+      name
+      order_index
+      cards {
+        card_id
+        name
+        deadline
+        project_id
+        list_id
+        order_index
+        links {
+          link_id
+          name
+          url
+          card_id
+          project_id
+        }
+        messages {
+          message_id
+          content
+          user_id
+          card_id
+          project_id
+          data_of_creation
+          username
+        }
+        todos {
+          todo_id
+          name
+          done
+          card_id
+          project_id
+        }
+      }
+    }
+    deleteList
+    moveList {
+      order_index
+      list_id
+    }
+    editList {
+      project_id
+      list_id
+      name
+      order_index
     }
   }
 }

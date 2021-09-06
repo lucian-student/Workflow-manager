@@ -1,5 +1,5 @@
 import { useMoveCardMutation as useMutation } from '../../generated/apolloComponents';
-import moveCardUpdate from '../../subscriptionUpdates/card/moveCardUpdate';
+import moveCardUpdateProject from '../../subscriptionUpdates/card/moveCardUpdateProject';
 
 interface Props {
     project_id: string,
@@ -13,7 +13,7 @@ export default function useMoveCardMutation({ project_id, team_id }: Props) {
             console.log(err.message);
         },
         update(proxy, result) {
-            moveCardUpdate(result.data.moveCard, project_id, proxy, false, team_id);
+            moveCardUpdateProject(result.data.moveCard, project_id, proxy, false, team_id);
         }
     });
 

@@ -5,9 +5,8 @@ import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { CloseMenuContext } from '../../context/closeMenu';
 import { List, useDeleteListMutation } from '../../generated/apolloComponents';
 import { ProjectContext } from '../../context/project';
-import { getProjectQuery } from '../../graphql/project/query/getProject';
-import update from 'immutability-helper';
 import { CardAddContext } from '../../context/cardAdd';
+import deleteListUpdate from '../../subscriptionUpdates/list/deleteListUpdate';
 
 interface Props {
     list: List,
@@ -35,33 +34,11 @@ function ListOptions({ list, open, setOpen }: Props): JSX.Element {
             console.log(err.message);
         },
         update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(list.project_id),
-                    team_id: !team_id ? null : Number(team_id)
-                }
-            }) as any;
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(list.project_id),
-                    team_id: !team_id ? null : Number(team_id)
-                },
-                data: {
-                    getProject: update(data.getProject, {
-                        project: {
-                            lists: {
-                                $apply: lists => {
-                                    return lists
-                                        .filter(item => Number(item.list_id) !== Number(result.data.deleteList))
-                                }
-                            }
-                        }
-                    })
-                }
-            });
+            if (team_id) {
+                console.log('team_project');
+                return;
+            }
+            deleteListUpdate(result.data.deleteList,list.project_id,proxy,team_id);
         }
     });
 

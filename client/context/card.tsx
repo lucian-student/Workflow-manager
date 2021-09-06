@@ -6,6 +6,7 @@ import editCardUpdateCard from '../subscriptionUpdates/card/editCardUpdateCard';
 import createLinkUpdateCard from '../subscriptionUpdates/link/createLinkUpdateCard';
 import deleteLinkUpdateCard from '../subscriptionUpdates/link/deleteLinkUpdateCard';
 import editLinkUpdate from '../subscriptionUpdates/link/editLinkUpdate';
+import moveCardUpdateCard from '../subscriptionUpdates/card/moveCardUpdateCard';
 
 interface ICardContext {
     card: Card
@@ -46,6 +47,9 @@ export const CardContextProvider = ({ children, card }: Props) => {
                 case 'EDIT_CARD':
                     editCardUpdateCard(result.editCard as Card, project.project_id, client, project.team_id);
                     break;
+                case 'MOVE_CARD':
+                    moveCardUpdateCard(result.moveCard, project.project_id, client, project.team_id);
+                    break;
                 case 'CREATE_LINK':
                     createLinkUpdateCard(result.createLink as LinkResponse, project.project_id, client, project.team_id);
                     break;
@@ -64,8 +68,15 @@ export const CardContextProvider = ({ children, card }: Props) => {
             if (data.cardListener.topic === 'DELETE_CARD') {
                 setCard_id(null);
             }
+            if (data.cardListener.topic === 'DELETE_LIST') {
+                if (data.cardListener.deleteList === card.list_id) {
+                    setCard_id(null);
+                }
+            }
         }
-    }, [data]);
+    }, [data, card.list_id]);
+
+
 
     return (
         <CardContext.Provider value={{

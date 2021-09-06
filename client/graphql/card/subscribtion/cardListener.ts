@@ -25,6 +25,12 @@ subscription CardListener(
             description
             deadline
         }
+        moveCard{
+            list_id
+            old_list_id
+            card_id
+            order_index
+        }
         createLink{
             link{
                 link_id
@@ -50,6 +56,7 @@ subscription CardListener(
             }
         list_id
         }
+        deleteList
     }
 }
 `;

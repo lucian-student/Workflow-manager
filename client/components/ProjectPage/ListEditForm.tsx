@@ -5,8 +5,8 @@ import { ImCancelCircle } from 'react-icons/im';
 import { CloseMenuContext } from '../../context/closeMenu';
 import { ListInput, useEditListMutation, List } from '../../generated/apolloComponents';
 import { ProjectContext } from '../../context/project';
-import { getProjectQuery } from '../../graphql/project/query/getProject';
-import update from 'immutability-helper';
+import editListUpdate from '../../subscriptionUpdates/list/editListUpdate';
+import Team_id from '../../pages/team/[team_id]';
 
 interface Props {
     list: List
@@ -37,39 +37,11 @@ function ListEditForm({ list }: Props): JSX.Element {
             console.log(err.message);
         },
         update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(list.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                }
-            }) as any;
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(list.project_id),
-                    team_id: !project.team_id ? null : Number(project.team_id)
-                },
-                data: {
-                    getProject: update(data.getProject, {
-                        project: {
-                            lists: {
-                                $apply: lists => lists.map((item) => {
-                                    if (item.list_id as string !== result.data.editList.list_id) {
-                                        return item;
-                                    } else {
-                                        return {
-                                            ...item,
-                                            ...result.data.editList
-                                        }
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
-            });
+           if(project.team_id){
+               console.log('team_project');
+               return;
+           }
+           editListUpdate(result.data.editList as List,project.project_id,proxy,project.team_id);
         }
     });
 

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import listFormStyles from './ListForm/ListForm.module.css';
 import { VscAdd } from 'react-icons/vsc';
 import { ImCancelCircle } from 'react-icons/im';
 import { useForm } from 'react-hook-form';
-import { useCreateListMutation } from '../../generated/apolloComponents';
-import update from 'immutability-helper';
+import { List, useCreateListMutation } from '../../generated/apolloComponents';
 import { useDropDownMenu } from '../../hooks/useDropdownMenu';
-import { getProjectQuery } from '../../graphql/project/query/getProject';
+import createListUpdate from '../../subscriptionUpdates/list/createListUpdate';
 
 interface Props {
     project_id: string
@@ -21,30 +20,11 @@ function ListForm({ project_id, team_id }: Props): JSX.Element {
 
     const [createListMutation, { data }] = useCreateListMutation({
         update(proxy, result) {
-            const data = proxy.readQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project_id),
-                    team_id: !Number(team_id) ? null : Number(team_id)
-                }
-            }) as any;
-
-            const updatedProject = update(data.getProject, {
-                project: { lists: { $push: [result.data.createList] } }
-            });
-
-            //console.log(updatedProject);
-
-            proxy.writeQuery({
-                query: getProjectQuery,
-                variables: {
-                    project_id: Number(project_id),
-                    team_id: !Number(team_id) ? null : Number(team_id)
-                },
-                data: {
-                    getProject: updatedProject
-                }
-            });
+            if (team_id) {
+                console.log('team_project');
+                return;
+            }
+            createListUpdate(result.data.createList as List, project_id, proxy, team_id);
         },
         onError(err) {
             console.log(err.message);

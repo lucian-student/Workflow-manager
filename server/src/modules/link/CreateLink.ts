@@ -59,7 +59,8 @@ export default class CreateLinkResolver {
             project_id,
             user_id: ctx.payload.user_id,
             topic: CREATE_LINK,
-            createLink: linkResponse
+            createLink: linkResponse,
+            card_id
         } as ListenerResponse);
 
         return linkResponse;

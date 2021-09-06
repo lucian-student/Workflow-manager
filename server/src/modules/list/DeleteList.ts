@@ -1,9 +1,13 @@
-import { ID, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, ID, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import isAuth from "../../middleware/isAuth";
 import List from "../../entity/List";
 import { getManager } from "typeorm";
 import isListAccessible from "../../middleware/isListAccessible";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
+import ListenerResponse from "../shared/ListenerResponse";
+import { DELETE_LIST } from '../project/ProjectListener';
 
 interface RawItem {
     order_index: number
@@ -12,9 +16,11 @@ interface RawItem {
 @Resolver()
 export default class DeleteListResolver {
 
-    @UseMiddleware(isAuth, isListAccessible,checkIfTeamAdmin)
+    @UseMiddleware(isAuth, isListAccessible, checkIfTeamAdmin)
     @Mutation(() => ID)
     async deleteList(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('project_id') project_id: number,
         @Arg('list_id') list_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
@@ -47,6 +53,13 @@ export default class DeleteListResolver {
                 .andWhere('project_id= :project_id', { project_id })
                 .execute();
         });
+
+        pubsub.publish(DELETE_LIST, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: DELETE_LIST,
+            deleteList: list_id
+        } as ListenerResponse);
 
         return list_id;
     }

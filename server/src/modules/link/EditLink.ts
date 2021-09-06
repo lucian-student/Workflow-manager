@@ -68,7 +68,8 @@ export default class EditLinkResolver {
             project_id,
             user_id: ctx.payload.user_id,
             topic: EDIT_LINK,
-            editLink: linkResponse
+            editLink: linkResponse,
+            card_id: Number(linkResponse.link.card_id)
         } as ListenerResponse);
 
         return linkResponse;

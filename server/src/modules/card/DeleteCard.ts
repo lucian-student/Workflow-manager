@@ -70,7 +70,8 @@ export default class DeleteCardResolver {
             user_id: ctx.payload.user_id,
             editProject: undefined,
             topic: DELETE_CARD,
-            deleteCard: res
+            deleteCard: res,
+            card_id
         } as ListenerResponse);
 
         return res;

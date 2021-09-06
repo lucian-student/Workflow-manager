@@ -70,7 +70,8 @@ export default class DeleteLinkResolver {
             project_id,
             user_id: ctx.payload.user_id,
             topic: DELETE_LINK,
-            deleteLink: res
+            deleteLink: res,
+            card_id: Number(res.card_id)
         } as ListenerResponse);
 
         return res;

@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import List from "../../entity/List";
 import isAuth from "../../middleware/isAuth";
 import isListAccessible from "../../middleware/isListAccessible";
@@ -6,6 +6,10 @@ import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import MoveListResponse from "./moveList/MoveListResponse";
 import Project from "../../entity/Project";
+import MyContext from "../../types/MyContext";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import ListenerResponse from "../shared/ListenerResponse";
+import { MOVE_LIST } from '../project/ProjectListener';
 
 @Resolver()
 export default class MoveListResolver {
@@ -13,12 +17,13 @@ export default class MoveListResolver {
     @UseMiddleware(isAuth, isListAccessible, checkIfTeamAdmin)
     @Mutation(() => MoveListResponse)
     async moveList(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('project_id') project_id: number,
         @Arg('list_id') list_id: number,
         @Arg('end_index') end_index: number,
         @Arg('team_id', { nullable: true }) team_id?: number
     ): Promise<MoveListResponse> {
-
 
         const res = new MoveListResponse();
 
@@ -83,6 +88,13 @@ export default class MoveListResolver {
             res.order_index = finish_index;
             res.list_id = list_id;
         });
+
+        pubsub.publish(MOVE_LIST, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: MOVE_LIST,
+            moveList: res
+        } as ListenerResponse);
 
         return res;
     }

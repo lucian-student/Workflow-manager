@@ -3,7 +3,7 @@ import { GetProjectResponse, MoveCardMutation, MoveCardResponse } from "../../ge
 import update from 'immutability-helper';
 import { getProjectQuery } from '../../graphql/project/query/getProject';
 
-export default function moveCardUpdate(moveCard: MoveCardResponse, project_id: string, client: ApolloClient<Object> | ApolloCache<MoveCardMutation>, subscribtion: boolean, team_id?: string): void {
+export default function moveCardUpdateProject(moveCard: MoveCardResponse, project_id: string, client: ApolloClient<Object> | ApolloCache<MoveCardMutation>, subscribtion: boolean, team_id?: string): void {
 
     try {
         const query2 = client.readQuery({
@@ -18,28 +18,19 @@ export default function moveCardUpdate(moveCard: MoveCardResponse, project_id: s
         const oldListIndex = query2.getProject.project.lists.findIndex(l => Number(l.list_id) === Number(moveCard.old_list_id));
         const cardIndex = query2.getProject.project.lists[oldListIndex].cards.findIndex(c => Number(c.card_id) === Number(moveCard.card_id));
 
-        /*console.log(moveCard);
+        //console.log(moveCard);
 
-        console.log(listIndex);
-        console.log(oldListIndex);
-        console.log(cardIndex);*/
+        //console.log(listIndex);
+        //console.log(oldListIndex);
+        //console.log(cardIndex);
 
         if (subscribtion) {
-            if (!query2.getProject.project.lists[oldListIndex].cards[cardIndex]) {
-                //console.log('1');
-                return;
+            if (query2.getProject.project.lists[listIndex].cards[moveCard.order_index]) {
+                if (query2.getProject.project.lists[listIndex].cards[moveCard.order_index].card_id === moveCard.card_id) {
+                    console.log('4');
+                    return;
+                }
             }
-
-            if (query2.getProject.project.lists[oldListIndex].cards[cardIndex].card_id !== moveCard.card_id) {
-                //console.log('2');
-                return;
-            }
-
-            if (query2.getProject.project.lists[listIndex].cards[moveCard.order_index].card_id === moveCard.card_id) {
-                //console.log('3');
-                return;
-            }
-            // console.log('4');
         }
 
         const copy = { ...query2.getProject.project.lists[oldListIndex].cards[cardIndex] };
@@ -93,7 +84,8 @@ export default function moveCardUpdate(moveCard: MoveCardResponse, project_id: s
 
     } catch (error) {
         console.log(error.message);
-        console.log(subscribtion);
+        //console.log(error);
+        // console.log(subscribtion);
     }
 
 }

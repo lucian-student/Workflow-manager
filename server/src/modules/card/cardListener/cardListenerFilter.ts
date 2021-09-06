@@ -5,7 +5,7 @@ import UserTeamConnection from "../../../entity/UserTeamConnection";
 import jwt from 'jsonwebtoken';
 import User from '../../../entity/User';
 import ListenerResponse from '../../shared/ListenerResponse';
-import { Context, DELETE_CARD } from '../../project/ProjectListener';
+import { Context, DELETE_CARD, DELETE_LIST } from '../../project/ProjectListener';
 import { Arguments } from '../CardListener';
 import Card from '../../../entity/Card';
 
@@ -20,6 +20,14 @@ export default async function projectListenerFilter({ args, payload, context }: 
         return false;
     }
 
+    //check for card_id
+
+    if (payload.card_id) {
+        if (payload.card_id !== args.card_id) {
+            console.log('check 3');
+        }
+    }
+
     let userData = null;
 
     //here check if jwt is valid
@@ -27,7 +35,7 @@ export default async function projectListenerFilter({ args, payload, context }: 
         userData = jwt.verify(context.subscribtionToken, process.env.SECRET3!) as { user: string, tokenVersion: string };
     } catch (err) {
         console.log(err.message);
-        console.log('check 3')
+        console.log('check 4')
         return false;
     }
 
@@ -43,18 +51,18 @@ export default async function projectListenerFilter({ args, payload, context }: 
 
     //console.log(user);
     if (!user) {
-        console.log('check 4')
+        console.log('check 5')
         return false;
     }
 
     if (String(user.tokenVersion) !== userData.tokenVersion) {
-        console.log('check 5')
+        console.log('check 6')
         return false;
     }
 
     let access: boolean = true;
     // check access to subscribtion
-    if (args.team_id && payload.topic !== DELETE_CARD) {
+    if (args.team_id && (payload.topic !== DELETE_CARD && payload.topic !== DELETE_LIST)) {
         const result = await getManager()
             .createQueryBuilder()
             .select('t2.project_id', 'project_id')
@@ -69,19 +77,19 @@ export default async function projectListenerFilter({ args, payload, context }: 
             .andWhere('t4.confirmed=true')
             .getRawOne();
         if (!result) {
-            console.log('check 6')
+            console.log('check 7')
             access = false;
         }
-    } else if (payload.topic !== DELETE_CARD) {
-        console.log('check 7')
+    } else if (payload.topic !== DELETE_CARD && payload.topic !== DELETE_LIST) {
+        console.log('check 8')
         access = false;
     }
 
-    if (payload.topic === DELETE_CARD) {
+    if (payload.topic === DELETE_CARD || payload.topic === DELETE_LIST) {
         const connection = await UserTeamConnection.findOne({ where: { user_id: payload.user_id, team_id: args.team_id, confirmed: true } });
 
         if (!connection) {
-            console.log('check 8')
+            console.log('check 9')
             access = false;
         }
     }

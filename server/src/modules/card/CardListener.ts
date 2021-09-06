@@ -2,10 +2,12 @@ import { Subscription, Resolver, Arg, Root } from 'type-graphql';
 import {
     DELETE_CARD,
     EDIT_CARD,
-    CREATE_CARD,
+    MOVE_CARD,
     CREATE_LINK,
+    MOVE_LIST,
     EDIT_LINK,
     DELETE_LINK,
+    DELETE_LIST,
     Context
 } from '../project/ProjectListener';
 import ListenerResponse from '../shared/ListenerResponse';
@@ -21,7 +23,7 @@ export interface Arguments {
 export default class CardListener {
 
     @Subscription(() => ListenerResponse, {
-        topics: [DELETE_CARD, EDIT_CARD, CREATE_CARD, CREATE_LINK, EDIT_LINK, DELETE_LINK],
+        topics: [DELETE_CARD, EDIT_CARD, MOVE_CARD, CREATE_LINK, EDIT_LINK, DELETE_LINK, DELETE_LIST],
         filter: async (filterData: { args: Arguments, context: Context, payload: ListenerResponse }) => {
             console.log(filterData.payload.topic)
             return await cardListenerFilter(filterData);

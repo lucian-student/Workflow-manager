@@ -167,7 +167,8 @@ export default class MoveCard {
             project_id,
             user_id: ctx.payload.user_id,
             topic: MOVE_CARD,
-            moveCard: res
+            moveCard: res,
+            card_id
         } as ListenerResponse);
 
         return res;

@@ -45,7 +45,8 @@ export default class EditCardResolver {
             project_id,
             user_id: ctx.payload.user_id,
             topic: EDIT_CARD,
-            editCard: card
+            editCard: card,
+            card_id
         } as ListenerResponse);
 
         return card;
