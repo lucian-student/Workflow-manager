@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Message from "../../entity/Message";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
@@ -6,6 +6,10 @@ import isMessageAccessible from "../../middleware/isMessageAccessible";
 import { getManager } from 'typeorm';
 import DeleteMessageResponse from "./deleteMessage/DeleteMessageResponse";
 import Card from "../../entity/Card";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { DELETE_MESSAGE } from '../project/ProjectListener';
+import MyContext from "../../types/MyContext";
+import ListenerResponse from "../shared/ListenerResponse";
 
 @Resolver()
 export default class DeleteMessageResolver {
@@ -13,6 +17,8 @@ export default class DeleteMessageResolver {
     @UseMiddleware(isAuth, isMessageAccessible, checkIfTeamAdmin)
     @Mutation(() => DeleteMessageResponse)
     async deleteMessage(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('project_id') project_id: number,
         @Arg('message_id') message_id: number,
         @Arg('team_id', { nullable: true }) team_id?: number
@@ -58,6 +64,14 @@ export default class DeleteMessageResolver {
 
             res.card_id = result.raw[0].card_id;
         });
+
+        pubsub.publish(DELETE_MESSAGE, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: DELETE_MESSAGE,
+            card_id: res.card_id,
+            deleteMessage: res
+        } as ListenerResponse);
 
         return res;
     }

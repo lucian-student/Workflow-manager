@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Todo from "../../entity/Todo";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import isAuth from "../../middleware/isAuth";
@@ -6,6 +6,10 @@ import isTodoAccessible from "../../middleware/isTodoAccessible";
 import { getManager } from 'typeorm';
 import DeleteTodoResponse from "./deleteTodo/DeleteTodoResponse";
 import Card from "../../entity/Card";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { DELETE_TODO } from '../project/ProjectListener';
+import MyContext from "../../types/MyContext";
+import ListenerResponse from "../shared/ListenerResponse";
 
 @Resolver()
 export default class DeleteTodoResolver {
@@ -13,6 +17,8 @@ export default class DeleteTodoResolver {
     @UseMiddleware(isAuth, isTodoAccessible, checkIfTeamAdmin)
     @Mutation(() => DeleteTodoResponse)
     async deleteTodo(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('todo_id') todo_id: number,
         @Arg('project_id') project_id: number,
         @Arg('team_id', { nullable: true }) team_id: number
@@ -58,6 +64,13 @@ export default class DeleteTodoResolver {
 
         });
 
+        pubsub.publish(DELETE_TODO,{
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: DELETE_TODO,
+            card_id:res.card_id,
+            deleteTodo:res
+        } as ListenerResponse);
 
         return res;
     }

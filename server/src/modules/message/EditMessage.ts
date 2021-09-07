@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Message from "../../entity/Message";
 import isAuth from "../../middleware/isAuth";
 import isMessageAccessible from "../../middleware/isMessageAccessible";
@@ -7,6 +7,10 @@ import { getManager } from "typeorm";
 import checkIfTeamAdmin from "../../middleware/checkIfTeamAdmin";
 import MessageResponse from "./shared/MessageResponse";
 import Card from "../../entity/Card";
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import MyContext from "../../types/MyContext";
+import { EDIT_MESSAGE } from '../project/ProjectListener';
+import ListenerResponse from "../shared/ListenerResponse";
 
 @Resolver()
 export default class EditMessageResolover {
@@ -14,6 +18,8 @@ export default class EditMessageResolover {
     @UseMiddleware(isAuth, isMessageAccessible, checkIfTeamAdmin)
     @Mutation(() => MessageResponse)
     async editMessage(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('data') data: MessageInput,
         @Arg('project_id') project_id: number,
         @Arg('message_id') message_id: number,
@@ -53,6 +59,14 @@ export default class EditMessageResolover {
 
             messageResponse.list_id = list.list_id
         });
+
+        pubsub.publish(EDIT_MESSAGE, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: EDIT_MESSAGE,
+            card_id: messageResponse.message.card_id,
+            editMessage: messageResponse
+        } as ListenerResponse);
 
         return messageResponse;
     }

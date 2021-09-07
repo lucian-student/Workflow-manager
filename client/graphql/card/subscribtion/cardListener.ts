@@ -57,6 +57,70 @@ subscription CardListener(
         list_id
         }
         deleteList
+        createMessage{
+            message {
+                message_id
+                content
+                user_id
+                card_id
+                project_id
+                data_of_creation
+                username
+            }
+            list_id
+        }
+        deleteMessage{
+            message_id
+            list_id
+            card_id
+        }
+        editMessage{
+            message{
+                message_id
+                content
+                user_id
+                card_id
+                project_id
+                data_of_creation
+                username
+            }
+            list_id
+        }
+        createTodo{
+            todo{
+                todo_id
+                name
+                done
+                card_id
+                project_id
+            }
+            list_id
+        }
+        deleteTodo{
+            todo_id
+            list_id
+            card_id
+        }
+        doneTodo{
+            todo{
+                todo_id
+                name
+                done
+                card_id
+                project_id
+            }
+            list_id
+        }
+        editTodo{
+            todo{
+                todo_id
+                name
+                done
+                card_id
+                project_id
+            }
+            list_id
+        }
     }
 }
 `;

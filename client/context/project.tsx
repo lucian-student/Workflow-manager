@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { createContext } from "react";
-import { DeleteLinkResponse, LinkResponse, Project, useProjectListenerSubscription, Card, List } from "../generated/apolloComponents";
+import { DeleteLinkResponse, LinkResponse, Project, useProjectListenerSubscription, Card, List, MessageResponse, TodoResponse } from "../generated/apolloComponents";
 import editProjectUpdate from '../subscriptionUpdates/project/editProjectUpdate';
 import deleteCardUpdate from '../subscriptionUpdates/card/deleteCardUpdate';
 import editCardUpdateProject from '../subscriptionUpdates/card/editCardUpdateProject';
@@ -12,6 +12,11 @@ import createListUpdate from '../subscriptionUpdates/list/createListUpdate';
 import deleteListUpdate from '../subscriptionUpdates/list/deleteListUpdate';
 import moveListUpdate from '../subscriptionUpdates/list/moveListUpdate';
 import editListUpdate from '../subscriptionUpdates/list/editListUpdate';
+import createMessageUpdateProject from '../subscriptionUpdates/message/createMessageUpdateProject';
+import deleteMessageUpdateProject from '../subscriptionUpdates/message/deleteMessageUpdateProject';
+import createTodoUpdateProject from '../subscriptionUpdates/todo/createTodoUpdateProject';
+import deleteTodoUpdateProject from '../subscriptionUpdates/todo/deleteTodoUpdateProject';
+import doneTodoUpdateProject from '../subscriptionUpdates/todo/doneTodoUpdateProject';
 
 interface IProjectContext {
     role?: number,
@@ -82,6 +87,21 @@ export const ProjectContextProvider = ({ children, role, project }: Props) => {
                     break;
                 case 'EDIT_LIST':
                     editListUpdate(result.editList as List, project.project_id, client, project.team_id);
+                    break;
+                case 'CREATE_MESSAGE':
+                    createMessageUpdateProject(result.createMessage as MessageResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'DELETE_MESSAGE':
+                    deleteMessageUpdateProject(result.deleteMessage, project.project_id, client, project.team_id);
+                    break;
+                case 'CREATE_TODO':
+                    createTodoUpdateProject(result.createTodo as TodoResponse, project.project_id, client, project.team_id);
+                    break;
+                case 'DELETE_TODO':
+                    deleteTodoUpdateProject(result.deleteTodo, project.project_id, client, project.team_id);
+                    break;
+                case 'DONE_TODO':
+                    doneTodoUpdateProject(result.doneTodo as TodoResponse, project.project_id, client, project.team_id);
                     break;
             }
         },

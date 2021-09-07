@@ -1,14 +1,24 @@
-import { Arg, Mutation, Resolver } from 'type-graphql';
+import { PubSub, Ctx, Arg, Mutation, Resolver, UseMiddleware } from 'type-graphql';
 import Todo from '../../entity/Todo';
 import { getManager } from 'typeorm';
 import TodoResponse from './shared/TodoResponse';
 import Card from '../../entity/Card';
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import { DONE_TODO } from '../project/ProjectListener';
+import MyContext from "../../types/MyContext";
+import ListenerResponse from '../shared/ListenerResponse';
+import isAuth from '../../middleware/isAuth';
+import isTodoAccessible from '../../middleware/isTodoAccessible';
+import checkIfTeamAdmin from '../../middleware/checkIfTeamAdmin';
 
 @Resolver()
 export default class DoneTodoResolver {
 
+    @UseMiddleware(isAuth, isTodoAccessible, checkIfTeamAdmin)
     @Mutation(() => TodoResponse)
     async doneTodo(
+        @PubSub() pubsub: PubSubType,
+        @Ctx() ctx: MyContext,
         @Arg('done') done: boolean,
         @Arg('todo_id') todo_id: number,
         @Arg('project_id') project_id: number,
@@ -51,6 +61,13 @@ export default class DoneTodoResolver {
             res.list_id = list.list_id
         });
 
+        pubsub.publish(DONE_TODO, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: DONE_TODO,
+            card_id: res.todo.card_id,
+            doneTodo: res
+        } as ListenerResponse);
 
         return res;
     }

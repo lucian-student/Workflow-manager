@@ -173,6 +173,13 @@ export type ListenerResponse = {
   deleteList?: Maybe<Scalars['ID']>;
   moveList?: Maybe<MoveListResponse>;
   editList?: Maybe<List>;
+  createMessage?: Maybe<MessageResponse>;
+  deleteMessage?: Maybe<DeleteMessageResponse>;
+  editMessage?: Maybe<MessageResponse>;
+  createTodo?: Maybe<TodoResponse>;
+  deleteTodo?: Maybe<DeleteTodoResponse>;
+  editTodo?: Maybe<TodoResponse>;
+  doneTodo?: Maybe<TodoResponse>;
 };
 
 export type LoginResponse = {
@@ -801,6 +808,47 @@ export type CardListenerSubscription = (
         { __typename?: 'Link' }
         & Pick<Link, 'link_id' | 'name' | 'url' | 'card_id' | 'project_id'>
       ) }
+    )>, createMessage?: Maybe<(
+      { __typename?: 'MessageResponse' }
+      & Pick<MessageResponse, 'list_id'>
+      & { message: (
+        { __typename?: 'Message' }
+        & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+      ) }
+    )>, deleteMessage?: Maybe<(
+      { __typename?: 'DeleteMessageResponse' }
+      & Pick<DeleteMessageResponse, 'message_id' | 'list_id' | 'card_id'>
+    )>, editMessage?: Maybe<(
+      { __typename?: 'MessageResponse' }
+      & Pick<MessageResponse, 'list_id'>
+      & { message: (
+        { __typename?: 'Message' }
+        & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+      ) }
+    )>, createTodo?: Maybe<(
+      { __typename?: 'TodoResponse' }
+      & Pick<TodoResponse, 'list_id'>
+      & { todo: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      ) }
+    )>, deleteTodo?: Maybe<(
+      { __typename?: 'DeleteTodoResponse' }
+      & Pick<DeleteTodoResponse, 'todo_id' | 'list_id' | 'card_id'>
+    )>, doneTodo?: Maybe<(
+      { __typename?: 'TodoResponse' }
+      & Pick<TodoResponse, 'list_id'>
+      & { todo: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      ) }
+    )>, editTodo?: Maybe<(
+      { __typename?: 'TodoResponse' }
+      & Pick<TodoResponse, 'list_id'>
+      & { todo: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      ) }
     )> }
   ) }
 );
@@ -1166,6 +1214,33 @@ export type ProjectListenerSubscription = (
     )>, editList?: Maybe<(
       { __typename?: 'List' }
       & Pick<List, 'project_id' | 'list_id' | 'name' | 'order_index'>
+    )>, createMessage?: Maybe<(
+      { __typename?: 'MessageResponse' }
+      & Pick<MessageResponse, 'list_id'>
+      & { message: (
+        { __typename?: 'Message' }
+        & Pick<Message, 'message_id' | 'content' | 'user_id' | 'card_id' | 'project_id' | 'data_of_creation' | 'username'>
+      ) }
+    )>, deleteMessage?: Maybe<(
+      { __typename?: 'DeleteMessageResponse' }
+      & Pick<DeleteMessageResponse, 'message_id' | 'list_id' | 'card_id'>
+    )>, createTodo?: Maybe<(
+      { __typename?: 'TodoResponse' }
+      & Pick<TodoResponse, 'list_id'>
+      & { todo: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      ) }
+    )>, deleteTodo?: Maybe<(
+      { __typename?: 'DeleteTodoResponse' }
+      & Pick<DeleteTodoResponse, 'todo_id' | 'list_id' | 'card_id'>
+    )>, doneTodo?: Maybe<(
+      { __typename?: 'TodoResponse' }
+      & Pick<TodoResponse, 'list_id'>
+      & { todo: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'todo_id' | 'name' | 'done' | 'card_id' | 'project_id'>
+      ) }
     )> }
   ) }
 );
@@ -1798,6 +1873,70 @@ export const CardListenerDocument = gql`
       list_id
     }
     deleteList
+    createMessage {
+      message {
+        message_id
+        content
+        user_id
+        card_id
+        project_id
+        data_of_creation
+        username
+      }
+      list_id
+    }
+    deleteMessage {
+      message_id
+      list_id
+      card_id
+    }
+    editMessage {
+      message {
+        message_id
+        content
+        user_id
+        card_id
+        project_id
+        data_of_creation
+        username
+      }
+      list_id
+    }
+    createTodo {
+      todo {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+      list_id
+    }
+    deleteTodo {
+      todo_id
+      list_id
+      card_id
+    }
+    doneTodo {
+      todo {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+      list_id
+    }
+    editTodo {
+      todo {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+      list_id
+    }
   }
 }
     `;
@@ -2698,6 +2837,48 @@ export const ProjectListenerDocument = gql`
       list_id
       name
       order_index
+    }
+    createMessage {
+      message {
+        message_id
+        content
+        user_id
+        card_id
+        project_id
+        data_of_creation
+        username
+      }
+      list_id
+    }
+    deleteMessage {
+      message_id
+      list_id
+      card_id
+    }
+    createTodo {
+      todo {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+      list_id
+    }
+    deleteTodo {
+      todo_id
+      list_id
+      card_id
+    }
+    doneTodo {
+      todo {
+        todo_id
+        name
+        done
+        card_id
+        project_id
+      }
+      list_id
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { PubSub, Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import Card from "../../entity/Card";
 import Message from "../../entity/Message";
 import Project from "../../entity/Project";
@@ -10,6 +10,9 @@ import MyContext from "../../types/MyContext";
 import MessageInput from "./shared/MessageInput";
 import MessageResponse from './shared/MessageResponse';
 import { getManager } from 'typeorm';
+import { PubSub as PubSubType } from 'graphql-subscriptions';
+import ListenerResponse from "../shared/ListenerResponse";
+import { CREATE_MESSAGE } from '../project/ProjectListener';
 
 @Resolver()
 export default class CreateMessageResolver {
@@ -17,6 +20,7 @@ export default class CreateMessageResolver {
     @UseMiddleware(isAuth, isCardAccessible, checkIfTeamAdmin)
     @Mutation(() => MessageResponse)
     async createMessage(
+        @PubSub() pubsub: PubSubType,
         @Arg('data') data: MessageInput,
         @Arg('project_id') project_id: number,
         @Arg('card_id') card_id: number,
@@ -61,6 +65,14 @@ export default class CreateMessageResolver {
 
             messageResponse.message.username = user.username;
         });
+
+        pubsub.publish(CREATE_MESSAGE, {
+            project_id,
+            user_id: ctx.payload.user_id,
+            topic: CREATE_MESSAGE,
+            card_id,
+            createMessage: messageResponse
+        } as ListenerResponse);
 
         return messageResponse;
     }

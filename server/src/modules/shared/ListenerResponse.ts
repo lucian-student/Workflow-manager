@@ -7,6 +7,10 @@ import MoveCardResponse from '../card/moveCard/MoveCardResponse';
 import DeleteLinkResponse from '../link/deleteLink/DeleteLinkResponse';
 import LinkResponse from '../link/shared/LinkResponse';
 import MoveListResponse from '../list/moveList/MoveListResponse';
+import DeleteMessageResponse from '../message/deleteMessage/DeleteMessageResponse';
+import MessageResponse from '../message/shared/MessageResponse';
+import DeleteTodoResponse from '../todo/deleteTodo/DeleteTodoResponse';
+import TodoResponse from '../todo/shared/TodoResponse';
 
 @ObjectType()
 export default class ListenerResponse {
@@ -56,4 +60,25 @@ export default class ListenerResponse {
 
     @Field(() => List, { nullable: true })
     editList?: List
+
+    @Field(() => MessageResponse, { nullable: true })
+    createMessage?: MessageResponse
+
+    @Field(() => DeleteMessageResponse, { nullable: true })
+    deleteMessage?: DeleteMessageResponse
+
+    @Field(() => MessageResponse, { nullable: true })
+    editMessage?: MessageResponse
+
+    @Field(() => TodoResponse, { nullable: true })
+    createTodo?: TodoResponse
+
+    @Field(() => DeleteTodoResponse, { nullable: true })
+    deleteTodo?: DeleteTodoResponse
+
+    @Field(() => TodoResponse, { nullable: true })
+    editTodo?: TodoResponse
+
+    @Field(() => TodoResponse, { nullable: true })
+    doneTodo?: TodoResponse
 }

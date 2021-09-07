@@ -55,7 +55,12 @@ export default class ProjectListenerResolver {
             CREATE_LIST,
             DELETE_LIST,
             EDIT_LIST,
-            MOVE_LIST
+            MOVE_LIST,
+            CREATE_MESSAGE,
+            DELETE_MESSAGE,
+            CREATE_TODO,
+            DELETE_TODO,
+            DONE_TODO
         ],
         filter: async (filterData: { args: Arguments, context: Context, payload: ListenerResponse }) => {
             console.log(filterData.payload.topic)
@@ -69,7 +74,6 @@ export default class ProjectListenerResolver {
         @Arg('team_id') team_id: number
     ): ListenerResponse {
 
-        console.log(data);
         return data;
     }
 

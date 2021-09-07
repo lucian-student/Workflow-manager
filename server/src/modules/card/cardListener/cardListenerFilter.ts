@@ -10,6 +10,7 @@ import { Arguments } from '../CardListener';
 import Card from '../../../entity/Card';
 
 export default async function projectListenerFilter({ args, payload, context }: { args: Arguments, context: Context, payload: ListenerResponse }): Promise<boolean> {
+
     if (context.subscribtionToken === null) {
         console.log('check 1')
         return false;
@@ -23,8 +24,9 @@ export default async function projectListenerFilter({ args, payload, context }: 
     //check for card_id
 
     if (payload.card_id) {
-        if (payload.card_id !== args.card_id) {
+        if (Number(payload.card_id) !== args.card_id) {
             console.log('check 3');
+            return false;
         }
     }
 
