@@ -129,3 +129,13 @@
 .label {
     color: #184b44;
 }
+
+.cancel_icon {
+    font-size: 1.5em;
+    color: #184b44;
+}
+
+.form_actions {
+    display: flex;
+    align-items: center;
+}

@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import menuStyles from './Menu/Menu.module.css';
 import { GiHamburgerMenu } from 'react-icons/gi';
@@ -7,8 +8,17 @@ import { useLogoutMutation } from '../../generated/apolloComponents';
 import { setAccessToken } from '../../utils/accessToken';
 import { useApolloClient } from '@apollo/client';
 
+interface RouterProps {
+    team_id?: string
+}
+
+
 function Menu(): JSX.Element {
     const apolloClient = useApolloClient();
+
+    const router = useRouter();
+
+    const { team_id }: RouterProps = router.query;
 
     const { currentUser, setCurrentUser } = useContext(AuthContext);
 
@@ -63,15 +73,32 @@ function Menu(): JSX.Element {
                         </Link>
                     </nav>
                 ) : (
-                    <nav className={menuStyles.nav}>
-                        <Link href="/main" >
-                            <a ref={activateLink} className={menuStyles.link}>Home</a>
-                        </Link>
-                        <Link href="/teams" >
-                            <a ref={activateLink} className={menuStyles.link}>Teams</a>
-                        </Link>
-                        <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
-                    </nav>
+                    <Fragment>
+                        {!team_id ? (
+                            <nav className={menuStyles.nav}>
+                                <Link href="/main" >
+                                    <a ref={activateLink} className={menuStyles.link}>Home</a>
+                                </Link>
+                                <Link href="/teams" >
+                                    <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                                </Link>
+                                <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
+                            </nav>
+                        ) : (
+                            <nav className={menuStyles.nav2}>
+                                <Link href="/main" >
+                                    <a ref={activateLink} className={menuStyles.link}>Home</a>
+                                </Link>
+                                <Link href="/teams" >
+                                    <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                                </Link>
+                                <Link href={`/team/${team_id}`}>
+                                    <a ref={activateLink} className={menuStyles.link}>Projects Team</a>
+                                </Link>
+                                <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
+                            </nav>
+                        )}
+                    </Fragment>
                 )}
             </div>
             <div className={menuStyles.mobile_nav}>
@@ -101,6 +128,9 @@ function Menu(): JSX.Element {
                                 </Link>
                                 <Link href="/teams" >
                                     <a ref={activateLink} className={menuStyles.link}>Teams</a>
+                                </Link>
+                                <Link href={`/team/${team_id}`}>
+                                    <a ref={activateLink} className={menuStyles.link}>Projects Team</a>
                                 </Link>
                                 <button className={[menuStyles.link, menuStyles.link_button].join(' ')} onClick={handleLogout}>Logout</button>
                             </nav>

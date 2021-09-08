@@ -5,6 +5,7 @@ import { MdSubtitles } from 'react-icons/md';
 import { BsLink45Deg } from 'react-icons/bs';
 import { LinkInput } from '../../generated/apolloComponents';
 import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
+import { ImCancelCircle } from 'react-icons/im';
 
 interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -67,10 +68,13 @@ function LinkEditForm({ setOpen, link, editLink }: Props): JSX.Element {
                         defaultValue={link.url}
                         {...register('url')} />
                 </div>
-                <button className={linkEditFormStyles.submit_button}
-                    type='submit'>
-                    Save
-                </button>
+                <div className={linkEditFormStyles.form_actions}>
+                    <button type='submit' className={linkEditFormStyles.submit_button}>
+                        Save
+                    </button>
+                    <ImCancelCircle className={linkEditFormStyles.cancel_icon}
+                        onClick={() => { setOpen(false); }} />
+                </div>
             </form>
         </div>
     )

@@ -15,6 +15,14 @@
     align-items: center;
 }
 
+.nav2 {
+    margin: 1em;
+    display: flex;
+    width: 533px;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .link {
     position: relative;

@@ -40,6 +40,16 @@
     -webkit-transition-delay: 9999s;
 }
 
+.cancel_icon {
+    font-size: 1.5em;
+    color: #184b44;
+}
+
+.form_actions {
+    display: flex;
+    align-items: center;
+}
+
 .submit_button {
     color: #fff;
     margin-top: 0.5em;

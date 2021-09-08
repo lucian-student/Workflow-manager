@@ -4,6 +4,7 @@ import { useDropdownCustom } from '../../hooks/useDropdownMenuCustom';
 import { useForm } from 'react-hook-form';
 import { MdSubtitles } from 'react-icons/md';
 import { TodoInput } from '../../generated/apolloComponents';
+import { ImCancelCircle } from 'react-icons/im';
 
 interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -47,10 +48,13 @@ function TodoEditForm({ setOpen, todo, editTodo }: Props): JSX.Element {
                         <div className='error_message'>Name has to be at least 1 characters long!</div>
                     )}
                 </div>
-                <button className={TodoEditFormStyles.submit_button}
-                    type='submit'>
-                    Save
-                </button>
+                <div className={TodoEditFormStyles.form_actions}>
+                    <button type='submit' className={TodoEditFormStyles.submit_button}>
+                        Save
+                    </button>
+                    <ImCancelCircle className={TodoEditFormStyles.cancel_icon}
+                        onClick={() => { setOpen(false); }} />
+                </div>
             </form>
         </div>
     )
